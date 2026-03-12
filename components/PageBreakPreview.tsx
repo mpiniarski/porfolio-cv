@@ -117,13 +117,10 @@ export function PageBreakPreview({ items, guessHeightPx = 500 }: Props) {
         return (
           <article key={`${item.company}-${item.position}`}>
             <Fragment>
-              <header className="flex flex-wrap justify-between gap-1 text-sm font-medium text-zinc-900">
-                <span>
-                  {item.position} • {item.company}
-                </span>
-                <span className="text-xs font-normal text-zinc-600">
-                  {item.start_date} – {item.end_date ?? "Present"}
-                </span>
+              <header className="text-sm font-medium text-zinc-900">
+                <div>
+                  {item.company} – {item.position}
+                </div>
               </header>
               {insertIndex !== null && headerIdx + 1 === insertIndex && (
                 <Spacer />
@@ -132,6 +129,7 @@ export function PageBreakPreview({ items, guessHeightPx = 500 }: Props) {
             {item.location ? (
               <Fragment>
                 <p className="text-xs text-zinc-600">
+                  {item.start_date} – {item.end_date ?? "Present"} ·{" "}
                   {item.location}
                 </p>
                 {insertIndex !== null &&
