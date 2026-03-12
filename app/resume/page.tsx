@@ -16,7 +16,7 @@ export default function ResumePage() {
   const languages = cv.sections?.languages ?? [];
 
   return (
-    <div className="min-h-screen bg-zinc-200 text-zinc-900">
+    <div className="min-h-screen bg-zinc-200 text-zinc-900 font-(--font-resume)">
       <div className="mx-auto max-w-4xl px-6 py-8">
         <section className="resume-page relative">
           <header className="border-b border-zinc-200 pb-4">

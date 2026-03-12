@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getResumeData } from "@/lib/resumeData";
 import { WorkedWithCarousel } from "@/components/worked-with-carousel";
+import { buttonVariants } from "@/components/ui/button-variants";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   const { cv } = getResumeData();
@@ -13,14 +15,14 @@ export default function Home() {
   const totalYears =
     experience.length > 0
       ? (() => {
-        const withDate = experience.filter((e) => e.start_date != null);
-        if (withDate.length === 0) return null;
-        const earliest = withDate[withDate.length - 1];
-        const startYear = Number(earliest.start_date!.slice(0, 4));
-        const nowYear = new Date().getFullYear();
-        const years = nowYear - startYear;
-        return years >= 10 ? `${years}+` : `${years}`;
-      })()
+          const withDate = experience.filter((e) => e.start_date != null);
+          if (withDate.length === 0) return null;
+          const earliest = withDate[withDate.length - 1];
+          const startYear = Number(earliest.start_date!.slice(0, 4));
+          const nowYear = new Date().getFullYear();
+          const years = nowYear - startYear;
+          return years >= 10 ? `${years}+` : `${years}`;
+        })()
       : null;
 
   const keyStrengths = skills
@@ -30,172 +32,246 @@ export default function Home() {
     )
     .slice(0, 4);
 
+  const companies =
+    experience.length > 0
+      ? experience.flatMap((item) => [item.company, ...(item.worked_with ?? [])])
+      : [];
+
   return (
     <>
-      <section className="grid gap-6 rounded-xl border border-zinc-200 bg-white/80 p-5 shadow-sm md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] md:items-start">
-        <div className="space-y-3">
-          {intro[0] && (
-            <p className="text-sm leading-relaxed text-zinc-700">
-              {intro[0]}
+      {/* HERO */}
+        <section className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:items-center">
+          <div className="space-y-6">
+            <p className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50/60 px-3 py-1 text-xs font-medium text-indigo-700 shadow-sm backdrop-blur">
+              <span className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.35)]" />
+              Open for senior frontend roles
             </p>
-          )}
-          {typicallyHelpWith.length > 0 && (
-            <div className="space-y-1.5 text-sm text-zinc-700">
-              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                I typically help with
-              </p>
-              <ul className="space-y-1 text-sm">
-                {typicallyHelpWith.map((item) => (
-                  <li key={item}>• {item}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          <div className="flex flex-wrap gap-3 pt-1">
-            <Link
-              href="/experience"
-              className="inline-flex items-center justify-center rounded-full border border-zinc-900 bg-zinc-900 px-4 py-1.5 text-sm font-medium text-zinc-50 shadow-sm transition hover:bg-zinc-800"
-            >
-              View experience
-            </Link>
-            <a
-              href="/cv.pdf"
-              download="cv.pdf"
-              className="inline-flex items-center justify-center rounded-full border border-zinc-200 bg-zinc-50 px-4 py-1.5 text-sm font-medium text-zinc-800 transition hover:bg-white"
-            >
-              View CV
-            </a>
-            <a
-              href={`mailto:${cv.email}`}
-              className="inline-flex items-center justify-center rounded-full border border-zinc-200 bg-zinc-50 px-4 py-1.5 text-sm font-medium text-zinc-800 transition hover:bg-white"
-            >
-              Contact by email
-            </a>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-1">
-          <div className="rounded-lg border border-zinc-200 bg-zinc-50/80 px-3 py-2.5">
-            <p className="text-[10px] font-medium uppercase tracking-wide text-zinc-500">
-              Focus
-            </p>
-            <p className="text-sm font-semibold text-zinc-900">
-              Data-heavy UIs & design systems
-            </p>
-          </div>
-          <div
-            className="rounded-lg border border-zinc-200 bg-zinc-50/80 px-3 py-2.5"
-            title={
-              experience.length > 0 && experience[experience.length - 1].start_date
-                ? `From start of earliest role (${experience[experience.length - 1].start_date!.slice(0, 4)}) to current year`
-                : undefined
-            }
-          >
-            <p className="text-[10px] font-medium uppercase tracking-wide text-zinc-500">
-              Years in industry
-            </p>
-            <p className="text-lg font-semibold text-zinc-900">
-              {totalYears ?? "9+"}
-            </p>
-          </div>
-          {education[0] && (
-            <div className="rounded-lg border border-zinc-200 bg-zinc-50/80 px-3 py-2.5">
-              <p className="text-[10px] font-medium uppercase tracking-wide text-zinc-500">
-                Education
-              </p>
-              <p className="text-sm font-semibold text-zinc-900">
-                {education[0].degree}
-              </p>
+            <div className="space-y-3">
+              <h1 className="text-balance text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+                {cv.headline}
+              </h1>
+              {intro[0] && (
+                <p className="max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
+                  {intro[0]}
+                </p>
+              )}
             </div>
-          )}
-          {cv.location && (
-            <div className="rounded-lg border border-zinc-200 bg-zinc-50/80 px-3 py-2.5">
-              <p className="text-[10px] font-medium uppercase tracking-wide text-zinc-500">
-                Location
-              </p>
-              <p className="text-sm font-semibold text-zinc-900">
-                {cv.location}
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
 
-      {keyStrengths.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
-              Key strengths
-            </h2>
+            {typicallyHelpWith.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  I typically help with
+                </p>
+                <ul className="grid gap-1 text-sm text-slate-700 sm:grid-cols-2">
+                  {typicallyHelpWith.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-2 rounded-xl border border-slate-100 bg-white/70 px-3 py-2 shadow-sm shadow-slate-100/60 backdrop-blur"
+                    >
+                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-indigo-500" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <Link
+                href="/experience"
+                className={cn(buttonVariants({ size: "lg" }))}
+              >
+                View experience
+              </Link>
+              <a
+                href="/cv.pdf"
+                download="cv.pdf"
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "lg" }),
+                )}
+              >
+                View CV
+              </a>
+              <a
+                href={`mailto:${cv.email}`}
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "lg" }),
+                )}
+              >
+                Contact by email
+              </a>
+            </div>
+          </div>
+
+          {/* Metrics / social proof card */}
+          <div className="space-y-4 rounded-2xl border border-slate-200/80 bg-white/80 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.08)] backdrop-blur">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <MetricCard
+                label="Years in industry"
+                value={totalYears ?? "9+"}
+                tooltip={
+                  experience.length > 0 &&
+                  experience[experience.length - 1].start_date
+                    ? `From start of earliest role (${experience[experience.length - 1].start_date!.slice(0, 4)}) to current year`
+                    : undefined
+                }
+              />
+              <MetricCard
+                label="Focus"
+                value="Data-heavy UIs & design systems"
+              />
+              {cv.location && (
+                <MetricCard label="Location" value={cv.location} />
+              )}
+              {education[0] && (
+                <MetricCard
+                  label="Education"
+                  value={education[0].degree}
+                  className="col-span-2 sm:col-span-3"
+                />
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* KEY STRENGTHS */}
+        {keyStrengths.length > 0 && (
+          <section className="mt-14 space-y-4">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Key strengths
+              </p>
+              <p className="mt-1 text-sm text-slate-600">
+                What I usually bring to complex frontend teams.
+              </p>
+            </div>
             <Link
               href="/skills"
-              className="text-xs font-medium text-zinc-600 underline underline-offset-4 hover:text-zinc-900"
+              className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
             >
               View all skills
             </Link>
           </div>
-          <ul className="grid gap-3 text-sm text-zinc-800 md:grid-cols-3">
+
+          <div className="grid gap-4 md:grid-cols-3">
             {keyStrengths.map((skill) => (
-              <li
+              <div
                 key={skill.label}
-                className="rounded-lg border border-zinc-200 bg-white px-3 py-2 transition hover:-translate-y-0.5 hover:shadow-sm"
+                className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-[0_14px_35px_rgba(15,23,42,0.08)] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(79,70,229,0.25)]"
               >
-                <p className="font-medium">{skill.label}</p>
-                <p className="text-xs text-zinc-700">{skill.details}</p>
-              </li>
+                <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="absolute -inset-20 bg-[radial-gradient(circle_at_top,_rgba(129,140,248,0.2),transparent_55%)]" />
+                </div>
+                <div className="relative space-y-2">
+                  <p className="text-sm font-semibold text-slate-900">
+                    {skill.label}
+                  </p>
+                  <p className="text-xs leading-relaxed text-slate-600">
+                    {skill.details}
+                  </p>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         </section>
-      )}
+        )}
 
-      {experience.length > 0 && (() => {
-        const companies = experience.flatMap((item) => [
-          item.company,
-          ...(item.worked_with ?? []),
-        ]);
-        return (
-          <section className="space-y-3">
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
+        {/* WORKED WITH / CAROUSEL */}
+        {companies.length > 0 && (
+          <section className="mt-14 space-y-4">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                 Worked with
-              </h2>
-              <Link
-                href="/experience"
-                className="text-xs font-medium text-zinc-600 underline underline-offset-4 hover:text-zinc-900"
-              >
-                View full experience
-              </Link>
+              </p>
+              <p className="mt-1 text-sm text-slate-600">
+                A sample of companies and teams I&apos;ve helped ship for.
+              </p>
             </div>
+            <Link
+              href="/experience"
+              className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
+            >
+              View full experience
+            </Link>
+          </div>
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white/80 p-3 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
             <WorkedWithCarousel companies={companies} />
-          </section>
-        );
-      })()}
+          </div>
+        </section>
+        )}
 
-      <section className="grid gap-4 rounded-xl border border-zinc-200 bg-white/80 p-5 shadow-sm md:grid-cols-[1fr_auto] md:items-center">
-        <div>
-          <p className="font-medium text-zinc-800">Open for job opportunities</p>
-          <p className="mt-1 text-xs leading-relaxed text-zinc-600">
-            I am open to senior frontend roles focused on complex, data-heavy products and teams that invest in design systems, component architecture, and developer experience. Prefer Warsaw-based or remote-friendly positions in Europe. Available to start in the coming months—reach out to discuss timing and fit.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <a
-            href="/cv.pdf"
-            download="cv.pdf"
-            className="inline-flex items-center justify-center rounded-full border border-zinc-900 bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-50 shadow-sm transition hover:bg-zinc-800"
-          >
-            View CV
-          </a>
-          <a
-            href={`mailto:${cv.email}`}
-            className="inline-flex items-center justify-center rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 text-sm font-medium text-zinc-800 transition hover:bg-white hover:border-zinc-300"
-          >
-            Contact
-          </a>
-        </div>
-      </section>
-
+        {/* CTA BAND */}
+        <section className="mt-14 relative overflow-hidden rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-500 px-5 py-6 text-slate-50 shadow-[0_24px_60px_rgba(30,64,175,0.7)] sm:px-7 sm:py-7 md:px-8 md:py-8">
+          <div className="pointer-events-none absolute inset-0 opacity-60">
+            <div className="absolute -left-10 top-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(248,250,252,0.35),transparent_65%)] blur-2xl" />
+            <div className="absolute -right-10 bottom-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.4),transparent_65%)] blur-2xl" />
+          </div>
+          <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-xl space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-100/90">
+                Open to opportunities
+              </p>
+              <p className="text-sm font-medium sm:text-base">
+                I&apos;m looking for senior frontend roles on teams that care
+                about craft, performance, and great internal tools.
+              </p>
+              <p className="text-xs leading-relaxed text-indigo-100/90 sm:text-[13px]">
+                Complex, data-heavy products, design systems, and component
+                architecture are where I&apos;m most useful. Prefer Warsaw or
+                remote-friendly teams in Europe.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href="/cv.pdf"
+                download="cv.pdf"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "bg-white text-indigo-700 hover:bg-slate-100",
+                )}
+              >
+                View CV
+              </a>
+              <a
+                href={`mailto:${cv.email}`}
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "lg" }),
+                  "border-indigo-200/80 bg-indigo-500/20 text-indigo-50 hover:bg-indigo-400/40",
+                )}
+              >
+                Contact
+              </a>
+            </div>
+          </div>
+        </section>
     </>
   );
 }
 
+interface MetricCardProps {
+  label: string;
+  value: string;
+  tooltip?: string;
+  className?: string;
+}
+
+function MetricCard({ label, value, tooltip, className }: MetricCardProps) {
+  return (
+    <div
+      className={`relative overflow-hidden rounded-2xl border border-slate-100 bg-slate-50/80 p-3 shadow-sm shadow-slate-100/80 backdrop-blur transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(15,23,42,0.12)] ${className ?? ""
+        }`}
+      title={tooltip}
+    >
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-indigo-100/60 via-transparent to-transparent opacity-60" />
+      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+        {label}
+      </p>
+      <p className="mt-1 text-base font-semibold text-slate-900 sm:text-lg">
+        {value}
+      </p>
+    </div>
+  );
+}
