@@ -16,18 +16,20 @@ export default function ExperiencePage() {
       <section className="space-y-5">
         {experience.map((item) => (
           <article
-            key={`${item.company}-${item.position}-${item.start_date}`}
+            key={`${item.company}-${item.position}-${item.start_date ?? ""}`}
             className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm"
           >
             <header className="flex flex-wrap justify-between gap-1 text-sm font-medium text-zinc-900">
               <span>
                 {item.position} • {item.company}
               </span>
-              <span className="text-xs font-normal text-zinc-600">
-                {item.start_date} – {item.end_date ?? "Present"}
-              </span>
+              {(item.start_date != null || item.end_date != null) && (
+                <span className="text-xs font-normal text-zinc-600">
+                  {item.start_date ?? "?"} – {item.end_date ?? "Present"}
+                </span>
+              )}
             </header>
-            {item.location ? (
+            {item.location != null ? (
               <p className="text-xs text-zinc-600">{item.location}</p>
             ) : null}
             {item.projects && item.projects.length > 0 ? (

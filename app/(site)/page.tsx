@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getResumeData } from "@/lib/resumeData";
+import { WorkedWithCarousel } from "@/components/worked-with-carousel";
 
 export default function Home() {
   const { cv } = getResumeData();
@@ -12,8 +13,10 @@ export default function Home() {
   const totalYears =
     experience.length > 0
       ? (() => {
-        const earliest = experience[experience.length - 1];
-        const startYear = Number(earliest.start_date.slice(0, 4));
+        const withDate = experience.filter((e) => e.start_date != null);
+        if (withDate.length === 0) return null;
+        const earliest = withDate[withDate.length - 1];
+        const startYear = Number(earliest.start_date!.slice(0, 4));
         const nowYear = new Date().getFullYear();
         const years = nowYear - startYear;
         return years >= 10 ? `${years}+` : `${years}`;
@@ -83,8 +86,8 @@ export default function Home() {
           <div
             className="rounded-lg border border-zinc-200 bg-zinc-50/80 px-3 py-2.5"
             title={
-              experience.length > 0
-                ? `From start of earliest role (${experience[experience.length - 1].start_date.slice(0, 4)}) to current year`
+              experience.length > 0 && experience[experience.length - 1].start_date
+                ? `From start of earliest role (${experience[experience.length - 1].start_date!.slice(0, 4)}) to current year`
                 : undefined
             }
           >
@@ -145,6 +148,29 @@ export default function Home() {
         </section>
       )}
 
+      {experience.length > 0 && (() => {
+        const companies = experience.flatMap((item) => [
+          item.company,
+          ...(item.worked_with ?? []),
+        ]);
+        return (
+          <section className="space-y-3">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
+                Worked with
+              </h2>
+              <Link
+                href="/experience"
+                className="text-xs font-medium text-zinc-600 underline underline-offset-4 hover:text-zinc-900"
+              >
+                View full experience
+              </Link>
+            </div>
+            <WorkedWithCarousel companies={companies} />
+          </section>
+        );
+      })()}
+
       <section className="grid gap-4 rounded-xl border border-zinc-200 bg-white/80 p-5 shadow-sm md:grid-cols-[1fr_auto] md:items-center">
         <div>
           <p className="font-medium text-zinc-800">Open for job opportunities</p>
@@ -168,51 +194,6 @@ export default function Home() {
           </a>
         </div>
       </section>
-
-      {experience.length > 0 && (() => {
-        const companies = experience.flatMap((item) => [
-          item.company,
-          ...(item.worked_with ?? []),
-        ]);
-        return (
-          <section className="space-y-3">
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="text-xl font-semibold tracking-tight">
-                Worked with
-              </h2>
-              <Link
-                href="/experience"
-                className="text-xs font-medium text-zinc-600 underline underline-offset-4 hover:text-zinc-900"
-              >
-                View full experience
-              </Link>
-            </div>
-            <div className="relative -mx-1">
-              <div
-                className="flex gap-2 overflow-x-auto py-1 scrollbar-none scroll-smooth scroll-snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                style={{ scrollSnapType: "x mandatory" }}
-              >
-                {companies.map((name) => (
-                  <span
-                    key={name}
-                    className="shrink-0 snap-start rounded-full border border-zinc-200 bg-zinc-50/80 px-4 py-2 text-sm font-medium text-zinc-800"
-                  >
-                    {name}
-                  </span>
-                ))}
-              </div>
-              <div
-                className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white to-transparent md:from-white/80"
-                aria-hidden
-              />
-              <div
-                className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-white to-transparent md:from-white/80"
-                aria-hidden
-              />
-            </div>
-          </section>
-        );
-      })()}
 
     </>
   );

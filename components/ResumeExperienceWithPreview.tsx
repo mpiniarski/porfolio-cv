@@ -16,9 +16,14 @@ export function ResumeExperienceWithPreview({ items }: Props) {
               {item.company} – {item.position}
             </div>
           </header>
-          {item.location ? (
+          {(item.start_date != null || item.end_date != null || item.location) ? (
             <p className="text-xs text-zinc-600">
-              {item.start_date} – {item.end_date ?? "Present"} · {item.location}
+              {item.start_date != null || item.end_date != null
+                ? `${item.start_date ?? "?"} – ${item.end_date ?? "Present"}`
+                : ""}
+              {item.location != null
+                ? (item.start_date != null || item.end_date != null ? " · " : "") + item.location
+                : ""}
             </p>
           ) : null}
           <ul className="mt-1 list-disc space-y-1 pl-5 text-xs leading-relaxed text-zinc-700">

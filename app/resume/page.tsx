@@ -29,7 +29,7 @@ export default function ResumePage() {
               <span>•</span>
               <a
                 href={`mailto:${cv.email}`}
-                className="underline decoration-zinc-400 underline-offset-4 hover:text-zinc-900"
+                className="underline decoration-zinc-400 underline-offset-4 hover:text-zinc-900 print:no-underline"
               >
                 {cv.email}
               </a>
@@ -38,7 +38,7 @@ export default function ResumePage() {
                   <span>•</span>
                   <a
                     href={item.username}
-                    className="underline decoration-zinc-400 underline-offset-4 hover:text-zinc-900"
+                    className="underline decoration-zinc-400 underline-offset-4 hover:text-zinc-900 print:no-underline"
                   >
                     {shortUrl(item.username)}
                   </a>

@@ -88,11 +88,14 @@ export function PageBreakPreview({ items, guessHeightPx = 500 }: Props) {
     </div>
   );
 
+  const hasMeta = (item: typeof items[0]) =>
+    item.start_date != null || item.end_date != null || item.location != null;
+
   const cumulative: number[] = [0];
   for (let i = 0; i < items.length; i++) {
     const prev = cumulative[i];
     const item = items[i];
-    let leaves = 1 + (item.location ? 1 : 0);
+    let leaves = 1 + (hasMeta(item) ? 1 : 0);
     if (item.projects && item.projects.length > 0) {
       for (const p of item.projects) {
         leaves += 1 + p.highlights.length;
@@ -113,7 +116,7 @@ export function PageBreakPreview({ items, guessHeightPx = 500 }: Props) {
       {items.map((item, itemIdx) => {
         const nextIdx = getNextBlockIndex(itemIdx);
         const headerIdx = nextIdx();
-        const locationIdx = item.location ? nextIdx() : null;
+        const locationIdx = hasMeta(item) ? nextIdx() : null;
         return (
           <article key={`${item.company}-${item.position}`}>
             <Fragment>
@@ -126,11 +129,15 @@ export function PageBreakPreview({ items, guessHeightPx = 500 }: Props) {
                 <Spacer />
               )}
             </Fragment>
-            {item.location ? (
+            {(item.start_date != null || item.end_date != null || item.location) ? (
               <Fragment>
                 <p className="text-xs text-zinc-600">
-                  {item.start_date} – {item.end_date ?? "Present"} ·{" "}
-                  {item.location}
+                  {item.start_date != null || item.end_date != null
+                    ? `${item.start_date ?? "?"} – ${item.end_date ?? "Present"}`
+                    : ""}
+                  {item.location != null
+                    ? (item.start_date != null || item.end_date != null ? " · " : "") + item.location
+                    : ""}
                 </p>
                 {insertIndex !== null &&
                   locationIdx !== null &&

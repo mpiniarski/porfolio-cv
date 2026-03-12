@@ -114,6 +114,10 @@ body {
   .resume-page-break-preview {
     display: none;
   }
+
+  .resume-page a {
+    text-decoration: none !important;
+  }
 }
 
 :root {
