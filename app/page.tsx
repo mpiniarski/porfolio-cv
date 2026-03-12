@@ -1,64 +1,138 @@
-import Image from "next/image";
+import Link from "next/link";
+import { SiteHeader } from "@/components/site-header";
+import { getResumeData } from "@/lib/resumeData";
 
 export default function Home() {
+  const { cv, social_networks = [], projects = [] } = getResumeData();
+  const intro = cv.sections?.[""] ?? [];
+  const experience = cv.sections?.experience ?? [];
+  const skills = cv.sections?.skills ?? [];
+  const education = cv.sections?.education ?? [];
+
+  const totalYears =
+    experience.length > 0
+      ? (() => {
+          const first = experience[experience.length - 1];
+          const startYear = Number(first.start_date.slice(0, 4));
+          const nowYear = new Date().getFullYear();
+          const years = nowYear - startYear;
+          return years >= 10 ? `${years}+` : `${years}`;
+        })()
+      : null;
+
+  const keyStrengths = skills
+    .filter(
+      (skill) =>
+        skill.label !== "Languages" && skill.label !== "Backend (Supporting)",
+    )
+    .slice(0, 4);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="min-h-screen bg-zinc-50 text-zinc-900">
+      <main className="mx-auto flex max-w-4xl flex-col gap-10 px-6 py-12">
+        <SiteHeader
+          cv={cv}
+          social_networks={social_networks}
+          tagline="Senior frontend engineer focused on data-heavy UIs, design systems, and performance in modern React/TypeScript ecosystems."
+          showProjectsNav={projects.length > 0}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+
+        <section className="space-y-3">
+          {intro.map((paragraph, idx) => (
+            <p
+              key={idx}
+              className="text-sm leading-relaxed text-zinc-700"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              {paragraph}
+            </p>
+          ))}
+
+          {education[0] && (
+            <p className="text-sm font-medium text-zinc-800">
+              {education[0].degree} ({education[0].area}) from{" "}
+              {education[0].institution}.
+            </p>
+          )}
+        </section>
+
+        {keyStrengths.length > 0 && (
+          <section className="space-y-3">
+            <ul className="grid gap-3 text-sm text-zinc-800 md:grid-cols-3">
+              {keyStrengths.map((skill) => (
+                <li
+                  key={skill.label}
+                  className="rounded-lg border border-zinc-200 bg-white px-3 py-2"
+                >
+                  <p className="font-medium">{skill.label}</p>
+                  <p className="text-xs text-zinc-700">{skill.details}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <section className="space-y-3">
+          <div className="flex items-baseline justify-between gap-4">
+            <h2 className="text-xl font-semibold tracking-tight">
+              Experience{totalYears ? ` (${totalYears} years)` : ""}
+            </h2>
+          </div>
+          <div className="space-y-4">
+            {experience.slice(0, 3).map((item) => {
+              const previewHighlights =
+                item.projects && item.projects.length > 0
+                  ? item.projects
+                      .map((project) =>
+                        project.highlights[0]
+                          ? `${project.name}: ${project.highlights[0]}`
+                          : null,
+                      )
+                      .filter(Boolean)
+                      .slice(0, 3)
+                  : item.highlights?.slice(0, 3) ?? [];
+
+              return (
+                <article key={`${item.company}-${item.position}`}>
+                  <header className="flex flex-wrap justify-between gap-1 text-sm font-medium text-zinc-900">
+                    <span>
+                      {item.position} • {item.company}
+                    </span>
+                    <span className="text-xs font-normal text-zinc-600">
+                      {item.start_date} – {item.end_date ?? "Present"}
+                    </span>
+                  </header>
+                  {item.location ? (
+                    <p className="text-xs text-zinc-600">{item.location}</p>
+                  ) : null}
+                  <ul className="mt-1 list-disc space-y-1 pl-5 text-xs leading-relaxed text-zinc-700">
+                    {previewHighlights.map((h) => (
+                      <li key={h}>{h}</li>
+                    ))}
+                  </ul>
+                </article>
+              );
+            })}
+          </div>
+          <div className="pt-1">
+            <Link
+              href="/experience"
+              className="text-xs font-medium text-zinc-600 underline underline-offset-4"
             >
-              Learning
-            </a>{" "}
-            center.
+              View full experience
+            </Link>
+          </div>
+        </section>
+
+        <section className="mt-2 rounded-lg border border-dashed border-zinc-300 bg-zinc-50 px-4 py-3 text-sm text-zinc-800">
+          <p className="font-medium">
+            Open to senior frontend roles (Warsaw / Remote).
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          <p className="mt-1 text-xs text-zinc-600">
+            If you&apos;re hiring for data-heavy products, design systems or
+            complex frontend platforms, feel free to reach out by email or via
+            LinkedIn.
+          </p>
+        </section>
       </main>
     </div>
   );

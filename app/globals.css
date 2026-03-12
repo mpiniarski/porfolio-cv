@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scrollbar-gutter: stable;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -23,4 +27,66 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-y: scroll;
+}
+
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+@media screen {
+  .resume-page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 2rem auto;
+    padding: 10mm;
+    background: #ffffff;
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.05),
+      0 15px 35px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  .resume-page-break-preview {
+    flex-shrink: 0;
+  }
+
+  .resume-page-break-preview-margin {
+    height: 38px;
+    background: #ffffff;
+  }
+
+  .resume-page-break-preview-line {
+    height: 0;
+    border-top: 1px dashed rgba(0, 0, 0, 0.2);
+  }
+}
+
+@media print {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+
+  .resume-page {
+    font-size: 11px;
+    line-height: 1.35;
+    box-shadow: none;
+    margin: 0;
+    width: auto;
+    min-height: auto;
+    padding: 0;
+    page-break-after: always;
+  }
+
+  .resume-page:last-child {
+    page-break-after: auto;
+  }
+
+  .resume-page-break-preview {
+    display: none;
+  }
 }
