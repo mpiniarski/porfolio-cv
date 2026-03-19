@@ -20,6 +20,25 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Testing
+
+### Visual regression tests
+
+Visual regression tests use Playwright to capture and compare full-page screenshots of the main routes.
+
+```bash
+# Run visual tests (compares against baseline snapshots)
+npm run test:visual
+
+# Update baseline snapshots after intentional UI changes
+npm run test:visual:update
+
+# View the HTML report (including diff viewer for failed tests)
+npm run test:report
+```
+
+When a screenshot differs from the baseline, the test fails. Run `npm run test:report` to open the HTML report, which shows **expected**, **actual**, and **diff** images side-by-side for each failure. Baseline snapshots live in `tests/visual.spec.ts-snapshots/` and should be committed to version control.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

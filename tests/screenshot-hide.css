@@ -1,0 +1,4 @@
+/* Hide Next.js dev overlay and indicator from visual regression screenshots */
+nextjs-portal {
+  display: none !important;
+}
