@@ -6,7 +6,7 @@ type Props = {
   items: CvExperienceItem[];
 };
 
-export function ResumeExperienceWithPreview({ items }: Props) {
+export function ResumeExperienceList({ items }: Props) {
   return (
     <div className="space-y-3">
       {items.map((item) => (
@@ -16,7 +16,7 @@ export function ResumeExperienceWithPreview({ items }: Props) {
               {item.company} – {item.position}
             </div>
           </header>
-          {(item.start_date != null || item.end_date != null || item.location) ? (
+          {item.start_date != null || item.end_date != null || item.location ? (
             <p className="text-xs text-zinc-600">
               {item.start_date != null || item.end_date != null
                 ? `${item.start_date ?? "?"} – ${item.end_date ?? "Present"}`

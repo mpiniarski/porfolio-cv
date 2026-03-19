@@ -1,29 +1,34 @@
-"use client"
+"use client";
 
-import { Button as ButtonPrimitive } from "@base-ui/react/button"
-import type { ButtonVariantProps } from "./button-variants"
-import { buttonVariants } from "./button-variants"
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
 
-import { cn } from "@/lib/utils"
+import type { ButtonVariantProps } from "./button-variants";
+import { buttonVariants } from "./button-variants";
 
-type ButtonProps = ButtonPrimitive.Props &
+import { cn } from "@/lib/utils";
+
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   ButtonVariantProps & {
-    asChild?: boolean
-  }
+    asChild?: boolean;
+  };
 
 function Button({
   className,
   variant = "default",
   size = "default",
+  asChild = false,
   ...props
 }: ButtonProps) {
+  const Comp = asChild ? Slot : "button";
+
   return (
-    <ButtonPrimitive
+    <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
-  )
+  );
 }
 
-export { Button }
+export { Button };

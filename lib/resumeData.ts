@@ -1,7 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
-import yaml from "yaml";
-
 export type CvSectionKey =
   | ""
   | "skills"
@@ -21,6 +17,8 @@ export interface CvSkillItem {
 
 export interface CvExperienceProject {
   name: string;
+  start_date?: string;
+  end_date?: string;
   highlights: string[];
 }
 
@@ -48,10 +46,17 @@ export interface CvEducationItem {
 export interface GroupedEducation {
   institution: string;
   location: string;
-  degrees: { degree: string; area: string; start_date: string; end_date: string }[];
+  degrees: {
+    degree: string;
+    area: string;
+    start_date: string;
+    end_date: string;
+  }[];
 }
 
-export function groupEducationByInstitution(education: CvEducationItem[]): GroupedEducation[] {
+export function groupEducationByInstitution(
+  education: CvEducationItem[],
+): GroupedEducation[] {
   const byKey = new Map<string, GroupedEducation>();
   for (const edu of education) {
     const key = `${edu.institution}|${edu.location}`;
@@ -65,7 +70,11 @@ export function groupEducationByInstitution(education: CvEducationItem[]): Group
     if (existing) {
       existing.degrees.push(entry);
     } else {
-      byKey.set(key, { institution: edu.institution, location: edu.location, degrees: [entry] });
+      byKey.set(key, {
+        institution: edu.institution,
+        location: edu.location,
+        degrees: [entry],
+      });
     }
   }
   return Array.from(byKey.values());
@@ -104,8 +113,42 @@ export interface CvData {
     name: string;
     headline: string;
     location: string;
+    portfolio?: string;
     email: string;
     phone: string;
+    /** Short summary used for meta tags, previews, etc. */
+    summary?: string;
+    /** Hero intro sentence displayed on the homepage. */
+    hero_intro?: string;
+    /**
+     * Optional 3-up stat strip shown in the homepage hero.
+     * When omitted, the UI falls back to derived education/years/location.
+     */
+    hero_stats?: Array<{ top: string; bottom: string }>;
+    /**
+     * Optional configuration for the "Worked with" homepage section.
+     * Allows matching curated content/order from external designs.
+     */
+    worked_with?: {
+      /** Overrides the computed X+ years label in the title, e.g. "9". */
+      years_label?: string;
+      /** Explicit ordered list of company names to render (must exist in company_logos). */
+      companies?: string[];
+    };
+    /** Footer role/tagline line. When omitted, falls back to headline. */
+    footer_tagline?: string;
+    open_for_opportunities?: boolean;
+    open_for_opportunities_section?: {
+      availability?: string;
+      mode?: string;
+      bullets: string[];
+    };
+    services?: { icon: string; title: string; description: string }[];
+    tools?: { name: string; description: string; logo: string }[];
+    /** Optional mapping used to render company logos in "Worked with". */
+    company_logos?: Record<string, string>;
+    /** Optional short labels for companies (e.g. "No Spoon" instead of full legal name). */
+    company_short_names?: Record<string, string>;
     sections: CvSections;
     social_networks?: CvSocialNetwork[];
     projects?: CvProject[];
@@ -113,28 +156,7 @@ export interface CvData {
   };
 }
 
-function findDataYml(): string {
-  const cwd = process.cwd();
-  const fromLib = path.resolve(__dirname, "..", "..", "data.yml");
-  const candidates = [
-    path.join(cwd, "data.yml"),
-    path.join(cwd, "..", "data.yml"),
-    fromLib,
-  ];
-  for (const filePath of candidates) {
-    if (fs.existsSync(filePath)) return filePath;
-  }
-  throw new Error(`data.yml not found. Tried: ${candidates.join(", ")}`);
-}
-
 /** Strip https:// and optional www. for compact display; href stays full URL for ATS and links. */
 export function shortUrl(url: string): string {
   return url.replace(/^https?:\/\/(www\.)?/i, "").trim();
-}
-
-export function getResumeData(): CvData {
-  const filePath = findDataYml();
-  const file = fs.readFileSync(filePath, "utf8");
-  const parsed = yaml.parse(file) as CvData;
-  return parsed;
 }
