@@ -67,7 +67,9 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
   const skills = cv.sections?.skills ?? [];
   const education = groupEducationByInstitution(cv.sections?.education ?? []);
   const languages = cv.sections?.languages ?? [];
-  const totalPages = experiencePage2.length > 0 ? 2 : 1;
+  const hasPage2 =
+    experiencePage2.length > 0 || education.length > 0 || languages.length > 0;
+  const totalPages = hasPage2 ? 2 : 1;
   const resumeLocation =
     /remote/i.test(cv.location) && /warsaw/i.test(cv.location) ? "Remote / Warsaw" : cv.location;
 
@@ -86,7 +88,8 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
             totalPages={totalPages}
           />
 
-          <section className="mb-5 print:break-inside-avoid">
+          <div className="flex flex-col gap-8">
+          <section className="print:break-inside-avoid">
             {intro.length > 0 ? (
               <p className="text-xs leading-relaxed text-slate-700">
                 {(() => {
@@ -106,16 +109,27 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
             ) : null}
           </section>
 
-          <div className="grid grid-cols-[1fr_200px] gap-8 print:break-before-avoid">
-            <div>
-              <section>
-                <h2 className="mb-2 text-sm font-semibold tracking-wider text-slate-500 uppercase">Experience:</h2>
+          {skills.length > 0 ? (
+            <section className="print:break-inside-avoid">
+              <h2 className="mb-2 text-sm font-semibold tracking-wider text-slate-500 uppercase">Technical Skills:</h2>
+              <div className="space-y-1">
+                {skills.map((skill) => (
+                  <p key={skill.label} className="text-xs leading-relaxed text-slate-700">
+                    <span className="font-medium tracking-wider text-slate-600 uppercase">{skill.label}:</span>{" "}
+                    {skill.details}
+                  </p>
+                ))}
+              </div>
+            </section>
+          ) : null}
 
-                <div className="space-y-4">
+          <section className="print:break-inside-avoid">
+            <h2 className="mb-2 text-sm font-semibold tracking-wider text-slate-500 uppercase">Recent Experience:</h2>
+            <div className="space-y-4">
                   {experiencePage1.map((item) => (
                     <article
                       key={`${item.company}-${item.position}-${item.start_date ?? ""}`}
-                      className="border-b border-slate-100 pb-4 print:break-inside-avoid"
+                      className="pb-4 print:break-inside-avoid"
                     >
                       <div className="mb-0.5 flex items-baseline justify-between">
                         <h3 className="text-sm font-semibold text-slate-900">{item.position}</h3>
@@ -133,7 +147,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                           {item.projects.map((project) => (
                             <section
                               key={project.name}
-                              className="border-b border-slate-200 pb-3 last:border-b-0 last:pb-0 print:break-inside-avoid"
+                              className="pb-3 last:pb-0 print:break-inside-avoid"
                             >
                               <div className="mb-1.5 flex items-baseline justify-between">
                                 <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
@@ -162,110 +176,11 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                   ))}
                 </div>
               </section>
-            </div>
-
-            <aside className="space-y-5 rounded bg-slate-50 p-4 shadow-sm print:break-inside-avoid print:shadow-none">
-              <section>
-                <h2 className="mb-4 text-xs tracking-wider text-slate-800 uppercase">Technical Skills:</h2>
-                <div className="space-y-3">
-                  {skills.map((skill) => (
-                    <div key={skill.label}>
-                      <h3 className="mb-1.5 text-xs tracking-wider text-slate-500 uppercase">{skill.label}:</h3>
-                      <p className="text-xs leading-relaxed text-slate-700">{skill.details}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <hr className="border-slate-300" />
-
-              <section>
-                <h2 className="mb-3 text-xs tracking-wider text-slate-800 uppercase">Education:</h2>
-
-                {(() => {
-                  const byField = new Map<string, typeof education>();
-                  for (const group of education) {
-                    const field =
-                      group.degrees[0]?.degree.match(/ (?:in|-) (.+)$/)?.[1]?.trim() ??
-                      group.degrees[0]?.degree ??
-                      "";
-                    const list = byField.get(field) ?? [];
-                    list.push(group);
-                    byField.set(field, list);
-                  }
-
-                  return Array.from(byField.entries()).map(([field, groups]) => (
-                    <div key={field} className="space-y-2">
-                      {field ? (
-                        <h3 className="mb-2 text-xs font-semibold tracking-wider text-slate-700 uppercase">{field}</h3>
-                      ) : null}
-
-                      {groups.map((group) => {
-                        const starts = group.degrees.map((d) => d.start_date);
-                        const ends = group.degrees.map((d) => d.end_date);
-                        const mergedStart = [...starts].sort()[0];
-                        const mergedEnd = [...ends].sort().reverse()[0];
-                        const dateRange = formatYearRange(mergedStart, mergedEnd);
-
-                        const msc = group.degrees.find((d) => /^MSc\b/i.test(d.degree));
-                        const bsc = group.degrees.find((d) => /^BSc\b/i.test(d.degree));
-                        const hasMscAndBsc = msc && bsc;
-
-                        const degreeLines = hasMscAndBsc
-                          ? [`MSc${msc.area ? ` (${msc.area})` : ""} & BSc`]
-                          : group.degrees.map((d) => {
-                            const abbrev = d.degree.includes(" - ") ? d.degree.split(" - ")[0].trim() : d.degree;
-                            return abbrev === "Student Exchange" ? "Student Exchange" : abbrev;
-                          });
-
-                        return (
-                          <div key={`${group.institution}-${group.location}`}>
-                            {degreeLines.map((line) => (
-                              <p key={line} className="text-xs font-medium text-slate-700">
-                                {line}
-                              </p>
-                            ))}
-                            <p className="text-[11px] text-slate-500">
-                              {group.institution}
-                              {group.location ? `, ${group.location}` : ""}
-                            </p>
-                            <span className="mt-0.5 block text-[10px] text-slate-400">{dateRange}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ));
-                })()}
-              </section>
-
-              {languages.length > 0 ? (
-                <>
-                  <hr className="border-slate-300" />
-                  <section>
-                    <h2 className="mb-3 text-xs tracking-wider text-slate-800 uppercase">Languages:</h2>
-                    <div className="space-y-1">
-                      {languages.map((lang) => {
-                        const [name, rest] = lang.bullet.split(/\s*\(\s*/);
-                        const label = name?.replace(/:$/, "").trim();
-                        const details = rest ? rest.replace(/\)\s*$/, "").trim() : "";
-                        const normalized = details ? normalizeLanguageDetails(details) : "";
-                        return (
-                          <p key={lang.bullet} className="text-xs text-slate-700">
-                            <span className="tracking-wider text-slate-500 uppercase">{label}:</span>{" "}
-                            {normalized || details || lang.bullet}
-                          </p>
-                        );
-                      })}
-                    </div>
-                  </section>
-                </>
-              ) : null}
-            </aside>
           </div>
         </div>
       </section>
 
-      {experiencePage2.length > 0 ? (
+      {hasPage2 ? (
         <section className={previewEnabled ? "resume-page" : "resume-page resume-page--no-preview"}>
           <div className={PAGE_PADDING_CLASS}>
             <ResumeHeader
@@ -279,16 +194,18 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
               totalPages={totalPages}
             />
 
-            <section>
+            <div className="flex flex-col gap-8">
+            {experiencePage2.length > 0 ? (
+                <section>
               <h2 className="mb-2 text-sm font-semibold tracking-wider text-slate-500 uppercase">
-                Experience (Continued):
+                Past Experience:
               </h2>
 
               <div className="space-y-4">
                 {experiencePage2.map((item) => (
                   <article
                     key={`${item.company}-${item.position}-${item.start_date ?? ""}`}
-                    className="border-b border-slate-100 pb-4 last:border-b-0 last:pb-0 print:break-inside-avoid"
+                    className="pb-4 last:pb-0 print:break-inside-avoid"
                   >
                     <div className="mb-0.5 flex items-baseline justify-between">
                       <h3 className="text-sm font-semibold text-slate-900">{item.position}</h3>
@@ -306,7 +223,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                         {item.projects.map((project) => (
                           <section
                             key={project.name}
-                            className="border-b border-slate-200 pb-3 last:border-b-0 last:pb-0 print:break-inside-avoid"
+                            className="pb-3 last:pb-0 print:break-inside-avoid"
                           >
                             <div className="mb-1.5 flex items-baseline justify-between">
                               <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
@@ -335,6 +252,81 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                 ))}
               </div>
             </section>
+              ) : null}
+
+            {education.length > 0 ? (
+              <section className="print:break-inside-avoid">
+                <h2 className="mb-1 text-sm font-semibold tracking-wider text-slate-500 uppercase">Education:</h2>
+                {(() => {
+                  const byField = new Map<string, typeof education>();
+                  for (const group of education) {
+                    const field =
+                      group.degrees[0]?.degree.match(/ (?:in|-) (.+)$/)?.[1]?.trim() ??
+                      group.degrees[0]?.degree ??
+                      "";
+                    const list = byField.get(field) ?? [];
+                    list.push(group);
+                    byField.set(field, list);
+                  }
+                  return Array.from(byField.entries()).map(([field, groups]) => (
+                    <div key={field} className="space-y-1">
+                      {field ? (
+                        <h3 className="mb-1 text-xs font-semibold tracking-wider text-slate-700 uppercase">{field}</h3>
+                      ) : null}
+                      {groups.map((group) => {
+                        const starts = group.degrees.map((d) => d.start_date);
+                        const ends = group.degrees.map((d) => d.end_date);
+                        const mergedStart = [...starts].sort()[0];
+                        const mergedEnd = [...ends].sort().reverse()[0];
+                        const dateRange = formatYearRange(mergedStart, mergedEnd);
+                        const msc = group.degrees.find((d) => /^MSc\b/i.test(d.degree));
+                        const bsc = group.degrees.find((d) => /^BSc\b/i.test(d.degree));
+                        const hasMscAndBsc = msc && bsc;
+                        const degreeLines = hasMscAndBsc
+                          ? [`MSc${msc.area ? ` (${msc.area})` : ""} & BSc`]
+                          : group.degrees.map((d) => {
+                              const abbrev = d.degree.includes(" - ") ? d.degree.split(" - ")[0].trim() : d.degree;
+                              return abbrev === "Student Exchange" ? "Student Exchange" : abbrev;
+                            });
+                        return (
+                          <div key={`${group.institution}-${group.location}`}>
+                            {degreeLines.map((line) => (
+                              <p key={line} className="text-xs font-medium text-slate-700">{line}</p>
+                            ))}
+                            <p className="text-[11px] text-slate-500">
+                              {group.institution}
+                              {group.location ? `, ${group.location}` : ""}
+                            </p>
+                            <span className="mt-0.5 block text-[10px] text-slate-400">{dateRange}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ));
+                })()}
+              </section>
+            ) : null}
+
+            {languages.length > 0 ? (
+              <section className="print:break-inside-avoid">
+                  <h2 className="mb-1 text-sm font-semibold tracking-wider text-slate-500 uppercase">Languages:</h2>
+                  <div className="space-y-1">
+                    {languages.map((lang) => {
+                      const [name, rest] = lang.bullet.split(/\s*\(\s*/);
+                      const label = name?.replace(/:$/, "").trim();
+                      const details = rest ? rest.replace(/\)\s*$/, "").trim() : "";
+                      const normalized = details ? normalizeLanguageDetails(details) : "";
+                      return (
+                        <p key={lang.bullet} className="text-xs text-slate-700">
+                          <span className="tracking-wider text-slate-500 uppercase">{label}:</span>{" "}
+                          {normalized || details || lang.bullet}
+                        </p>
+                      );
+                    })}
+                  </div>
+                </section>
+            ) : null}
+          </div>
           </div>
         </section>
       ) : null}
