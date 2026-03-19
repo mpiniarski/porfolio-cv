@@ -107,16 +107,19 @@ cv:
         details: "TypeScript · JavaScript · Kotlin"
 
       - label: "Frontend"
-        details: "React · Vue · Next.js · GraphQL · REST"
+        details: "React · Vue · Next.js · GraphQL · REST · Webpack · Vite"
 
       - label: "Architecture"
-        details: "Design systems · component architecture · performance optimization"
+        details: "Design systems · component architecture · performance optimization · a11y · CI/CD · Lighthouse"
 
       - label: "Testing"
         details: "Unit · Integration · E2E · Visual regression"
 
       - label: "Backend (Supporting)"
-        details: "Node.js · Kotlin · Java · AWS · Terraform · MongoDB"
+        details: "Node.js · Kotlin · Java · AWS · Terraform · MongoDB · Docker"
+
+      - label: "Observability"
+        details: "NewRelic · Sentry"
 
     experience:
       - company: "Balyasny Asset Management"
@@ -130,9 +133,9 @@ cv:
           - "Built data-heavy interfaces visualizing large datasets (tens of
             thousands of rows) using React, Highcharts and AG Grid."
           - "Improved dashboard performance through rendering optimizations
-            (memoization) and more efficient data fetching."
-          - "Collaborated closely with risk managers to translate financial
-            requirements into reliable internal tools."
+            (memoization), Lighthouse audits, and more efficient data fetching."
+          - "Translated risk managers' requirements into reliable internal
+            tools."
 
       - company: "Dynamic Solutions"
         position: "Senior Frontend Developer (Consulting)"
@@ -155,19 +158,21 @@ cv:
               - "Acted as frontend lead in a 10-person team (4 frontend
                 engineers), mentoring two developers and reviewing most pull
                 requests."
-              - "Defined coding standards and frontend architecture while
-                coordinating development across multiple applications."
+              - "Defined coding standards and frontend architecture, established
+                CI/CD practices, and coordinated development across multiple
+                applications."
               - "Designed and implemented a shared design system (~30 reusable
-                components) improving UI consistency across products."
+                components) with a11y best practices, improving UI consistency
+                across products."
 
           - name: "MANN+HUMMEL (Diva-E)"
             start_date: "2022-09"
             end_date: "2023-01"
             highlights:
-              - "Developed frontend features for a multi-market e-commerce platform
-                using React, TypeScript and GraphQL, collaborating closely with
-                design and product teams to improve product browsing and search
-                experiences."
+              - "Developed frontend features for a multi-market e-commerce
+                platform using React, TypeScript and GraphQL, collaborating
+                with design and product teams to improve search, filtering, and
+                product discovery UX."
 
           - name: "Websight CMS"
             start_date: "2021-04"
@@ -178,8 +183,8 @@ cv:
               - "Designed and implemented a drag-and-drop page editor supporting
                 vertical and horizontal layouts, inline editing and component tree
                 management using React and TypeScript."
-              - "Mentored a small frontend team (2–3 engineers) and contributed to
-                frontend architecture decisions."
+              - "Mentored a small frontend team (2–3 engineers) and drove
+                frontend architecture and component strategy."
 
       - company: "OLX Group"
         position: "Software Engineer"
@@ -198,7 +203,8 @@ cv:
             dev team."
           - "Served auth flows UI from the new app instead of the legacy system,
             reducing UI-related work and maintenance by at least 50%."
-          - "Improved observability using NewRelic."
+          - "Improved observability and error tracking using NewRelic and
+            Sentry."
 
       - company: "No Spoon Tech Lab"
         position: "Full-stack Web Developer"
@@ -217,7 +223,7 @@ cv:
         location: "Poznań"
         highlights:
           - "Developed frontend features for multiple client projects,
-            contributing UI components across several web applications."
+            delivering reusable UI components for client products."
           - "Implemented UI components and client-side features using JavaScript
             and Ember.js across multiple products."
 
@@ -230,8 +236,8 @@ cv:
           - "Developed REST APIs for an e-learning platform as part of a
             lightweight microservice architecture using Java, Kotlin, REST and
             MongoDB."
-          - "Worked in cross-functional Scrum teams (~20 engineers across two
-            collaborating teams)."
+          - "Shipped features in cross-functional Scrum teams (~20 engineers
+            across two collaborating teams)."
     education:
       - institution: "Poznań University of Technology"
         degree: "MSc - Computer Science"
