@@ -2,7 +2,7 @@ cv:
   name: "Marcin Piniarski"
   headline: "Senior Frontend Engineer"
   summary: "Senior frontend engineer focused on data-heavy UIs, design systems, and performance in modern React/TypeScript ecosystems."
-  hero_intro: "Senior Frontend Engineer with 9+ years of experience designing frontend architectures for enterprise platforms and complex data-heavy applications."
+  hero_intro: "Senior Frontend Engineer (TypeScript/React) with 9+ years building maintainable frontend architectures for multi-tenant enterprise platforms."
   location: "Warsaw, Poland (Remote available)"
   portfolio: "https://piniarski.dev"
   email: "piniarski.m@gmail.com"
@@ -95,12 +95,12 @@ cv:
 
   sections:
     "":
-      - "Senior Frontend Engineer with 9+ years of experience designing frontend
-        architectures for enterprise platforms and complex data-heavy
-        applications. Led frontend development across multiple products,
-        introducing design systems, engineering standards, and performance
-        improvements. Experienced in React, TypeScript, and modern frontend
-        tooling within large-scale systems."
+      - "Senior Frontend Engineer (TypeScript/React) with 9+ years building
+        maintainable frontend architectures for multi-tenant enterprise
+        platforms and complex data-heavy
+        applications. Led FE teams of up to 3 engineers. Introduced design
+        systems, engineering standards, and performance improvements across
+        products."
 
     skills:
       - label: "Languages"
@@ -152,8 +152,9 @@ cv:
               - "Led frontend development for a multi-language enterprise platform
                 powering Siemens’ global web presence (including siemens.com) using
                 Vue, TypeScript and GraphQL."
-              - "Acted as frontend lead within a team of four engineers, mentoring
-                two developers and reviewing most pull requests."
+              - "Acted as frontend lead in a 10-person team (4 frontend
+                engineers), mentoring two developers and reviewing most pull
+                requests."
               - "Defined coding standards and frontend architecture while
                 coordinating development across multiple applications."
               - "Designed and implemented a shared design system (~30 reusable
@@ -190,10 +191,14 @@ cv:
             marketplace platform using Kotlin, Java and AWS Cognito."
           - "Implemented core user flows including login, registration and
             password recovery."
-          - "Migrated authentication infrastructure to AWS Cognito and
+          - "Migrated millions of users to AWS Cognito in a gradual rollout and
             introduced security features such as suspicious login verification."
-          - "Built internal account recovery tools used by customer support
-            teams and improved observability using NewRelic."
+          - "Gave Customer Support direct control over unblocking Cognito-blocked users,
+            eliminating 15–20 daily manual incidents previously handled by the
+            dev team."
+          - "Served auth flows UI from the new app instead of the legacy system,
+            reducing UI-related work and maintenance by at least 50%."
+          - "Improved observability using NewRelic."
 
       - company: "No Spoon Tech Lab"
         position: "Full-stack Web Developer"
