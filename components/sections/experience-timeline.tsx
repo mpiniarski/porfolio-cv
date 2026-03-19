@@ -36,7 +36,7 @@ function formatMonthYear(d: Date) {
 }
 
 function formatPeriod(start: Date, end: Date) {
-  return `${formatMonthYear(start)} - ${formatMonthYear(end)}`;
+  return `${formatMonthYear(start)} – ${formatMonthYear(end)}`;
 }
 
 type ExperienceItem = {

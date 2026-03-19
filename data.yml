@@ -242,22 +242,22 @@ cv:
       - institution: "Poznań University of Technology"
         degree: "MSc - Computer Science"
         area: "Distributed Systems"
-        start_date: "2017"
-        end_date: "2019"
+        start_date: "2017-10"
+        end_date: "2019-06"
         location: "Poland"
 
       - institution: "Poznań University of Technology"
         degree: "BSc - Computer Science"
         area: "Computer Science"
-        start_date: "2014"
-        end_date: "2017"
+        start_date: "2014-09"
+        end_date: "2017-09"
         location: "Poland"
 
       - institution: "Universitat Politècnica de València"
         degree: "Student Exchange - Computer Science"
         area: ""
-        start_date: "2018"
-        end_date: "2019"
+        start_date: "2018-09"
+        end_date: "2019-06"
         location: "Spain"
 
     languages:

@@ -31,3 +31,6 @@ export function formatYearRange(start?: string, end?: string): string {
   const e = String(end).slice(0, 4);
   return `${s}${RANGE_SEP}${e}`;
 }
+
+/** En-dash separator for date ranges. Use for consistency (e.g. experience-timeline). */
+export const DATE_RANGE_SEP = RANGE_SEP;
