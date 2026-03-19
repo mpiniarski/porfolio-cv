@@ -1,4 +1,5 @@
 import React from "react";
+import { formatDateRange, formatYearRange } from "@/lib/dateFormat";
 import { groupEducationByInstitution } from "@/lib/resumeData";
 import type { CvData } from "@/lib/resumeData";
 import { ResumeHeader } from "./ResumeHeader";
@@ -6,20 +7,6 @@ import { ResumeHeader } from "./ResumeHeader";
 const PRIMARY_EXPERIENCE_COUNT = 2;
 const PAGE_PADDING_CLASS =
   "max-w-[210mm] mx-auto px-16 py-12 print:px-16 print:py-12 min-h-[297mm] print:min-h-0 w-full print:w-[210mm]";
-
-function formatMonthYear(value: string | undefined): string {
-  if (!value) return "?";
-  const [y, m] = String(value).split("-");
-  if (!y) return "?";
-  if (!m) return y;
-  return `${m.padStart(2, "0")}.${y}`;
-}
-
-function formatRange(start?: string, end?: string): string {
-  const s = formatMonthYear(start);
-  const e = end ? formatMonthYear(end) : "Present";
-  return `${s} - ${e}`;
-}
 
 function highlightTech(text: string): (string | React.ReactElement)[] {
   const technologies = [
@@ -133,7 +120,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                       <div className="mb-0.5 flex items-baseline justify-between">
                         <h3 className="text-sm font-semibold text-slate-900">{item.position}</h3>
                         <span className="text-[10px] text-slate-400 whitespace-nowrap">
-                          {formatRange(item.start_date, item.end_date)}
+                          {formatDateRange(item.start_date, item.end_date)}
                         </span>
                       </div>
                       <div className="mb-1.5 flex items-baseline justify-between">
@@ -153,7 +140,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                                   {project.name}
                                 </p>
                                 <span className="text-[9px] text-slate-400">
-                                  {formatRange(project.start_date, project.end_date)}
+                                  {formatDateRange(project.start_date, project.end_date)}
                                 </span>
                               </div>
                               <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
@@ -218,7 +205,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                         const ends = group.degrees.map((d) => d.end_date);
                         const mergedStart = [...starts].sort()[0];
                         const mergedEnd = [...ends].sort().reverse()[0];
-                        const dateRange = mergedStart === mergedEnd ? mergedStart : `${mergedStart}-${mergedEnd}`;
+                        const dateRange = formatYearRange(mergedStart, mergedEnd);
 
                         const msc = group.degrees.find((d) => /^MSc\b/i.test(d.degree));
                         const bsc = group.degrees.find((d) => /^BSc\b/i.test(d.degree));
@@ -306,7 +293,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                     <div className="mb-0.5 flex items-baseline justify-between">
                       <h3 className="text-sm font-semibold text-slate-900">{item.position}</h3>
                       <span className="text-[10px] text-slate-400 whitespace-nowrap">
-                        {formatRange(item.start_date, item.end_date)}
+                        {formatDateRange(item.start_date, item.end_date)}
                       </span>
                     </div>
                     <div className="mb-1.5 flex items-baseline justify-between">
@@ -326,7 +313,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                                 {project.name}
                               </p>
                               <span className="text-[9px] text-slate-400">
-                                {formatRange(project.start_date, project.end_date)}
+                                {formatDateRange(project.start_date, project.end_date)}
                               </span>
                             </div>
                             <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
