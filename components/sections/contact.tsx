@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Linkedin, Loader2, Mail, MapPin, Send } from "lucide-react";
 
-import type { CvData } from "@/lib/resumeData";
+import { formatCvLocationLine, type CvData } from "@/lib/resumeData";
 import { shortUrl } from "@/lib/shortUrl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -109,7 +109,7 @@ export function ContactSection({ cv }: { cv: CvData["cv"] }) {
                     </div>
                     <div>
                       <h4 className="font-medium mb-1">Location</h4>
-                      <p className="text-muted-foreground">{cv.location}</p>
+                      <p className="text-muted-foreground">{formatCvLocationLine(cv)}</p>
                     </div>
                   </div>
                 </CardContent>

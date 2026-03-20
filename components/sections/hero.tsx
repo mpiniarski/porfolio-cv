@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
 import Image from "next/image";
 
-import type { CvData } from "@/lib/resumeData";
+import { formatCvLocationLine, type CvData } from "@/lib/resumeData";
 import { Button } from "@/components/ui/button";
 import { DownloadCVButton } from "@/components/DownloadCVButton";
 
@@ -26,7 +26,7 @@ export function HeroSection({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const intro = cv.hero_intro ?? cv.sections?.[""]?.[0];
+  const intro = cv.short_summary ?? cv.summary;
   const linkedin = cv.social_networks?.find((n) => n.network.toLowerCase() === "linkedin")?.username;
   const github = cv.social_networks?.find((n) => n.network.toLowerCase() === "github")?.username;
   const education = topEducationLabel;
@@ -141,7 +141,7 @@ export function HeroSection({
                   </div>
                   <div className="text-center lg:text-left">
                     <div className="text-2xl md:text-3xl mb-1">Remote</div>
-                    <div className="text-sm text-muted-foreground">{cv.location}</div>
+                    <div className="text-sm text-muted-foreground">{formatCvLocationLine(cv)}</div>
                   </div>
                 </>
               )}

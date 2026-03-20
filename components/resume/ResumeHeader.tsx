@@ -7,8 +7,6 @@ type Props = {
   location: string;
   email: string;
   socialNetworks: CvSocialNetwork[];
-  pageNumber: number;
-  totalPages: number;
 };
 
 export function ResumeHeader({
@@ -18,15 +16,15 @@ export function ResumeHeader({
   location,
   email,
   socialNetworks,
-  pageNumber,
-  totalPages,
 }: Props) {
   return (
-    <header className="relative mb-5 border-b-2 border-slate-800 pb-3">
-      <div className="flex items-start justify-between gap-8">
+    <header className="mb-6 shrink-0 border-b-2 border-slate-800 pb-3 print:mb-3.75 print:pb-2.75">
+      <div className="flex items-start justify-between gap-8 print:gap-5">
         <div className="flex-1">
-          <p className="mb-1 text-lg font-semibold tracking-wide text-slate-600 uppercase">{headline}</p>
-          <h1 className="mb-2 text-3xl tracking-tight">{name}</h1>
+          <p className="mb-1 text-lg font-semibold tracking-wide text-slate-600 uppercase print:mb-0.5 print:text-base">
+            {headline}
+          </p>
+          <h1 className="mb-2 text-3xl tracking-tight print:mb-1 print:text-2xl">{name}</h1>
         </div>
 
         <div className="flex w-fit shrink-0 flex-col items-start gap-0.5 text-left text-[9px] text-slate-700">
@@ -49,10 +47,6 @@ export function ResumeHeader({
             </a>
           ))}
         </div>
-      </div>
-
-      <div className="absolute -bottom-4.5 right-0 text-[9px] text-slate-400">
-        Page {pageNumber} of {totalPages}
       </div>
     </header>
   );

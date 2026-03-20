@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 
 import type { CvData } from "@/lib/resumeData";
-import { Badge } from "@/components/ui/badge";
 import { DownloadCVButton } from "@/components/DownloadCVButton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
@@ -42,6 +41,8 @@ function formatPeriod(start: Date, end: Date) {
 type ExperienceItem = {
   title: string;
   company: string;
+  /** Full project line from data (e.g. "SIEMENS (GroundFog)"); shown like employer name under the role. */
+  projectName?: string;
   parentCompany?: string;
   location: string;
   period: string;
@@ -78,7 +79,7 @@ export function ExperienceTimelineSection({
   experience,
   cv,
 }: {
-  experience: NonNullable<CvData["cv"]["sections"]>["experience"];
+  experience: CvData["cv"]["experience"];
   cv: CvData["cv"];
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -130,9 +131,11 @@ export function ExperienceTimelineSection({
           if (!pStart || !pEnd) continue;
 
           const projectCompany = company ?? exp.company;
+          const projectTitle = p.role?.trim() || title;
           out.push({
-            title,
+            title: projectTitle,
             company: projectCompany,
+            projectName: p.name,
             parentCompany: exp.company,
             location: exp.location ?? "",
             period: formatPeriod(pStart, pEnd),
@@ -181,7 +184,7 @@ export function ExperienceTimelineSection({
   }, [experiences.length]);
 
   const educationMilestones = useMemo<EducationMilestone[]>(() => {
-    const edu = cv.sections?.education ?? [];
+    const edu = cv.education ?? [];
     const milestones: EducationMilestone[] = [];
 
     const bachelor =
@@ -214,7 +217,7 @@ export function ExperienceTimelineSection({
     }
 
     return milestones;
-  }, [cv.sections?.education]);
+  }, [cv.education]);
 
   const timelineBounds = useMemo(() => {
     const dates = [
@@ -369,18 +372,18 @@ export function ExperienceTimelineSection({
 
                     <div className="flex-1">
                       <h3 className="text-xl md:text-2xl font-semibold mb-2">{exp.title}</h3>
-                      <p className="text-primary text-lg font-medium mb-2">{exp.company}</p>
+                      <p className="text-primary text-lg font-medium mb-1">
+                        {exp.projectName ?? exp.company}
+                      </p>
 
                       {exp.parentCompany ? (
-                        <div className="mb-2">
-                          <Badge
-                            variant="outline"
-                            className="border-primary/30 text-primary bg-primary/5 text-xs px-2 py-0.5"
-                          >
-                            <Building2 className="h-3 w-3 mr-1" />
-                            {exp.parentCompany}
-                          </Badge>
-                        </div>
+                        <p className="text-sm text-muted-foreground mb-2 flex items-start gap-1.5">
+                          <Building2 className="mt-0.5 h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+                          <span>
+                            Employed by{" "}
+                            <span className="font-medium text-foreground/90">{exp.parentCompany}</span>
+                          </span>
+                        </p>
                       ) : null}
 
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground text-sm">
@@ -393,7 +396,7 @@ export function ExperienceTimelineSection({
                           <span>{exp.location}</span>
                         </div>
                       </div>
-                      {exp.client ? (
+                      {exp.client && !exp.projectName ? (
                         <p className="text-xs text-muted-foreground mt-2">Client: {exp.client}</p>
                       ) : null}
                     </div>
@@ -436,20 +439,20 @@ export function ExperienceTimelineSection({
                     >
                       {experiences[activeIndex].title}
                     </h3>
-                    <p className="text-primary text-lg font-medium mb-2">
-                      {experiences[activeIndex].company}
+                    <p className="text-primary text-lg font-medium mb-1">
+                      {experiences[activeIndex].projectName ?? experiences[activeIndex].company}
                     </p>
 
                     {experiences[activeIndex].parentCompany ? (
-                      <div className="mb-2">
-                        <Badge
-                          variant="outline"
-                          className="border-primary/30 text-primary bg-primary/5 text-xs px-2 py-0.5"
-                        >
-                          <Building2 className="h-3 w-3 mr-1" />
-                          {experiences[activeIndex].parentCompany}
-                        </Badge>
-                      </div>
+                      <p className="text-sm text-muted-foreground mb-2 flex items-start gap-1.5">
+                        <Building2 className="mt-0.5 h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+                        <span>
+                          Employed by{" "}
+                          <span className="font-medium text-foreground/90">
+                            {experiences[activeIndex].parentCompany}
+                          </span>
+                        </span>
+                      </p>
                     ) : null}
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground text-sm">
@@ -462,7 +465,7 @@ export function ExperienceTimelineSection({
                         <span>{experiences[activeIndex].location}</span>
                       </div>
                     </div>
-                    {experiences[activeIndex].client ? (
+                    {experiences[activeIndex].client && !experiences[activeIndex].projectName ? (
                       <p className="text-xs text-muted-foreground mt-2">Client: {experiences[activeIndex].client}</p>
                     ) : null}
                   </div>
@@ -552,8 +555,8 @@ export function ExperienceTimelineSection({
                 const rangeHeight = bottomPosition - topPosition;
                 const isActive = index === activeIndex;
 
-                const labelMain = exp.isSubProject ? exp.client : exp.shortName || exp.company;
-                const labelSub1 = exp.isSubProject ? exp.shortName || exp.company : null;
+                const labelMain = exp.isSubProject ? exp.title : exp.shortName || exp.company;
+                const labelSub1 = exp.isSubProject ? exp.projectName ?? exp.company : null;
                 const labelSub2 = exp.isSubProject ? exp.parentCompany : null;
 
                 return (
@@ -730,8 +733,8 @@ export function ExperienceTimelineSection({
                     const rangeHeight = bottomPosition - topPosition;
                     const isActive = index === activeIndex;
 
-                    const labelMain = exp.isSubProject ? exp.client : exp.shortName || exp.company;
-                    const labelSub1 = exp.isSubProject ? exp.shortName || exp.company : null;
+                    const labelMain = exp.isSubProject ? exp.title : exp.shortName || exp.company;
+                    const labelSub1 = exp.isSubProject ? exp.projectName ?? exp.company : null;
                     const labelSub2 = exp.isSubProject ? exp.parentCompany : null;
 
                     return (

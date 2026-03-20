@@ -2,7 +2,8 @@
 
 import { Boxes, Code, Globe, Languages, Server, TestTube } from "lucide-react";
 
-import type { CvData } from "@/lib/resumeData";
+import { sortEducationByEndDateDesc, type CvData } from "@/lib/resumeData";
+import { formatDateRange } from "@/lib/dateFormat";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -20,8 +21,23 @@ function parseSpokenLanguage(bullet: string): { name: string; level: string } {
   return { name: m[1].trim(), level: m[2].trim() };
 }
 
+function educationAboutTitle(e: CvData["cv"]["education"][number]) {
+  if (/^Student Exchange/i.test(e.degree)) return "Student Exchange";
+  return e.degree
+    .replace(/^MSc\s*-\s*/i, "MSc in ")
+    .replace(/^BSc\s*-\s*/i, "BSc in ")
+    .trim();
+}
+
+function educationAboutShowArea(e: CvData["cv"]["education"][number]) {
+  const raw = e.area?.trim();
+  if (!raw) return false;
+  const fromDegree = e.degree.match(/ (?:in|-) (.+)$/)?.[1]?.trim().toLowerCase() ?? "";
+  return fromDegree === "" || raw.toLowerCase() !== fromDegree;
+}
+
 export function AboutOverviewSection({ cv }: { cv: CvData["cv"] }) {
-  const skillCategories = (cv.sections?.skills ?? []).map((s) => {
+  const skillCategories = (cv.skills ?? []).map((s) => {
     const title = s.label;
     const icon =
       s.label === "Languages"
@@ -40,21 +56,9 @@ export function AboutOverviewSection({ cv }: { cv: CvData["cv"] }) {
     };
   });
 
-  const spokenLanguages = (cv.sections?.languages ?? []).map((l) => parseSpokenLanguage(l.bullet));
+  const spokenLanguages = (cv.languages ?? []).map((l) => parseSpokenLanguage(l.bullet));
 
-  const education = cv.sections?.education ?? [];
-  const poznan = education.filter((e) => e.institution === "Poznań University of Technology");
-  const exchange = education.filter((e) => e.institution !== "Poznań University of Technology");
-
-  const poznanStart = poznan.map((e) => Number(String(e.start_date).slice(0, 4))).filter(Number.isFinite);
-  const poznanEnd = poznan.map((e) => Number(String(e.end_date).slice(0, 4))).filter(Number.isFinite);
-  const poznanPeriod =
-    poznanStart.length && poznanEnd.length
-      ? `${Math.min(...poznanStart)}-${Math.max(...poznanEnd)}`
-      : undefined;
-
-  const msc = poznan.find((e) => /^MSc\b/i.test(e.degree));
-  const bsc = poznan.find((e) => /^BSc\b/i.test(e.degree));
+  const educationSorted = sortEducationByEndDateDesc(cv.education ?? []);
 
   return (
     <>
@@ -109,32 +113,26 @@ export function AboutOverviewSection({ cv }: { cv: CvData["cv"] }) {
                 <Languages className="h-6 w-6 text-primary" />
                 <h3 className="text-xl font-semibold">Education</h3>
               </div>
-              <div className="space-y-6">
-                <div className="border-l-4 border-primary pl-6 py-2">
-                  {msc ? (
-                    <>
-                      <h4 className="text-xl font-semibold mb-1">MSc in Computer Science</h4>
-                      {msc.area ? <p className="text-base text-muted-foreground mb-2">{msc.area}</p> : null}
-                    </>
-                  ) : null}
-                  {bsc ? <p className="text-base text-muted-foreground mb-2">BSc in Computer Science</p> : null}
-                  <p className="text-lg font-medium mb-1">Poznań University of Technology</p>
-                  {poznanPeriod ? <p className="text-sm text-primary font-medium">{poznanPeriod}</p> : null}
-                </div>
-
-                {exchange.map((e) => (
-                  <div key={`${e.institution}-${e.degree}`} className="border-l-4 border-primary pl-6 py-2">
-                    <h4 className="text-lg font-semibold mb-1">
-                      {e.degree.startsWith("Student Exchange") ? "Student Exchange" : e.degree}
-                    </h4>
-                    {e.area ? <p className="text-sm text-muted-foreground mb-1">{e.area}</p> : null}
-                    <p className="text-base text-muted-foreground mb-2">
-                      {e.institution}
-                      {e.location ? `, ${e.location}` : ""}
-                    </p>
+              <div className="space-y-4">
+                {educationSorted.map((e) => (
+                  <div
+                    key={`${e.institution}-${e.degree}-${e.start_date}`}
+                    className="border-l-4 border-primary pl-6 py-1.5"
+                  >
+                    <h4 className="text-xl font-semibold mb-1">{educationAboutTitle(e)}</h4>
+                    {educationAboutShowArea(e) ? (
+                      <p className="text-base text-muted-foreground mb-2">{e.area}</p>
+                    ) : null}
+                    <p className="text-lg font-medium mb-1">{e.institution}</p>
+                    {e.location ? (
+                      <p className="text-sm text-muted-foreground mb-2">{e.location}</p>
+                    ) : null}
                     <p className="text-sm text-primary font-medium">
-                      {e.start_date}-{e.end_date}
+                      {formatDateRange(e.start_date, e.end_date)}
                     </p>
+                    {e.thesis?.trim() ? (
+                      <p className="text-sm text-muted-foreground mt-2">{e.thesis}</p>
+                    ) : null}
                   </div>
                 ))}
               </div>

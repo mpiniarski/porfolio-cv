@@ -109,16 +109,16 @@ body {
   }
 
   html {
-    font-size: 15px;
+    font-size: 14.75px;
   }
 
   .resume-page {
-    line-height: 1.35;
+    line-height: 1.33;
     font-family: var(--font-resume-sans);
     box-shadow: none;
     margin: 0;
     width: 210mm;
-    min-height: auto;
+    min-height: 297mm;
     padding: 0;
     page-break-after: always;
     -webkit-print-color-adjust: exact;
@@ -127,6 +127,11 @@ body {
 
   .resume-page:last-child {
     page-break-after: auto;
+  }
+
+  /** Second sheet only: slightly denser line-height to claw back a few lines when printing. */
+  .resume-page.resume-page--sheet-2 {
+    line-height: 1.31;
   }
 
   .resume-page-break-preview {

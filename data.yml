@@ -1,12 +1,164 @@
 cv:
+  photo: "/hero/profile.png"
+  social_networks:
+    - network: LinkedIn
+      username: "https://linkedin.com/in/marcin-piniarski"
+    - network: GitHub
+      username: "https://github.com/mpiniarski"
+
   name: "Marcin Piniarski"
   headline: "Senior Frontend Engineer"
-  summary: "Senior frontend engineer focused on data-heavy UIs, design systems, and performance in modern React/TypeScript ecosystems."
-  hero_intro: "Senior Frontend Engineer (TypeScript/React) with 9+ years building maintainable frontend architectures for multi-tenant enterprise platforms."
-  location: "Warsaw, Poland (Remote available)"
+  summary: "Senior Frontend Engineer with 9+ years of experience building complex frontend systems, including data-heavy applications, visual CMS editors with drag-and-drop page editing, and scalable platform architectures using TypeScript, React, and Vue. Led frontend development across enterprise platforms and internal tools, delivering AI-powered interfaces and analytical dashboards. Strong focus on performance, maintainability, and engineering quality (CI/CD, testing, a11y)."
+  short_summary: "Senior Frontend Engineer building complex UI systems — from visual CMS editors and AI-powered interfaces to data-heavy dashboards. Specializing in frontend architecture, design systems, and performance at scale."
+  location: "Warsaw, Poland"
+  remote_available: true
   portfolio: "https://piniarski.dev"
   email: "piniarski.m@gmail.com"
   phone: "+48 505 409 892"
+
+  skills:
+    - label: "Frontend"
+      details: "TypeScript · JavaScript · React · Vue · Next.js · GraphQL · REST · Webpack · Vite"
+
+    - label: "Architecture"
+      details: "Design systems · Component architecture · Performance optimization · a11y · CI/CD · Lighthouse"
+
+    - label: "Testing"
+      details: "Unit · Integration · E2E · Visual regression"
+
+    - label: "Backend (Supporting)"
+      details: "Node.js · Kotlin · Java · AWS · Terraform · MongoDB · Docker · NewRelic · Sentry"
+
+  experience:
+    - company: "Balyasny Asset Management"
+      position: "Senior Frontend Engineer"
+      start_date: "2025-03"
+      end_date: "2026-02"
+      location: "Warsaw"
+      highlights:
+        - "Designed and delivered analytical views for portfolio risk analysis, translating complex financial requirements into decision-support tools used by ~1000 users."
+        - "Built internal React dashboards enabling exploration of large-scale financial datasets with AG Grid and custom visualizations."
+        - "Developed an advanced chart editor using Highcharts, supporting multiple visualization types (including candlestick, scatter, and bar) with configurable axes, data series, styling, and data selection."
+        - "Implemented efficient data fetching and caching using TanStack Query, ensuring responsive UI performance and efficient data handling for high-volume backend data."
+
+    - company: "Dynamic Solutions"
+      company_description: "Technology consulting firm with in-house software products; provides senior-level specialists to enterprise clients."
+      position: "Senior Frontend Developer (Consulting)"
+      start_date: "2021-04"
+      end_date: "2025-02"
+      location: "Warsaw"
+      resume_break_projects_after: 2
+      worked_with:
+        - Siemens
+        - GroundFog
+        - Mann-Hummel
+        - Diva-E
+      projects:
+        - name: "SIEMENS (GroundFog)"
+          start_date: "2023-02"
+          end_date: "2025-02"
+          highlights:
+            - "Led frontend development within a 10-person team (4 frontend engineers) on a global multi-application platform using Vue, TypeScript, and Vite, mentoring developers and improving code quality via guidelines and CI/CD (linting, quality gates), reducing noise in PRs and improving review efficiency."
+            - "Delivered core platform features for siemens.com, including AI-powered search, chatbot interfaces, and live translation used across a global multi-language platform."
+            - "Built and evolved a shared design system (~30 components) used across multiple applications, enabling consistent UI development at scale."
+            - "Improved frontend quality and reliability by introducing visual regression testing (Playwright) and integrating checks into the CI/CD pipeline, reducing UI regressions in production."
+            - "Automated cross-environment content access via URL-based configuration, eliminating manual data migration and enabling direct access to production content in local environments, significantly improving development and testing efficiency."
+
+        - name: "MANN+HUMMEL (Diva-E)"
+          start_date: "2022-09"
+          end_date: "2023-01"
+          highlights:
+            - "Developed advanced product discovery features using React, TypeScript, and GraphQL, including VIN-based search, dimension-based filtering, and smart search across a large automotive catalog, improving product discovery and navigation across the catalog."
+            - "Built search results, product detail pages, and 360° product visualizations, improving product exploration and usability."
+
+        - name: "Websight CMS"
+          start_date: "2021-04"
+          end_date: "2022-08"
+          highlights:
+            - "Led frontend development of a visual CMS built with React, mentoring a frontend engineer and collaborating closely with backend (OSGi-based) and design teams, including reviewing and guiding frontend-related contributions; primary contributor to core editor functionality."
+            - "Designed and built a drag-and-drop page editor with component tree and overlay-based editing on top of an iframe-rendered page, enabling content teams to visually create and manage pages without developer involvement."
+            - "Led frontend architecture evolution, including migration to TypeScript and React Hooks and refactoring core editor systems (actions, state management, ESM ↔ React integration)."
+            - "Delivered core CMS capabilities including inline editing and content tree interactions, while ensuring correct rendering of embedded pages by dynamically adapting styles (e.g. normalizing viewport units inside iframe context)."
+
+    - company: "OLX Group"
+      position: "Software Engineer"
+      location: "Poznań"
+      start_date: "2019-12"
+      end_date: "2021-01"
+      highlights:
+        - "Developed authentication systems for a large-scale marketplace using Kotlin, Java and AWS Cognito."
+        - "Implemented core user flows including login, registration and password recovery."
+        - "Contributed to migration of millions of users to AWS Cognito and introduced security features such as suspicious login detection."
+        - "Enabled Customer Support to manage blocked users independently, eliminating 15–20 daily incidents previously handled by engineers."
+        - "Improved observability and error tracking using NewRelic and Sentry."
+
+    - company: "No Spoon Tech Lab"
+      position: "Full-stack Web Developer"
+      location: "Spain"
+      start_date: "2018-06"
+      end_date: "2019-08"
+      highlights:
+        - "Developed a real-time chat application for an online gaming platform using React and KotlinJS over the XMPP protocol."
+        - "Designed and implemented messaging features including message synchronization, presence handling, and real-time updates across connected clients."
+
+    - company: "Appchance"
+      position: "Junior Frontend Developer"
+      start_date: "2018-01"
+      end_date: "2018-05"
+      location: "Poznań"
+      highlights:
+        - "Developed reusable UI components and client-side features using JavaScript and Ember.js across multiple projects."
+
+    - company: "Pearson IOKI"
+      position: "Junior Java Developer"
+      start_date: "2016-07"
+      end_date: "2017-12"
+      location: "Poznań"
+      highlights:
+        - "Developed REST APIs for an e-learning platform using Java, Kotlin, REST and MongoDB within a microservice architecture."
+        - "Delivered features in cross-functional Scrum teams (~20 engineers across two teams)."
+
+  education:
+    - institution: "Poznań University of Technology"
+      degree: "MSc in Computer Science"
+      area: "Distributed Systems"
+      start_date: "2017-10"
+      end_date: "2019-06"
+      location: "Poland"
+      thesis: "Analysis and optimization of the communication mechanism between applications in distributed systems using the RPC model"
+
+    - institution: "Poznań University of Technology"
+      degree: "BSc in Computer Science"
+      area: "Computer Science"
+      start_date: "2014-09"
+      end_date: "2017-09"
+      location: "Poland"
+      thesis: "Scientific conference management system"
+
+    - institution: "Universitat Politècnica de València"
+      degree: "Student Exchange"
+      area: ""
+      start_date: "2018-09"
+      end_date: "2019-06"
+      location: "Spain"
+
+  languages:
+    - bullet: "English (Fluent, C1)"
+    - bullet: "Spanish (Intermediate, A2)"
+    - bullet: "Polish (Native)"
+
+  typically_help_with:
+    - "Designing and implementing React/TypeScript frontends for internal tools and platforms"
+    - "Building and evolving design systems and component libraries at scale"
+    - "Profiling, debugging, and improving performance in data-heavy UIs"
+
+  projects:
+    - name: "Contrast"
+      summary: "Real-time multiplayer word association game built with PartyKit, React, and TypeScript, demonstrating hexagonal architecture with shared game logic across client and server."
+      technologies: "React · Next.js · TypeScript · PartyKit · WebSockets · Tailwind CSS"
+      app: "https://spectrum-dev-kohl.vercel.app/"
+      repo: "https://github.com/mpiniarski/spectrum"
+      image: "/contrast/clue.png"
 
   hero_stats:
     - top: "M.Sc"
@@ -92,194 +244,3 @@ cv:
     - name: "Cotypist"
       description: "AI-powered typing assistant"
       logo: "https://cotypist.app/img/icon_32,402x.png.pagespeed.ce.1upAc7YQx7.png"
-
-  sections:
-    "":
-      - "Senior Frontend Engineer (TypeScript/React) with 9+ years building
-        maintainable frontend architectures for multi-tenant enterprise
-        platforms and complex data-heavy
-        applications. Led FE teams of up to 3 engineers. Introduced design
-        systems, engineering standards, and performance improvements across
-        products."
-
-    skills:
-      - label: "Languages"
-        details: "TypeScript · JavaScript · Kotlin"
-
-      - label: "Frontend"
-        details: "React · Vue · Next.js · GraphQL · REST · Webpack · Vite"
-
-      - label: "Architecture"
-        details: "Design systems · component architecture · performance optimization · a11y · CI/CD · Lighthouse"
-
-      - label: "Testing"
-        details: "Unit · Integration · E2E · Visual regression"
-
-      - label: "Backend (Supporting)"
-        details: "Node.js · Kotlin · Java · AWS · Terraform · MongoDB · Docker"
-
-      - label: "Observability"
-        details: "NewRelic · Sentry"
-
-    experience:
-      - company: "Balyasny Asset Management"
-        position: "Senior Frontend Engineer"
-        start_date: "2025-03"
-        end_date: "2026-02"
-        location: "Warsaw"
-        highlights:
-          - "Developed internal dashboards for portfolio risk analysis used by
-            hedge fund risk management teams."
-          - "Built data-heavy interfaces visualizing large datasets (tens of
-            thousands of rows) using React, Highcharts and AG Grid."
-          - "Improved dashboard performance through rendering optimizations
-            (memoization), Lighthouse audits, and more efficient data fetching."
-          - "Translated risk managers' requirements into reliable internal
-            tools."
-
-      - company: "Dynamic Solutions"
-        position: "Senior Frontend Developer (Consulting)"
-        start_date: "2021-04"
-        end_date: "2025-02"
-        location: "Warsaw"
-        worked_with:
-          - Siemens
-          - GroundFog
-          - Mann-Hummel
-          - Diva-E
-        projects:
-          - name: "SIEMENS (GroundFog)"
-            start_date: "2023-02"
-            end_date: "2025-02"
-            highlights:
-              - "Led frontend development for a multi-language enterprise platform
-                powering Siemens’ global web presence (including siemens.com) using
-                Vue, TypeScript and GraphQL."
-              - "Acted as frontend lead in a 10-person team (4 frontend
-                engineers), mentoring two developers and reviewing most pull
-                requests."
-              - "Defined coding standards and frontend architecture, established
-                CI/CD practices, and coordinated development across multiple
-                applications."
-              - "Designed and implemented a shared design system (~30 reusable
-                components) with a11y best practices, improving UI consistency
-                across products."
-
-          - name: "MANN+HUMMEL (Diva-E)"
-            start_date: "2022-09"
-            end_date: "2023-01"
-            highlights:
-              - "Developed frontend features for a multi-market e-commerce
-                platform using React, TypeScript and GraphQL, collaborating
-                with design and product teams to improve search, filtering, and
-                product discovery UX."
-
-          - name: "Websight CMS"
-            start_date: "2021-04"
-            end_date: "2022-08"
-            highlights:
-              - "Owned frontend development of a React-based CMS and collaborated
-                with backend engineers on its pluggable architecture."
-              - "Designed and implemented a drag-and-drop page editor supporting
-                vertical and horizontal layouts, inline editing and component tree
-                management using React and TypeScript."
-              - "Mentored a small frontend team (2–3 engineers) and drove
-                frontend architecture and component strategy."
-
-      - company: "OLX Group"
-        position: "Software Engineer"
-        location: "Poznań"
-        start_date: "2019-12"
-        end_date: "2021-01"
-        highlights:
-          - "Developed authentication systems for a large-scale online
-            marketplace platform using Kotlin, Java and AWS Cognito."
-          - "Implemented core user flows including login, registration and
-            password recovery."
-          - "Migrated millions of users to AWS Cognito in a gradual rollout and
-            introduced security features such as suspicious login verification."
-          - "Gave Customer Support direct control over unblocking Cognito-blocked users,
-            eliminating 15–20 daily manual incidents previously handled by the
-            dev team."
-          - "Served auth flows UI from the new app instead of the legacy system,
-            reducing UI-related work and maintenance by at least 50%."
-          - "Improved observability and error tracking using NewRelic and
-            Sentry."
-
-      - company: "No Spoon Tech Lab"
-        position: "Full-stack Web Developer"
-        location: "Spain"
-        start_date: "2018-06"
-        end_date: "2019-08"
-        highlights:
-          - "Developed a real-time chat system for an online gaming platform
-            using the XMPP protocol, implementing messaging interfaces with
-            React and KotlinJS."
-
-      - company: "Appchance"
-        position: "Junior Frontend Developer"
-        start_date: "2018-01"
-        end_date: "2018-05"
-        location: "Poznań"
-        highlights:
-          - "Developed frontend features for multiple client projects,
-            delivering reusable UI components for client products."
-          - "Implemented UI components and client-side features using JavaScript
-            and Ember.js across multiple products."
-
-      - company: "Pearson IOKI"
-        position: "Junior Java Developer"
-        start_date: "2016-07"
-        end_date: "2017-12"
-        location: "Poznań"
-        highlights:
-          - "Developed REST APIs for an e-learning platform as part of a
-            lightweight microservice architecture using Java, Kotlin, REST and
-            MongoDB."
-          - "Shipped features in cross-functional Scrum teams (~20 engineers
-            across two collaborating teams)."
-    education:
-      - institution: "Poznań University of Technology"
-        degree: "MSc - Computer Science"
-        area: "Distributed Systems"
-        start_date: "2017-10"
-        end_date: "2019-06"
-        location: "Poland"
-
-      - institution: "Poznań University of Technology"
-        degree: "BSc - Computer Science"
-        area: "Computer Science"
-        start_date: "2014-09"
-        end_date: "2017-09"
-        location: "Poland"
-
-      - institution: "Universitat Politècnica de València"
-        degree: "Student Exchange - Computer Science"
-        area: ""
-        start_date: "2018-09"
-        end_date: "2019-06"
-        location: "Spain"
-
-    languages:
-      - bullet: "English (Fluent, C1)"
-      - bullet: "Spanish (Intermediate, A2)"
-      - bullet: "Polish (Native)"
-
-    typically_help_with:
-      - "Designing and implementing React/TypeScript frontends for internal tools and platforms"
-      - "Building and evolving design systems and component libraries at scale"
-      - "Profiling, debugging, and improving performance in data-heavy UIs"
-
-  social_networks:
-    - network: LinkedIn
-      username: "https://www.linkedin.com/in/marcin-piniarski"
-    - network: GitHub
-      username: "https://github.com/mpiniarski"
-  photo: "/hero/profile.png"
-  projects:
-    - name: "Contrast"
-      summary: "Real-time multiplayer word association game built with PartyKit, React, and TypeScript, demonstrating hexagonal architecture with shared game logic across client and server."
-      technologies: "React · Next.js · TypeScript · PartyKit · WebSockets · Tailwind CSS"
-      app: "https://spectrum-dev-kohl.vercel.app/"
-      repo: "https://github.com/mpiniarski/spectrum"
-      image: "/contrast/clue.png"

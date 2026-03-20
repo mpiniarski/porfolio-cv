@@ -1,15 +1,3 @@
-export type CvSectionKey =
-  | ""
-  | "skills"
-  | "experience"
-  | "education"
-  | "languages"
-  | "typically_help_with";
-
-export interface CvIntroSection {
-  "": string[];
-}
-
 export interface CvSkillItem {
   label: string;
   details: string;
@@ -17,6 +5,8 @@ export interface CvSkillItem {
 
 export interface CvExperienceProject {
   name: string;
+  /** Role or title while on this engagement (e.g. Lead front-end developer). */
+  role?: string;
   start_date?: string;
   end_date?: string;
   highlights: string[];
@@ -30,10 +20,19 @@ export interface CvExperienceItem {
   location?: string;
   /** Short company description (e.g. consulting firm, product company). */
   company_description?: string;
-  /** Client or partner company names to show in "Worked with" (e.g. consulting clients). */
+  /**
+   * Client or partner names (e.g. consulting accounts). On the resume, when set with `projects`,
+   * each chunk of that list (including continuations on the next page) gets the same client-project
+   * left rule. Also used on the marketing site / timeline.
+   */
   worked_with?: string[];
   highlights?: string[];
   projects?: CvExperienceProject[];
+  /**
+   * Resume only: after this many projects (in current sort order), continue the rest on the next page
+   * with the same role/company header. Omit for a single block.
+   */
+  resume_break_projects_after?: number;
 }
 
 export interface CvEducationItem {
@@ -46,107 +45,13 @@ export interface CvEducationItem {
   thesis?: string;
 }
 
-export interface GroupedEducationDegree {
-  degree: string;
-  area: string;
-  start_date: string;
-  end_date: string;
-  thesis?: string;
-  /** When set, this degree is from a different institution (e.g. Student Exchange). */
-  institution?: string;
-  location?: string;
-}
-
-export interface GroupedEducation {
-  institution: string;
-  location: string;
-  degrees: GroupedEducationDegree[];
-}
-
-export function groupEducationByInstitution(
-  education: CvEducationItem[],
-): GroupedEducation[] {
-  const byKey = new Map<string, GroupedEducation>();
-  for (const edu of education) {
-    const key = `${edu.institution}|${edu.location}`;
-    const existing = byKey.get(key);
-    const entry = {
-      degree: edu.degree,
-      area: edu.area,
-      start_date: edu.start_date,
-      end_date: edu.end_date,
-      thesis: edu.thesis,
-    };
-    if (existing) {
-      existing.degrees.push(entry);
-    } else {
-      byKey.set(key, {
-        institution: edu.institution,
-        location: edu.location,
-        degrees: [entry],
-      });
-    }
-  }
-  return Array.from(byKey.values());
-}
-
-function isStudentExchange(d: GroupedEducationDegree): boolean {
-  return /^Student Exchange\b/i.test(d.degree);
-}
-
-function isAcademic(d: GroupedEducationDegree): boolean {
-  return /^MSc\b/i.test(d.degree) || /^BSc\b/i.test(d.degree);
-}
-
-function getDiscipline(d: GroupedEducationDegree): string {
-  return d.degree?.match(/ (?:in|-) (.+)$/)?.[1]?.trim().toLowerCase() ?? "";
-}
-
-/** Merges Student Exchange groups into academic blocks when they share the same discipline. */
-export function mergeStudentExchangeIntoAcademic(
-  groups: GroupedEducation[],
-): GroupedEducation[] {
-  const academic = groups.find((g) => g.degrees.some(isAcademic));
-  const exchangeOnly = groups.filter(
-    (g) =>
-      g !== academic &&
-      g.degrees.every(isStudentExchange) &&
-      g.degrees.length > 0,
-  );
-  if (!academic || exchangeOnly.length === 0) return groups;
-
-  const mainDiscipline = getDiscipline(
-    academic.degrees.find(isAcademic) ?? academic.degrees[0],
-  );
-  const merged = [...groups];
-  for (const ex of exchangeOnly) {
-    const exDiscipline = getDiscipline(ex.degrees[0]);
-    if (exDiscipline && exDiscipline === mainDiscipline) {
-      for (const d of ex.degrees) {
-        academic.degrees.push({
-          ...d,
-          institution: ex.institution,
-          location: ex.location,
-        });
-      }
-      const idx = merged.indexOf(ex);
-      if (idx >= 0) merged.splice(idx, 1);
-    }
-  }
-  return merged;
+/** Newest end date first (for resume and marketing education lists). */
+export function sortEducationByEndDateDesc(education: CvEducationItem[]): CvEducationItem[] {
+  return [...education].sort((a, b) => (b.end_date ?? "").localeCompare(a.end_date ?? ""));
 }
 
 export interface CvLanguageItem {
   bullet: string;
-}
-
-export interface CvSections {
-  "": string[];
-  skills: CvSkillItem[];
-  experience: CvExperienceItem[];
-  education: CvEducationItem[];
-  languages: CvLanguageItem[];
-  typically_help_with?: string[];
 }
 
 export interface CvSocialNetwork {
@@ -169,13 +74,15 @@ export interface CvData {
     name: string;
     headline: string;
     location: string;
+    /** When true, UI may append remote availability to the location line (see `formatCvLocationLine`). */
+    remote_available?: boolean;
     portfolio?: string;
     email: string;
     phone: string;
     /** Short summary used for meta tags, previews, etc. */
     summary?: string;
-    /** Hero intro sentence displayed on the homepage. */
-    hero_intro?: string;
+    /** Short one-liner for the homepage hero (and fallback where a brief blurb is needed). */
+    short_summary?: string;
     /**
      * Optional 3-up stat strip shown in the homepage hero.
      * When omitted, the UI falls back to derived education/years/location.
@@ -205,7 +112,11 @@ export interface CvData {
     company_logos?: Record<string, string>;
     /** Optional short labels for companies (e.g. "No Spoon" instead of full legal name). */
     company_short_names?: Record<string, string>;
-    sections: CvSections;
+    skills: CvSkillItem[];
+    experience: CvExperienceItem[];
+    education: CvEducationItem[];
+    languages: CvLanguageItem[];
+    typically_help_with?: string[];
     social_networks?: CvSocialNetwork[];
     projects?: CvProject[];
     photo?: string | null;
@@ -215,4 +126,20 @@ export interface CvData {
 /** Strip https:// and optional www. for compact display; href stays full URL for ATS and links. */
 export function shortUrl(url: string): string {
   return url.replace(/^https?:\/\/(www\.)?/i, "").trim();
+}
+
+/** Location line for site chrome (hero, contact): geographic location plus optional remote note. */
+export function formatCvLocationLine(cv: Pick<CvData["cv"], "location" | "remote_available">): string {
+  const loc = cv.location.trim();
+  if (cv.remote_available) {
+    return loc ? `${loc} (Remote available)` : "Remote available";
+  }
+  return loc;
+}
+
+/** Compact location for the printable resume header (preserves prior “Remote / Warsaw” wording when applicable). */
+export function formatCvLocationForResume(cv: Pick<CvData["cv"], "location" | "remote_available">): string {
+  const loc = cv.location.trim();
+  if (cv.remote_available && /warsaw/i.test(loc)) return "Remote / Warsaw";
+  return formatCvLocationLine(cv);
 }

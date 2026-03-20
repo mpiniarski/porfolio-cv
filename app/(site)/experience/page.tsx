@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/shared/page-header";
 
 export default function ExperiencePage() {
   const { cv } = getCvData();
-  const experience = cv.sections?.experience ?? [];
+  const experience = cv.experience ?? [];
 
   return (
     <div className="shrink-0 grow-0">

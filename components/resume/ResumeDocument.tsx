@@ -1,15 +1,24 @@
 import React from "react";
 import { formatDateRange } from "@/lib/dateFormat";
-import {
-  groupEducationByInstitution,
-  mergeStudentExchangeIntoAcademic,
-} from "@/lib/resumeData";
-import type { CvData } from "@/lib/resumeData";
+import { formatCvLocationForResume, sortEducationByEndDateDesc } from "@/lib/resumeData";
+import type { CvData, CvExperienceItem, CvExperienceProject } from "@/lib/resumeData";
 import { ResumeHeader } from "./ResumeHeader";
 
 const PRIMARY_EXPERIENCE_COUNT = 2;
-const PAGE_PADDING_CLASS =
-  "max-w-[210mm] mx-auto px-16 py-12 print:px-16 print:py-12 min-h-[297mm] print:min-h-0 w-full print:w-[210mm]";
+
+const PAGE_SHELL_BASE =
+  "max-w-[210mm] mx-auto px-16 py-12 min-h-[297mm] print:min-h-[297mm] w-full print:w-[210mm]";
+/** Page 1 print padding (full page). */
+const PAGE_1_PRINT_PAD = "print:px-12 print:py-6";
+/** Page 2 print padding: slightly tighter to recover a small amount of vertical space. */
+const PAGE_2_PRINT_PAD = "print:px-11 print:py-5";
+
+type ExperienceRenderRow = {
+  item: CvExperienceItem;
+  /** Subset of `item.projects` for this page chunk; omit to use full item. */
+  projectSlice?: CvExperienceProject[];
+  continuation: boolean;
+};
 
 function highlightTech(text: string): (string | React.ReactElement)[] {
   const technologies = [
@@ -54,6 +63,109 @@ function highlightTech(text: string): (string | React.ReactElement)[] {
   return parts.length > 0 ? parts : [text];
 }
 
+function ResumeProjectEntry({ project }: { project: CvExperienceProject }) {
+  const role = project.role?.trim();
+  const primary = role || project.name;
+  const secondary = role ? project.name : null;
+  return (
+    <section className="flex flex-col gap-1.5 pb-3 last:pb-0 print:gap-1.25 print:pb-2.25 print:last:pb-0 print:break-inside-avoid">
+      <div className="space-y-0.5 print:space-y-px">
+        <h3 className="text-sm font-semibold text-slate-900">{primary}</h3>
+        {secondary ? <p className="text-xs font-semibold text-slate-600">{secondary}</p> : null}
+      </div>
+      <div className="text-[10px] text-slate-500">
+        {formatDateRange(project.start_date, project.end_date)}
+      </div>
+      <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-relaxed text-slate-700 marker:text-slate-400 print:space-y-1.25 print:leading-[1.475]">
+        {project.highlights.map((h) => (
+          <li key={h}>{highlightTech(h)}</li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function expandExperienceForResumeRows(items: CvExperienceItem[]): ExperienceRenderRow[] {
+  const out: ExperienceRenderRow[] = [];
+  for (const item of items) {
+    const projs = item.projects;
+    const n = item.resume_break_projects_after;
+    if (projs && n != null && n > 0 && n < projs.length) {
+      out.push({ item, projectSlice: projs.slice(0, n), continuation: false });
+      out.push({ item, projectSlice: projs.slice(n), continuation: true });
+    } else {
+      out.push({ item, continuation: false });
+    }
+  }
+  return out;
+}
+
+function resumeExperienceRowKey(row: ExperienceRenderRow): string {
+  const sliceKey = row.projectSlice?.[0]?.name ?? "full";
+  return `${row.item.company}-${row.item.position}-${row.item.start_date ?? ""}-${row.continuation ? "c" : "a"}-${sliceKey}`;
+}
+
+function ResumeExperienceArticle({ row }: { row: ExperienceRenderRow }) {
+  const { item, continuation, projectSlice } = row;
+  const projects = projectSlice ?? item.projects;
+  const hasProjects = projects && projects.length > 0;
+  const showCompanyDescription = item.company_description && !continuation;
+  const isConsultingStyle = (item.worked_with?.length ?? 0) > 0;
+
+  return (
+    <article className="space-y-1.5 pb-3 last:pb-0 print:space-y-1.5 print:pb-2.5 print:last:pb-0 print:break-inside-avoid">
+      {!continuation ? (
+        <>
+          <div className="space-y-0.5 print:space-y-px">
+            <h3 className="text-sm font-semibold text-slate-900">{item.position}</h3>
+            <p className="text-xs font-semibold text-slate-600">{item.company}</p>
+          </div>
+          <div className="text-[10px] text-slate-500">
+            {formatDateRange(item.start_date, item.end_date)}
+            {item.location ? ` · ${item.location}` : ""}
+          </div>
+        </>
+      ) : null}
+      {showCompanyDescription ? (
+        <p className="text-xs leading-relaxed text-slate-700 print:leading-[1.475]">
+          {item.company_description}
+        </p>
+      ) : null}
+      {hasProjects ? (
+        <div
+          className={
+            isConsultingStyle
+              ? continuation
+                ? "space-y-3 border-l border-slate-200 py-0.5 pl-3 print:space-y-2.25 print:border-slate-300 print:pl-3 print:py-0.5"
+                : "mt-2 space-y-3 border-l border-slate-200 py-0.5 pl-3 print:mt-1.75 print:space-y-2.25 print:border-slate-300 print:pl-3 print:py-0.5"
+              : continuation
+                ? "space-y-3 print:space-y-2.75"
+                : "space-y-3 pt-2 print:space-y-2.75 print:pt-2.25"
+          }
+        >
+          {projects.map((project) => (
+            <ResumeProjectEntry key={project.name} project={project} />
+          ))}
+        </div>
+      ) : (
+        <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-relaxed text-slate-700 marker:text-slate-400 print:space-y-1.25 print:leading-[1.475]">
+          {(item.highlights ?? []).map((h) => (
+            <li key={h}>{highlightTech(h)}</li>
+          ))}
+        </ul>
+      )}
+    </article>
+  );
+}
+
+function ResumePageFooter({ pageNumber, totalPages }: { pageNumber: number; totalPages: number }) {
+  return (
+    <footer className="shrink-0 pt-2.5 text-right text-[9px] text-slate-400 print:pt-2">
+      Page {pageNumber} of {totalPages}
+    </footer>
+  );
+}
+
 function normalizeLanguageDetails(details: string): string {
   const d = details.trim();
   const parts = d.split(",").map((p) => p.trim()).filter(Boolean);
@@ -71,29 +183,32 @@ function sortByStartDateDesc<T extends { start_date?: string }>(items: T[]): T[]
 
 export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]; previewEnabled?: boolean }) {
   const social_networks = cv.social_networks ?? [];
-  const intro = cv.sections?.[""] ?? [];
-  const rawExperience = cv.sections?.experience ?? [];
+  const resumeSummaryText = (cv.summary?.trim() ?? "").trim();
+  const rawExperience = cv.experience ?? [];
   const experience = sortByStartDateDesc(rawExperience).map((item) => ({
     ...item,
     projects: item.projects ? sortByStartDateDesc(item.projects) : undefined,
   }));
-  const experiencePage1 = experience.slice(0, PRIMARY_EXPERIENCE_COUNT);
-  const experiencePage2 = experience.slice(PRIMARY_EXPERIENCE_COUNT);
-  const skills = cv.sections?.skills ?? [];
-  const education = mergeStudentExchangeIntoAcademic(
-    groupEducationByInstitution(cv.sections?.education ?? []),
-  );
-  const languages = cv.sections?.languages ?? [];
+  const experienceRows = expandExperienceForResumeRows(experience);
+  const experiencePage1Rows = experienceRows.slice(0, PRIMARY_EXPERIENCE_COUNT);
+  const experiencePage2Rows = experienceRows.slice(PRIMARY_EXPERIENCE_COUNT);
+  const skills = cv.skills ?? [];
+  const education = sortEducationByEndDateDesc(cv.education ?? []);
+  const languages = cv.languages ?? [];
   const hasPage2 =
-    experiencePage2.length > 0 || education.length > 0 || languages.length > 0;
+    experiencePage2Rows.length > 0 || education.length > 0 || languages.length > 0;
   const totalPages = hasPage2 ? 2 : 1;
-  const resumeLocation =
-    /remote/i.test(cv.location) && /warsaw/i.test(cv.location) ? "Remote / Warsaw" : cv.location;
+  const resumeLocation = formatCvLocationForResume(cv);
+
+  const page1Shell = `${PAGE_SHELL_BASE} ${PAGE_1_PRINT_PAD} flex min-h-0 flex-col`;
+  const page2Shell = `${PAGE_SHELL_BASE} ${PAGE_2_PRINT_PAD} flex min-h-0 flex-col`;
 
   return (
     <div className="bg-white font-(--font-resume) print:bg-white">
-      <section className={previewEnabled ? "resume-page" : "resume-page resume-page--no-preview"}>
-        <div className={PAGE_PADDING_CLASS}>
+      <section
+        className={`${previewEnabled ? "resume-page" : "resume-page resume-page--no-preview"} flex min-h-0 flex-col`}
+      >
+        <div className={page1Shell}>
           <ResumeHeader
             headline={cv.headline}
             name={cv.name}
@@ -101,16 +216,14 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
             location={resumeLocation}
             email={cv.email}
             socialNetworks={social_networks}
-            pageNumber={1}
-            totalPages={totalPages}
           />
 
-          <div className="flex flex-col gap-5">
+          <div className="flex min-h-0 flex-1 flex-col gap-6 print:gap-4.5">
           <section className="print:break-inside-avoid">
-            {intro.length > 0 ? (
-              <p className="text-xs leading-relaxed text-slate-700">
+            {resumeSummaryText ? (
+              <p className="text-xs leading-relaxed text-slate-700 print:leading-[1.475]">
                 {(() => {
-                  const text = intro[0] ?? "";
+                  const text = resumeSummaryText;
                   const marker = "experience";
                   const idx = text.toLowerCase().indexOf(marker);
                   if (idx === -1) return text;
@@ -128,10 +241,12 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
 
           {skills.length > 0 ? (
             <section className="print:break-inside-avoid">
-              <h2 className="mb-2 text-sm font-semibold tracking-wider text-slate-500 uppercase">Technical Skills:</h2>
-              <div className="space-y-1">
+              <h2 className="mb-3 text-sm font-semibold tracking-wider text-slate-500 uppercase print:mb-1.75">
+                Technical Skills:
+              </h2>
+              <div className="space-y-2 print:space-y-1.75">
                 {skills.map((skill) => (
-                  <p key={skill.label} className="text-xs leading-relaxed text-slate-700">
+                  <p key={skill.label} className="text-xs leading-relaxed text-slate-700 print:leading-[1.475]">
                     <span className="font-medium tracking-wider text-slate-600 uppercase">{skill.label}:</span>{" "}
                     {skill.details}
                   </p>
@@ -140,220 +255,86 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
             </section>
           ) : null}
 
-          <section className="print:break-inside-avoid">
-            <h2 className="mb-2 text-sm font-semibold tracking-wider text-slate-500 uppercase">Recent Experience:</h2>
-            <div className="space-y-2">
-                  {experiencePage1.map((item) => (
-                    <article
-                      key={`${item.company}-${item.position}-${item.start_date ?? ""}`}
-                      className="space-y-1 pb-2 print:break-inside-avoid"
-                    >
-                      <h3 className="text-sm font-semibold text-slate-900">{item.position}</h3>
-                      <p className="text-xs font-semibold text-slate-600">{item.company}</p>
-                      <div className="text-[10px] text-slate-500">
-                        {formatDateRange(item.start_date, item.end_date)}
-                        {item.location ? ` · ${item.location}` : ""}
-                      </div>
-                      {item.company_description ? (
-                        <p className="text-xs leading-[1.6] text-slate-700">
-                          {item.company_description}
-                        </p>
-                      ) : null}
-                      {item.projects && item.projects.length > 0 ? (
-                        <div className="space-y-2 pt-1">
-                          {item.projects.map((project) => (
-                            <section
-                              key={project.name}
-                              className="space-y-1 pb-2 last:pb-0 print:break-inside-avoid"
-                            >
-                              <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
-                                {project.name}
-                              </p>
-                              <div className="text-[10px] text-slate-500">
-                                {formatDateRange(project.start_date, project.end_date)}
-                              </div>
-                              <ul className="ml-5 list-disc space-y-1 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
-                                {project.highlights.map((h) => (
-                                  <li key={h}>{highlightTech(h)}</li>
-                                ))}
-                              </ul>
-                            </section>
-                          ))}
-                        </div>
-                      ) : (
-                        <ul className="ml-5 list-disc space-y-1 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
-                          {(item.highlights ?? []).map((h) => (
-                            <li key={h}>{highlightTech(h)}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </article>
-                  ))}
-                </div>
-              </section>
+          <section>
+            <h2 className="mb-3 text-sm font-semibold tracking-wider text-slate-500 uppercase print:mb-2.25">
+              Experience:
+            </h2>
+            <div className="space-y-4 print:space-y-2.75">
+              {experiencePage1Rows.map((row) => (
+                <ResumeExperienceArticle key={resumeExperienceRowKey(row)} row={row} />
+              ))}
+            </div>
+          </section>
           </div>
+
+          <ResumePageFooter pageNumber={1} totalPages={totalPages} />
         </div>
       </section>
 
       {hasPage2 ? (
-        <section className={previewEnabled ? "resume-page" : "resume-page resume-page--no-preview"}>
-          <div className={PAGE_PADDING_CLASS}>
-            <div className="flex flex-col gap-5">
-            {experiencePage2.length > 0 ? (
-                <section>
-              <h2 className="mb-2 text-sm font-semibold tracking-wider text-slate-500 uppercase">
-                Past Experience:
-              </h2>
-
-              <div className="space-y-2">
-                {experiencePage2.map((item) => (
-                    <article
-                    key={`${item.company}-${item.position}-${item.start_date ?? ""}`}
-                    className="space-y-1 pb-2 last:pb-0 print:break-inside-avoid"
-                  >
-                      <h3 className="text-sm font-semibold text-slate-900">{item.position}</h3>
-                      <p className="text-xs font-semibold text-slate-600">{item.company}</p>
-                      <div className="text-[10px] text-slate-500">
-                        {formatDateRange(item.start_date, item.end_date)}
-                        {item.location ? ` · ${item.location}` : ""}
-                      </div>
-                      {item.company_description ? (
-                        <p className="text-xs leading-[1.6] text-slate-700">
-                          {item.company_description}
-                        </p>
-                      ) : null}
-                    {item.projects && item.projects.length > 0 ? (
-                      <div className="space-y-2">
-                          {item.projects.map((project) => (
-                            <section
-                              key={project.name}
-                              className="space-y-1 pb-2 last:pb-0 print:break-inside-avoid"
-                            >
-                              <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
-                                {project.name}
-                              </p>
-                              <div className="text-[10px] text-slate-500">
-                                {formatDateRange(project.start_date, project.end_date)}
-                              </div>
-                              <ul className="ml-5 list-disc space-y-1 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
-                                {project.highlights.map((h) => (
-                                  <li key={h}>{highlightTech(h)}</li>
-                                ))}
-                              </ul>
-                            </section>
-                          ))}
-                        </div>
-                      ) : (
-                        <ul className="ml-5 list-disc space-y-1 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
-                          {(item.highlights ?? []).map((h) => (
-                            <li key={h}>{highlightTech(h)}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </article>
-                ))}
-              </div>
-            </section>
-              ) : null}
+        <section
+          className={`${previewEnabled ? "resume-page" : "resume-page resume-page--no-preview"} resume-page--sheet-2 flex min-h-0 flex-col`}
+        >
+          <div className={page2Shell}>
+            <div className="flex min-h-0 flex-1 flex-col gap-6 print:gap-3.5">
+            {experiencePage2Rows.length > 0 ? (
+              <section>
+                <div className="space-y-4 print:space-y-2.25">
+                  {experiencePage2Rows.map((row) => (
+                    <ResumeExperienceArticle key={resumeExperienceRowKey(row)} row={row} />
+                  ))}
+                </div>
+              </section>
+            ) : null}
 
             {education.length > 0 ? (
               <section className="print:break-inside-avoid">
-                <h2 className="mb-1 text-sm font-semibold tracking-wider text-slate-500 uppercase">Education:</h2>
-                <div className="space-y-2">
-                {(() => {
-                  const sorted = [...education].sort((a, b) => {
-                    const aEnd = [...a.degrees.map((d) => d.end_date)].sort().reverse()[0] ?? "";
-                    const bEnd = [...b.degrees.map((d) => d.end_date)].sort().reverse()[0] ?? "";
-                    return bEnd.localeCompare(aEnd);
-                  });
-                  return sorted.map((group) => {
-                    const starts = group.degrees.map((d) => d.start_date);
-                    const ends = group.degrees.map((d) => d.end_date);
-                    const mergedStart = [...starts].sort()[0];
-                    const mergedEnd = [...ends].sort().reverse()[0];
-                    const yearRange = formatDateRange(mergedStart, mergedEnd);
-                    const msc = group.degrees.find((d) => /^MSc\b/i.test(d.degree));
-                    const bsc = group.degrees.find((d) => /^BSc\b/i.test(d.degree));
-                    const isAcademic = msc || bsc;
+                <h2 className="mb-2 text-sm font-semibold tracking-wider text-slate-500 uppercase print:mb-1.5">
+                  Education:
+                </h2>
+                <div className="space-y-2 print:space-y-1.5">
+                  {education.map((entry) => {
+                    const abbrev = entry.degree.includes(" - ")
+                      ? entry.degree.split(" - ")[0].trim()
+                      : entry.degree;
                     const discipline =
-                      (msc ?? bsc)?.degree?.match(/ (?:in|-) (.+)$/)?.[1]?.trim() ?? "";
-                    const displayDiscipline = discipline || "Computer Science";
-                    const institutionLine = [group.institution, group.location].filter(Boolean).join(", ");
-                    const degreesSorted = [...group.degrees].sort(
-                      (a, b) => (b.end_date ?? "").localeCompare(a.end_date ?? ""),
-                    );
-
-                    if (isAcademic) {
-                      const mainDegrees = degreesSorted.filter((d) => !d.institution);
-                      const exchangeDegrees = degreesSorted.filter((d) => d.institution);
-                      const mainStarts = mainDegrees.map((d) => d.start_date);
-                      const mainEnds = mainDegrees.map((d) => d.end_date);
-                      const mainYearRange =
-                        mainDegrees.length > 0
-                          ? formatDateRange(
-                              [...mainStarts].sort()[0],
-                              [...mainEnds].sort().reverse()[0],
-                            )
-                          : yearRange;
-
-                      return (
-                        <div key={`${group.institution}-${group.location}`} className="space-y-0.5">
-                          <p className="text-xs font-semibold text-slate-700">{displayDiscipline}</p>
-                          {mainDegrees.map((d, i) => {
-                            const abbrev = d.degree.includes(" - ") ? d.degree.split(" - ")[0].trim() : d.degree;
-                            const omitArea = d.area && displayDiscipline.toLowerCase() === d.area.toLowerCase();
-                            const spec = d.area && !omitArea ? ` (${d.area})` : "";
-                            const thesis = d.thesis?.trim();
-                            return (
-                              <div key={`${d.degree}-${i}`}>
-                                <p className="text-xs leading-[1.6] text-slate-700">
-                                  {abbrev}{spec}
-                                </p>
-                                {thesis ? (
-                                  <p className="text-[10px] text-slate-500 -mt-0.5">{thesis}</p>
-                                ) : null}
-                              </div>
-                            );
-                          })}
-                          <p className="text-[11px] text-slate-500">{institutionLine}</p>
-                          <p className="text-[10px] text-slate-500">{mainYearRange}</p>
-                          {exchangeDegrees.map((d, i) => {
-                            const abbrev = d.degree.includes(" - ") ? d.degree.split(" - ")[0].trim() : d.degree;
-                            const exchangeInstitutionLine = [d.institution, d.location].filter(Boolean).join(", ");
-                            const exchangeDateRange = formatDateRange(d.start_date, d.end_date);
-                            return (
-                              <React.Fragment key={`${d.degree}-${i}`}>
-                                <p className="text-xs leading-[1.6] text-slate-700">{abbrev}</p>
-                                <p className="text-[11px] text-slate-500">{exchangeInstitutionLine}</p>
-                                <p className="text-[10px] text-slate-500">{exchangeDateRange}</p>
-                              </React.Fragment>
-                            );
-                          })}
-                        </div>
-                      );
-                    }
-
+                      entry.degree.match(/ (?:in|-) (.+)$/)?.[1]?.trim() ?? entry.area?.trim() ?? "";
+                    const omitArea =
+                      Boolean(entry.area?.trim()) &&
+                      discipline.length > 0 &&
+                      entry.area!.trim().toLowerCase() === discipline.toLowerCase();
+                    const spec =
+                      entry.area?.trim() && !omitArea ? ` (${entry.area.trim()})` : "";
+                    const institutionLine = [entry.institution, entry.location].filter(Boolean).join(", ");
+                    const yearRange = formatDateRange(entry.start_date, entry.end_date);
+                    const thesis = entry.thesis?.trim();
                     return (
-                      <div key={`${group.institution}-${group.location}`} className="space-y-0.5">
+                      <div
+                        key={`${entry.institution}-${entry.degree}-${entry.start_date}`}
+                        className="space-y-0.5"
+                      >
                         <p className="text-xs font-semibold text-slate-700">
-                          {degreesSorted[0]?.degree.includes(" - ")
-                            ? degreesSorted[0].degree.split(" - ")[0].trim()
-                            : degreesSorted[0]?.degree ?? ""}
+                          {abbrev}
+                          {spec}
                         </p>
+                        {thesis ? (
+                          <p className="text-[10px] text-slate-500 -mt-0.5">{thesis}</p>
+                        ) : null}
                         <p className="text-[11px] text-slate-500">{institutionLine}</p>
                         <p className="text-[10px] text-slate-500">{yearRange}</p>
                       </div>
                     );
-                  });
-                })()}
+                  })}
                 </div>
               </section>
             ) : null}
 
             {languages.length > 0 ? (
               <section className="print:break-inside-avoid">
-                  <h2 className="mb-1 text-sm font-semibold tracking-wider text-slate-500 uppercase">Languages:</h2>
-                  <div className="space-y-1">
+                  <h2 className="mb-2 text-sm font-semibold tracking-wider text-slate-500 uppercase print:mb-1.5">
+                    Languages:
+                  </h2>
+                  <div className="space-y-2 print:space-y-1.5">
                     {languages.map((lang) => {
                       const [name, rest] = lang.bullet.split(/\s*\(\s*/);
                       const label = name?.replace(/:$/, "").trim();
@@ -370,6 +351,8 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                 </section>
             ) : null}
           </div>
+
+            <ResumePageFooter pageNumber={2} totalPages={totalPages} />
           </div>
         </section>
       ) : null}

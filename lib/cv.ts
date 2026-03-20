@@ -31,7 +31,7 @@ function parseYear(value: string | undefined): number | null {
 }
 
 function getYearsOfExperience(cv: CvData["cv"]): number | null {
-  const exp = cv.sections?.experience ?? [];
+  const exp = cv.experience ?? [];
   const years = exp
     .map((e) => parseYear(e.start_date))
     .filter((y): y is number => y != null)
@@ -41,7 +41,7 @@ function getYearsOfExperience(cv: CvData["cv"]): number | null {
 }
 
 function getTopEducationLabel(cv: CvData["cv"]): { top: string; bottom: string } | null {
-  const edu = cv.sections?.education ?? [];
+  const edu = cv.education ?? [];
   const msc = edu.find((e) => /^MSc\b/i.test(e.degree));
   if (msc) return { top: "M.Sc", bottom: msc.area || "Computer Science" };
   const bsc = edu.find((e) => /^BSc\b/i.test(e.degree));
@@ -50,7 +50,7 @@ function getTopEducationLabel(cv: CvData["cv"]): { top: string; bottom: string }
 }
 
 function getWorkedWithCompanies(cv: CvData["cv"]): string[] {
-  const exp = cv.sections?.experience ?? [];
+  const exp = cv.experience ?? [];
   const names = new Set<string>();
   for (const e of exp) {
     if (e.company) names.add(e.company);
@@ -61,7 +61,7 @@ function getWorkedWithCompanies(cv: CvData["cv"]): string[] {
 
 export function deriveCv(cv: CvData["cv"]): CvDerived {
   const title = `${cv.name} – ${cv.headline}`;
-  const description = cv.summary ?? cv.sections?.[""]?.[0] ?? undefined;
+  const description = cv.summary ?? undefined;
 
   const yearsOfExperience = getYearsOfExperience(cv);
   const topEducationLabel = getTopEducationLabel(cv);

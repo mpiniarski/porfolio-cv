@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getLucideIcon } from "@/components/shared/icon-map";
 
-function formatTopEducation(edu: CvData["cv"]["sections"]["education"][number] | undefined) {
+function formatTopEducation(edu: CvData["cv"]["education"][number] | undefined) {
   if (!edu) return "—";
   const degree = edu.degree
     .replace(/^MSc\s*-\s*/i, "MSc in ")
@@ -20,7 +20,7 @@ function formatTopEducation(edu: CvData["cv"]["sections"]["education"][number] |
 }
 
 export function OverviewQuickSection({ cv }: { cv: CvData["cv"] }) {
-  const topEducation = cv.sections?.education?.[0];
+  const topEducation = cv.education?.[0];
 
   const coreStack = [
     {
