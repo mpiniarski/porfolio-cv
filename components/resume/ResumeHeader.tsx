@@ -1,13 +1,4 @@
-import { shortUrl } from "@/lib/resumeData";
 import type { CvSocialNetwork } from "@/lib/resumeData";
-import { Mail, Linkedin, Github, MapPin } from "lucide-react";
-
-function NetworkIcon({ network }: { network: string }) {
-  const n = network.toLowerCase();
-  if (n.includes("linkedin")) return <Linkedin className="h-3 w-3 shrink-0 text-slate-500" />;
-  if (n.includes("github")) return <Github className="h-3 w-3 shrink-0 text-slate-500" />;
-  return null;
-}
 
 type Props = {
   headline: string;
@@ -36,30 +27,25 @@ export function ResumeHeader({
         <div className="flex-1">
           <p className="mb-1 text-lg font-semibold tracking-wide text-slate-600 uppercase">{headline}</p>
           <h1 className="mb-2 text-3xl tracking-tight">{name}</h1>
-          {portfolio ? (
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm text-slate-700">Portfolio: {portfolio}</span>
-            </div>
-          ) : null}
         </div>
 
-        <div className="flex flex-col gap-1.5 text-right text-xs text-slate-700">
-          <div className="flex items-center justify-end gap-1.5">
-            <span>{location}</span>
-            <MapPin className="h-3 w-3 shrink-0 text-slate-500" />
-          </div>
-          <a className="flex items-center justify-end gap-1.5 hover:underline" href={`mailto:${email}`}>
-            <span>{email}</span>
-            <Mail className="h-3 w-3 shrink-0 text-slate-500" />
+        <div className="flex w-fit shrink-0 flex-col items-start gap-0.5 text-left text-[9px] text-slate-700">
+          <div>Location: {location}</div>
+          <a className="hover:underline" href={`mailto:${email}`}>
+            Email: {email}
           </a>
+          {portfolio ? (
+            <a className="hover:underline" href={portfolio}>
+              Portfolio: {portfolio}
+            </a>
+          ) : null}
           {socialNetworks.map((item) => (
             <a
               key={item.network}
-              className="flex items-center justify-end gap-1.5 hover:underline"
+              className="hover:underline"
               href={item.username}
             >
-              <span>{shortUrl(item.username)}</span>
-              <NetworkIcon network={item.network} />
+              {item.network}: {item.username}
             </a>
           ))}
         </div>

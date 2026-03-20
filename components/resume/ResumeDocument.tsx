@@ -1,6 +1,9 @@
 import React from "react";
-import { formatDateRange, formatYearRange } from "@/lib/dateFormat";
-import { groupEducationByInstitution } from "@/lib/resumeData";
+import { formatDateRange } from "@/lib/dateFormat";
+import {
+  groupEducationByInstitution,
+  mergeStudentExchangeIntoAcademic,
+} from "@/lib/resumeData";
 import type { CvData } from "@/lib/resumeData";
 import { ResumeHeader } from "./ResumeHeader";
 
@@ -77,7 +80,9 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
   const experiencePage1 = experience.slice(0, PRIMARY_EXPERIENCE_COUNT);
   const experiencePage2 = experience.slice(PRIMARY_EXPERIENCE_COUNT);
   const skills = cv.sections?.skills ?? [];
-  const education = groupEducationByInstitution(cv.sections?.education ?? []);
+  const education = mergeStudentExchangeIntoAcademic(
+    groupEducationByInstitution(cv.sections?.education ?? []),
+  );
   const languages = cv.sections?.languages ?? [];
   const hasPage2 =
     experiencePage2.length > 0 || education.length > 0 || languages.length > 0;
@@ -141,35 +146,33 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                   {experiencePage1.map((item) => (
                     <article
                       key={`${item.company}-${item.position}-${item.start_date ?? ""}`}
-                      className="pb-2 print:break-inside-avoid"
+                      className="space-y-1 pb-2 print:break-inside-avoid"
                     >
-                      <div className="mb-0.5 flex items-baseline justify-between">
-                        <h3 className="text-sm font-semibold text-slate-900">{item.position}</h3>
-                        <span className="text-[10px] text-slate-400 whitespace-nowrap">
-                          {formatDateRange(item.start_date, item.end_date)}
-                        </span>
+                      <h3 className="text-sm font-semibold text-slate-900">{item.position}</h3>
+                      <p className="text-xs font-semibold text-slate-600">{item.company}</p>
+                      <div className="text-[10px] text-slate-500">
+                        {formatDateRange(item.start_date, item.end_date)}
+                        {item.location ? ` · ${item.location}` : ""}
                       </div>
-                      <div className="mb-1.5 flex items-baseline justify-between">
-                        <p className="text-xs font-semibold text-slate-600">{item.company}</p>
-                        <span className="text-xs text-slate-500">{item.location}</span>
-                      </div>
-
+                      {item.company_description ? (
+                        <p className="text-xs leading-[1.6] text-slate-700">
+                          {item.company_description}
+                        </p>
+                      ) : null}
                       {item.projects && item.projects.length > 0 ? (
-                        <div className="space-y-2">
+                        <div className="space-y-2 pt-1">
                           {item.projects.map((project) => (
                             <section
                               key={project.name}
-                              className="pb-2 last:pb-0 print:break-inside-avoid"
+                              className="space-y-1 pb-2 last:pb-0 print:break-inside-avoid"
                             >
-                              <div className="mb-1.5 flex items-baseline justify-between">
-                                <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
-                                  {project.name}
-                                </p>
-                                <span className="text-[9px] text-slate-400">
-                                  {formatDateRange(project.start_date, project.end_date)}
-                                </span>
+                              <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                {project.name}
+                              </p>
+                              <div className="text-[10px] text-slate-500">
+                                {formatDateRange(project.start_date, project.end_date)}
                               </div>
-                              <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
+                              <ul className="ml-5 list-disc space-y-1 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
                                 {project.highlights.map((h) => (
                                   <li key={h}>{highlightTech(h)}</li>
                                 ))}
@@ -178,7 +181,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                           ))}
                         </div>
                       ) : (
-                        <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
+                        <ul className="ml-5 list-disc space-y-1 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
                           {(item.highlights ?? []).map((h) => (
                             <li key={h}>{highlightTech(h)}</li>
                           ))}
@@ -195,17 +198,6 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
       {hasPage2 ? (
         <section className={previewEnabled ? "resume-page" : "resume-page resume-page--no-preview"}>
           <div className={PAGE_PADDING_CLASS}>
-            <ResumeHeader
-              headline={cv.headline}
-              name={cv.name}
-              portfolio={cv.portfolio}
-              location={resumeLocation}
-              email={cv.email}
-              socialNetworks={social_networks}
-              pageNumber={2}
-              totalPages={totalPages}
-            />
-
             <div className="flex flex-col gap-5">
             {experiencePage2.length > 0 ? (
                 <section>
@@ -215,52 +207,50 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
 
               <div className="space-y-2">
                 {experiencePage2.map((item) => (
-                  <article
+                    <article
                     key={`${item.company}-${item.position}-${item.start_date ?? ""}`}
-                    className="pb-2 last:pb-0 print:break-inside-avoid"
+                    className="space-y-1 pb-2 last:pb-0 print:break-inside-avoid"
                   >
-                    <div className="mb-0.5 flex items-baseline justify-between">
                       <h3 className="text-sm font-semibold text-slate-900">{item.position}</h3>
-                      <span className="text-[10px] text-slate-400 whitespace-nowrap">
-                        {formatDateRange(item.start_date, item.end_date)}
-                      </span>
-                    </div>
-                    <div className="mb-1.5 flex items-baseline justify-between">
                       <p className="text-xs font-semibold text-slate-600">{item.company}</p>
-                      <span className="text-xs text-slate-500">{item.location}</span>
-                    </div>
-
+                      <div className="text-[10px] text-slate-500">
+                        {formatDateRange(item.start_date, item.end_date)}
+                        {item.location ? ` · ${item.location}` : ""}
+                      </div>
+                      {item.company_description ? (
+                        <p className="text-xs leading-[1.6] text-slate-700">
+                          {item.company_description}
+                        </p>
+                      ) : null}
                     {item.projects && item.projects.length > 0 ? (
                       <div className="space-y-2">
-                        {item.projects.map((project) => (
-                          <section
-                            key={project.name}
-                            className="pb-2 last:pb-0 print:break-inside-avoid"
-                          >
-                            <div className="mb-1.5 flex items-baseline justify-between">
+                          {item.projects.map((project) => (
+                            <section
+                              key={project.name}
+                              className="space-y-1 pb-2 last:pb-0 print:break-inside-avoid"
+                            >
                               <p className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
                                 {project.name}
                               </p>
-                              <span className="text-[9px] text-slate-400">
+                              <div className="text-[10px] text-slate-500">
                                 {formatDateRange(project.start_date, project.end_date)}
-                              </span>
-                            </div>
-                            <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
-                              {project.highlights.map((h) => (
-                                <li key={h}>{highlightTech(h)}</li>
-                              ))}
-                            </ul>
-                          </section>
-                        ))}
-                      </div>
-                    ) : (
-                      <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
-                        {(item.highlights ?? []).map((h) => (
-                          <li key={h}>{highlightTech(h)}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </article>
+                              </div>
+                              <ul className="ml-5 list-disc space-y-1 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
+                                {project.highlights.map((h) => (
+                                  <li key={h}>{highlightTech(h)}</li>
+                                ))}
+                              </ul>
+                            </section>
+                          ))}
+                        </div>
+                      ) : (
+                        <ul className="ml-5 list-disc space-y-1 list-outside text-xs leading-[1.6] text-slate-700 marker:text-slate-400">
+                          {(item.highlights ?? []).map((h) => (
+                            <li key={h}>{highlightTech(h)}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </article>
                 ))}
               </div>
             </section>
@@ -269,6 +259,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
             {education.length > 0 ? (
               <section className="print:break-inside-avoid">
                 <h2 className="mb-1 text-sm font-semibold tracking-wider text-slate-500 uppercase">Education:</h2>
+                <div className="space-y-2">
                 {(() => {
                   const sorted = [...education].sort((a, b) => {
                     const aEnd = [...a.degrees.map((d) => d.end_date)].sort().reverse()[0] ?? "";
@@ -280,29 +271,82 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                     const ends = group.degrees.map((d) => d.end_date);
                     const mergedStart = [...starts].sort()[0];
                     const mergedEnd = [...ends].sort().reverse()[0];
-                    const yearRange = formatYearRange(mergedStart, mergedEnd);
+                    const yearRange = formatDateRange(mergedStart, mergedEnd);
                     const msc = group.degrees.find((d) => /^MSc\b/i.test(d.degree));
                     const bsc = group.degrees.find((d) => /^BSc\b/i.test(d.degree));
-                    const hasMscAndBsc = msc && bsc;
+                    const isAcademic = msc || bsc;
                     const discipline =
-                      group.degrees[0]?.degree.match(/ (?:in|-) (.+)$/)?.[1]?.trim() ?? "";
-                    const degreeLabel = hasMscAndBsc
-                      ? `MSc${msc?.area ? ` (${msc.area})` : ""} & BSc${discipline ? ` ${discipline}` : ""}`
-                      : group.degrees
-                          .map((d) => {
-                            const abbrev = d.degree.includes(" - ") ? d.degree.split(" - ")[0].trim() : d.degree;
-                            const subj = d.degree.match(/ (?:in|-) (.+)$/)?.[1]?.trim();
-                            return subj ? `${abbrev} ${subj}` : abbrev;
-                          })
-                          .join(", ");
+                      (msc ?? bsc)?.degree?.match(/ (?:in|-) (.+)$/)?.[1]?.trim() ?? "";
+                    const displayDiscipline = discipline || "Computer Science";
                     const institutionLine = [group.institution, group.location].filter(Boolean).join(", ");
+                    const degreesSorted = [...group.degrees].sort(
+                      (a, b) => (b.end_date ?? "").localeCompare(a.end_date ?? ""),
+                    );
+
+                    if (isAcademic) {
+                      const mainDegrees = degreesSorted.filter((d) => !d.institution);
+                      const exchangeDegrees = degreesSorted.filter((d) => d.institution);
+                      const mainStarts = mainDegrees.map((d) => d.start_date);
+                      const mainEnds = mainDegrees.map((d) => d.end_date);
+                      const mainYearRange =
+                        mainDegrees.length > 0
+                          ? formatDateRange(
+                              [...mainStarts].sort()[0],
+                              [...mainEnds].sort().reverse()[0],
+                            )
+                          : yearRange;
+
+                      return (
+                        <div key={`${group.institution}-${group.location}`} className="space-y-0.5">
+                          <p className="text-xs font-semibold text-slate-700">{displayDiscipline}</p>
+                          {mainDegrees.map((d, i) => {
+                            const abbrev = d.degree.includes(" - ") ? d.degree.split(" - ")[0].trim() : d.degree;
+                            const omitArea = d.area && displayDiscipline.toLowerCase() === d.area.toLowerCase();
+                            const spec = d.area && !omitArea ? ` (${d.area})` : "";
+                            const thesis = d.thesis?.trim();
+                            return (
+                              <div key={`${d.degree}-${i}`}>
+                                <p className="text-xs leading-[1.6] text-slate-700">
+                                  {abbrev}{spec}
+                                </p>
+                                {thesis ? (
+                                  <p className="text-[10px] text-slate-500 -mt-0.5">{thesis}</p>
+                                ) : null}
+                              </div>
+                            );
+                          })}
+                          <p className="text-[11px] text-slate-500">{institutionLine}</p>
+                          <p className="text-[10px] text-slate-500">{mainYearRange}</p>
+                          {exchangeDegrees.map((d, i) => {
+                            const abbrev = d.degree.includes(" - ") ? d.degree.split(" - ")[0].trim() : d.degree;
+                            const exchangeInstitutionLine = [d.institution, d.location].filter(Boolean).join(", ");
+                            const exchangeDateRange = formatDateRange(d.start_date, d.end_date);
+                            return (
+                              <React.Fragment key={`${d.degree}-${i}`}>
+                                <p className="text-xs leading-[1.6] text-slate-700">{abbrev}</p>
+                                <p className="text-[11px] text-slate-500">{exchangeInstitutionLine}</p>
+                                <p className="text-[10px] text-slate-500">{exchangeDateRange}</p>
+                              </React.Fragment>
+                            );
+                          })}
+                        </div>
+                      );
+                    }
+
                     return (
-                      <p key={`${group.institution}-${group.location}`} className="text-xs text-slate-700">
-                        {degreeLabel}, {institutionLine} — {yearRange}
-                      </p>
+                      <div key={`${group.institution}-${group.location}`} className="space-y-0.5">
+                        <p className="text-xs font-semibold text-slate-700">
+                          {degreesSorted[0]?.degree.includes(" - ")
+                            ? degreesSorted[0].degree.split(" - ")[0].trim()
+                            : degreesSorted[0]?.degree ?? ""}
+                        </p>
+                        <p className="text-[11px] text-slate-500">{institutionLine}</p>
+                        <p className="text-[10px] text-slate-500">{yearRange}</p>
+                      </div>
                     );
                   });
                 })()}
+                </div>
               </section>
             ) : null}
 

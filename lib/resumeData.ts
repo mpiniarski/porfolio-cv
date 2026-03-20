@@ -28,6 +28,8 @@ export interface CvExperienceItem {
   start_date?: string;
   end_date?: string;
   location?: string;
+  /** Short company description (e.g. consulting firm, product company). */
+  company_description?: string;
   /** Client or partner company names to show in "Worked with" (e.g. consulting clients). */
   worked_with?: string[];
   highlights?: string[];
@@ -41,17 +43,24 @@ export interface CvEducationItem {
   start_date: string;
   end_date: string;
   location: string;
+  thesis?: string;
+}
+
+export interface GroupedEducationDegree {
+  degree: string;
+  area: string;
+  start_date: string;
+  end_date: string;
+  thesis?: string;
+  /** When set, this degree is from a different institution (e.g. Student Exchange). */
+  institution?: string;
+  location?: string;
 }
 
 export interface GroupedEducation {
   institution: string;
   location: string;
-  degrees: {
-    degree: string;
-    area: string;
-    start_date: string;
-    end_date: string;
-  }[];
+  degrees: GroupedEducationDegree[];
 }
 
 export function groupEducationByInstitution(
@@ -66,6 +75,7 @@ export function groupEducationByInstitution(
       area: edu.area,
       start_date: edu.start_date,
       end_date: edu.end_date,
+      thesis: edu.thesis,
     };
     if (existing) {
       existing.degrees.push(entry);
@@ -78,6 +88,52 @@ export function groupEducationByInstitution(
     }
   }
   return Array.from(byKey.values());
+}
+
+function isStudentExchange(d: GroupedEducationDegree): boolean {
+  return /^Student Exchange\b/i.test(d.degree);
+}
+
+function isAcademic(d: GroupedEducationDegree): boolean {
+  return /^MSc\b/i.test(d.degree) || /^BSc\b/i.test(d.degree);
+}
+
+function getDiscipline(d: GroupedEducationDegree): string {
+  return d.degree?.match(/ (?:in|-) (.+)$/)?.[1]?.trim().toLowerCase() ?? "";
+}
+
+/** Merges Student Exchange groups into academic blocks when they share the same discipline. */
+export function mergeStudentExchangeIntoAcademic(
+  groups: GroupedEducation[],
+): GroupedEducation[] {
+  const academic = groups.find((g) => g.degrees.some(isAcademic));
+  const exchangeOnly = groups.filter(
+    (g) =>
+      g !== academic &&
+      g.degrees.every(isStudentExchange) &&
+      g.degrees.length > 0,
+  );
+  if (!academic || exchangeOnly.length === 0) return groups;
+
+  const mainDiscipline = getDiscipline(
+    academic.degrees.find(isAcademic) ?? academic.degrees[0],
+  );
+  const merged = [...groups];
+  for (const ex of exchangeOnly) {
+    const exDiscipline = getDiscipline(ex.degrees[0]);
+    if (exDiscipline && exDiscipline === mainDiscipline) {
+      for (const d of ex.degrees) {
+        academic.degrees.push({
+          ...d,
+          institution: ex.institution,
+          location: ex.location,
+        });
+      }
+      const idx = merged.indexOf(ex);
+      if (idx >= 0) merged.splice(idx, 1);
+    }
+  }
+  return merged;
 }
 
 export interface CvLanguageItem {
