@@ -43,7 +43,7 @@ cv:
 
     - company: "Dynamic Solutions"
       company_description: "Technology consulting firm with in-house software products; provides senior-level specialists to enterprise clients."
-      position: "Senior Frontend Developer (Consulting)"
+      position: "Lead Frontend Developer"
       start_date: "2021-04"
       end_date: "2025-02"
       location: "Warsaw"
@@ -55,6 +55,7 @@ cv:
         - Diva-E
       projects:
         - name: "SIEMENS (GroundFog)"
+          role: "Lead Front-end Developer"
           start_date: "2023-02"
           end_date: "2025-02"
           highlights:
@@ -65,6 +66,7 @@ cv:
             - "Automated cross-environment content access via URL-based configuration, eliminating manual data migration and enabling direct access to production content in local environments, significantly improving development and testing efficiency."
 
         - name: "MANN+HUMMEL (Diva-E)"
+          role: "Senior Front-end Developer"
           start_date: "2022-09"
           end_date: "2023-01"
           highlights:
@@ -72,6 +74,7 @@ cv:
             - "Built search results, product detail pages, and 360° product visualizations, improving product exploration and usability."
 
         - name: "Websight CMS"
+          role: "Front-end Developer"
           start_date: "2021-04"
           end_date: "2022-08"
           highlights:
