@@ -69,6 +69,28 @@ export interface CvProject {
   image?: string;
 }
 
+export interface CvSelectedWorkHighlight {
+  title: string;
+  /** Detail line (e.g. tech stack) or context (e.g. employer). */
+  subtitle?: string;
+  /** Lucide icon name registered in `components/shared/icon-map.tsx`. */
+  icon?: string;
+  /** Exact key in `company_logos` for the org where the work happened. */
+  company?: string;
+  /**
+   * Fragment for `/experience#…` — must match `experienceEntryAnchorId(project name or company)` in code.
+   * Example: `websight-cms`, `siemens-groundfog`, `balyasny-asset-management`.
+   */
+  experience_anchor?: string;
+}
+
+export interface CvCoreTechnology {
+  name: string;
+  logo: string;
+  /** Dark logo on light background (e.g. Next.js mark). */
+  invert_logo?: boolean;
+}
+
 export interface CvData {
   cv: {
     name: string;
@@ -119,6 +141,14 @@ export interface CvData {
     typically_help_with?: string[];
     social_networks?: CvSocialNetwork[];
     projects?: CvProject[];
+    /** Homepage “Selected Work”; section omitted when missing or `highlights` empty. */
+    selected_work?: {
+      title?: string;
+      description?: string;
+      highlights: CvSelectedWorkHighlight[];
+    };
+    /** Tech stack logos for home overview + about; UI falls back to built-in defaults when omitted. */
+    core_technologies?: CvCoreTechnology[];
     photo?: string | null;
   };
 }

@@ -2,11 +2,14 @@
 
 import type { LucideIcon } from "lucide-react";
 import {
+  BarChart3,
+  Bot,
   Briefcase,
   FolderOpen,
   Globe,
   Home,
   Layers,
+  LayoutTemplate,
   Lightbulb,
   Mail,
   Package,
@@ -18,11 +21,14 @@ import {
 } from "lucide-react";
 
 const ICONS: Record<string, LucideIcon> = {
+  BarChart3,
+  Bot,
   Briefcase,
   FolderOpen,
   Globe,
   Home,
   Layers,
+  LayoutTemplate,
   Lightbulb,
   Mail,
   Package,

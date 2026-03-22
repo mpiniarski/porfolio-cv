@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 
+import { experienceEntryAnchorId } from "@/lib/experienceAnchor";
 import type { CvData } from "@/lib/resumeData";
 import { DownloadCVButton } from "@/components/DownloadCVButton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -55,6 +56,8 @@ type ExperienceItem = {
   isSubProject?: boolean;
   shortName?: string;
   isOpportunity?: boolean;
+  /** Matches `selected_work.highlights[].experience_anchor` / URL `#fragment`. */
+  anchorId: string;
 };
 
 type EducationMilestone = {
@@ -83,6 +86,7 @@ export function ExperienceTimelineSection({
   cv: CvData["cv"];
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const desktopDetailRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
@@ -110,6 +114,7 @@ export function ExperienceTimelineSection({
         highlights: opp.bullets,
         technologies: [],
         isOpportunity: true,
+        anchorId: experienceEntryAnchorId(undefined, "Open for Opportunities"),
       });
     }
 
@@ -152,6 +157,7 @@ export function ExperienceTimelineSection({
                 : projectCompany === "No Spoon Tech Lab"
                   ? "No Spoon"
                   : undefined,
+            anchorId: experienceEntryAnchorId(p.name, exp.company),
           });
         }
       } else if (expStart) {
@@ -165,6 +171,7 @@ export function ExperienceTimelineSection({
           highlights: exp.highlights ?? [],
           technologies: [],
           logo: cv.company_logos?.[exp.company],
+          anchorId: experienceEntryAnchorId(undefined, exp.company),
         });
       }
     }
@@ -173,10 +180,33 @@ export function ExperienceTimelineSection({
     return out;
   }, [cv, experience]);
 
-  // On load: default to the first "real" job; the opportunities card is an extra promo.
+  // On load / hash change: deep-link to `#anchor` from Selected Work, else skip the promo card when it's first.
   useEffect(() => {
-    const firstNonOpp = experiences.findIndex((e) => !e.isOpportunity);
-    if (firstNonOpp > 0) setActiveIndex(firstNonOpp);
+    const applyNavigation = () => {
+      const id = window.location.hash.replace(/^#/, "").trim();
+      if (id) {
+        const fromHash = experiences.findIndex((e) => e.anchorId === id);
+        if (fromHash >= 0) {
+          setActiveIndex(fromHash);
+          requestAnimationFrame(() => {
+            const isLg = window.matchMedia("(min-width: 1024px)").matches;
+            if (isLg) {
+              desktopDetailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            } else {
+              document
+                .querySelector(`[data-experience-anchor="${CSS.escape(id)}"]`)
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          });
+          return;
+        }
+      }
+      const firstNonOpp = experiences.findIndex((e) => !e.isOpportunity);
+      if (firstNonOpp > 0) setActiveIndex(firstNonOpp);
+    };
+    applyNavigation();
+    window.addEventListener("hashchange", applyNavigation);
+    return () => window.removeEventListener("hashchange", applyNavigation);
   }, [experiences]);
 
   useEffect(() => {
@@ -352,10 +382,11 @@ export function ExperienceTimelineSection({
             {experiences.map((exp, index) => (
               <Card
                 key={`${exp.company}-${exp.period}-${index}`}
+                data-experience-anchor={exp.anchorId}
                 ref={(el) => {
                   cardRefs.current[index] = el;
                 }}
-                className={`border-border/50 shadow-lg transition-all duration-500 ${highlightedIndex === index ? "ring-2 ring-primary shadow-primary/20" : ""
+                className={`scroll-mt-28 border-border/50 shadow-lg transition-all duration-500 ${highlightedIndex === index ? "ring-2 ring-primary shadow-primary/20" : ""
                   }`}
               >
                 <CardHeader className="pb-4">
@@ -418,7 +449,7 @@ export function ExperienceTimelineSection({
 
         {/* Desktop: Figma-style card + rail */}
         <div className="hidden lg:grid lg:grid-cols-[1fr_240px] gap-8 items-center py-10">
-          <div>
+          <div ref={desktopDetailRef} className="scroll-mt-28">
             <Card className="border-border/50 shadow-xl">
               <CardHeader className="pb-4">
                 <div className="flex items-start gap-4">

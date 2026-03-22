@@ -2,6 +2,7 @@ import { getCvData } from "@/lib/cv";
 import { HeroSection } from "@/components/sections/hero";
 import { WorkedWithSection } from "@/components/sections/worked-with";
 import { OverviewQuickSection } from "@/components/sections/overview-quick";
+import { SelectedWorkSection } from "@/components/sections/selected-work";
 import { ServicesSection } from "@/components/sections/services";
 import { ProjectsSection } from "@/components/sections/projects";
 import { ExploreMoreSection } from "@/components/sections/explore-more";
@@ -24,6 +25,9 @@ export default function Home() {
           yearsOfExperience={derived.yearsOfExperience}
           companies={derived.workedWith}
         />
+      </div>
+      <div id="selected-work">
+        <SelectedWorkSection cv={cv} />
       </div>
       <div id="overview">
         <OverviewQuickSection cv={cv} />

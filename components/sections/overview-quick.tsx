@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, GraduationCap } from "lucide-react";
 
+import { getCoreTechnologies } from "@/lib/coreTechnologies";
 import type { CvData } from "@/lib/resumeData";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,23 +22,7 @@ function formatTopEducation(edu: CvData["cv"]["education"][number] | undefined) 
 
 export function OverviewQuickSection({ cv }: { cv: CvData["cv"] }) {
   const topEducation = cv.education?.[0];
-
-  const coreStack = [
-    {
-      name: "TypeScript",
-      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
-    },
-    { name: "React", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-    { name: "Vue", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" },
-    { name: "Next.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
-    {
-      name: "GraphQL",
-      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg",
-    },
-    { name: "Node.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
-    { name: "Kotlin", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" },
-    { name: "Playwright", logo: "https://playwright.dev/img/playwright-logo.svg" },
-  ];
+  const coreStack = getCoreTechnologies(cv);
 
   const expertise = [
     { name: "Frontend Development", icon: "Globe" },
@@ -110,7 +95,7 @@ export function OverviewQuickSection({ cv }: { cv: CvData["cv"] }) {
                         width={40}
                         height={40}
                         className="w-10 h-10 object-contain"
-                        style={{ filter: tech.name === "Next.js" ? "invert(1)" : "none" }}
+                        style={{ filter: tech.invert_logo ? "invert(1)" : "none" }}
                       />
                     </div>
                     <span className="font-medium text-sm">{tech.name}</span>

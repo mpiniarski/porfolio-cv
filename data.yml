@@ -163,6 +163,45 @@ cv:
       repo: "https://github.com/mpiniarski/spectrum"
       image: "/contrast/clue.png"
 
+  selected_work:
+    title: "Selected Work"
+    description: "High-impact product surfaces from recent senior frontend roles."
+    highlights:
+      - title: "Visual CMS editor"
+        subtitle: "WebSight"
+        icon: "LayoutTemplate"
+        company: "Dynamic Solutions"
+        experience_anchor: "websight-cms"
+      - title: "AI-powered search + chatbot + live translations"
+        subtitle: "Siemens"
+        icon: "Bot"
+        company: "Siemens"
+        experience_anchor: "siemens-groundfog"
+      - title: "Financial dashboards"
+        subtitle: "Balyasny"
+        icon: "BarChart3"
+        company: "Balyasny Asset Management"
+        experience_anchor: "balyasny-asset-management"
+
+  core_technologies:
+    - name: "TypeScript"
+      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
+    - name: "React"
+      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+    - name: "Vue"
+      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg"
+    - name: "Next.js"
+      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg"
+      invert_logo: true
+    - name: "GraphQL"
+      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg"
+    - name: "Node.js"
+      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
+    - name: "Kotlin"
+      logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg"
+    - name: "Playwright"
+      logo: "https://playwright.dev/img/playwright-logo.svg"
+
   hero_stats:
     - top: "M.Sc"
       bottom: "Computer Science"

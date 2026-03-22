@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { Boxes, Code, Globe, Languages, Server, TestTube } from "lucide-react";
 
+import { getCoreTechnologies } from "@/lib/coreTechnologies";
 import { sortEducationByEndDateDesc, type CvData } from "@/lib/resumeData";
 import { formatDateRange } from "@/lib/dateFormat";
 import { Badge } from "@/components/ui/badge";
@@ -59,6 +61,7 @@ export function AboutOverviewSection({ cv }: { cv: CvData["cv"] }) {
   const spokenLanguages = (cv.languages ?? []).map((l) => parseSpokenLanguage(l.bullet));
 
   const educationSorted = sortEducationByEndDateDesc(cv.education ?? []);
+  const coreStack = getCoreTechnologies(cv);
 
   return (
     <>
@@ -97,6 +100,29 @@ export function AboutOverviewSection({ cv }: { cv: CvData["cv"] }) {
               );
             })}
           </div>
+
+          <Card className="mt-12 border-border/50 hover:border-primary/30 hover:shadow-lg transition-all">
+            <CardContent className="p-8">
+              <h3 className="mb-6 text-center text-lg font-semibold">Core Technologies</h3>
+              <div className="grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-8">
+                {coreStack.map((tech) => (
+                  <div key={tech.name} className="group flex flex-col items-center gap-3">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-border/50 bg-background transition-all group-hover:border-primary/30 group-hover:shadow-md">
+                      <Image
+                        src={tech.logo}
+                        alt={tech.name}
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 object-contain"
+                        style={{ filter: tech.invert_logo ? "invert(1)" : "none" }}
+                      />
+                    </div>
+                    <span className="text-center text-sm font-medium">{tech.name}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
