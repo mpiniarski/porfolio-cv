@@ -66,7 +66,7 @@ export function ContactSection({ cv }: { cv: CvData["cv"] }) {
                       <Mail className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h4 className="font-medium mb-1">Email</h4>
+                      <h3 className="font-medium mb-1 text-base">Email</h3>
                       <a
                         href={`mailto:${cv.email}`}
                         className="text-muted-foreground hover:text-primary transition-colors"
@@ -86,7 +86,7 @@ export function ContactSection({ cv }: { cv: CvData["cv"] }) {
                         <Linkedin className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <h4 className="font-medium mb-1">LinkedIn</h4>
+                        <h3 className="font-medium mb-1 text-base">LinkedIn</h3>
                         <a
                           href={linkedin}
                           target="_blank"
@@ -108,7 +108,7 @@ export function ContactSection({ cv }: { cv: CvData["cv"] }) {
                       <MapPin className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h4 className="font-medium mb-1">Location</h4>
+                      <h3 className="font-medium mb-1 text-base">Location</h3>
                       <p className="text-muted-foreground">{formatCvLocationLine(cv)}</p>
                     </div>
                   </div>

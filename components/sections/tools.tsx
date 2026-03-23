@@ -35,7 +35,7 @@ export function ToolsSection({ cv }: { cv: CvData["cv"] }) {
                   />
                 </div>
                 <div>
-                  <h4 className="font-medium text-sm mb-1">{tool.name}</h4>
+                  <h3 className="font-medium text-sm mb-1">{tool.name}</h3>
                   <p className="text-xs text-muted-foreground">{tool.description}</p>
                 </div>
               </CardContent>

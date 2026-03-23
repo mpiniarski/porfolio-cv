@@ -56,6 +56,7 @@ export function CaseStudiesSection({
               <Link
                 key={study.id}
                 href={`/projects/${study.id}`}
+                aria-label={`Case study: ${study.title} — ${study.company}`}
                 className="group block h-full rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <Card className="h-full border-border/50 transition-all group-hover:border-primary/30 group-hover:shadow-md">
@@ -78,10 +79,11 @@ export function CaseStudiesSection({
                         >
                           <Image
                             src={logoSrc}
-                            alt={logoMapKey ? `${logoMapKey} logo` : "Company logo"}
+                            alt=""
                             width={CASE_STUDY_LOGO_MARK_BOX_PX.width}
                             height={CASE_STUDY_LOGO_MARK_BOX_PX.height}
                             className="object-contain object-right"
+                            aria-hidden
                           />
                         </div>
                       ) : null}

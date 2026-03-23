@@ -41,11 +41,11 @@ export function WorkedWithSection({
             <p className="text-muted-foreground text-lg">
               Led frontend development and introduced design systems across global teams in finance, e-commerce, and enterprise software.
             </p>
-            <Link href="/experience" className="block mt-6">
-              <Button className="w-full sm:w-auto sm:min-w-[280px]" size="lg">
-                View My Experience <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+            <Button className="mt-6 w-full sm:w-auto sm:min-w-[280px]" size="lg" asChild>
+              <Link href="/experience">
+                View My Experience <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
+              </Link>
+            </Button>
           </div>
 
           {/* Right Side - Logo Grid */}
@@ -54,6 +54,7 @@ export function WorkedWithSection({
               <Link
                 key={company.name}
                 href={`/experience#${toAnchorId(company.name)}`}
+                aria-label={`${company.shortName ?? company.name}: view on Experience timeline`}
                 className="flex items-center justify-center p-6 lg:p-8 h-[100px] lg:h-[120px] bg-white transition-colors group cursor-pointer"
                 style={{
                   borderRight: (index + 1) % 3 !== 0 ? "1px solid hsl(var(--border))" : "none",
@@ -62,7 +63,8 @@ export function WorkedWithSection({
               >
                 <img
                   src={company.logo}
-                  alt={`${company.shortName ?? company.name} logo`}
+                  alt=""
+                  aria-hidden
                   style={{
                     maxWidth: LOGO_MAX_WIDTH,
                     maxHeight: LOGO_MAX_HEIGHT,

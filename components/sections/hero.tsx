@@ -98,9 +98,10 @@ export function HeroSection({
                   href={github}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="GitHub profile"
                   className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-background/50 backdrop-blur-sm border border-primary/10 hover:bg-primary/10 hover:border-primary/30 transition-all duration-300"
                 >
-                  <Github className="h-5 w-5" />
+                  <Github className="h-5 w-5" aria-hidden />
                 </a>
               ) : null}
               {linkedin ? (
@@ -108,16 +109,18 @@ export function HeroSection({
                   href={linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="LinkedIn profile"
                   className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-background/50 backdrop-blur-sm border border-primary/10 hover:bg-primary/10 hover:border-primary/30 transition-all duration-300"
                 >
-                  <Linkedin className="h-5 w-5" />
+                  <Linkedin className="h-5 w-5" aria-hidden />
                 </a>
               ) : null}
               <a
                 href={`mailto:${cv.email}`}
+                aria-label={`Email ${cv.name}`}
                 className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-background/50 backdrop-blur-sm border border-primary/10 hover:bg-primary/10 hover:border-primary/30 transition-all duration-300"
               >
-                <Mail className="h-5 w-5" />
+                <Mail className="h-5 w-5" aria-hidden />
               </a>
             </div>
 

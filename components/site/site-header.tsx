@@ -31,7 +31,7 @@ export function SiteHeader({ cv }: { cv: CvData["cv"] }) {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="shrink-0">
             <div className="flex flex-col">
-              <h3 className="tracking-tight leading-tight">{cv.name}</h3>
+              <p className="text-base font-semibold tracking-tight leading-tight">{cv.name}</p>
               <span className="text-xs text-muted-foreground">{cv.headline}</span>
             </div>
           </Link>

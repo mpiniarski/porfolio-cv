@@ -54,20 +54,25 @@ export function ExploreMoreSection({
           {displayLinks.map((link) => {
             const Icon = getLucideIcon(link.icon);
             return (
-              <Link key={link.href} href={link.href} className="h-full">
+              <Link
+                key={link.href}
+                href={link.href}
+                className="h-full"
+                aria-label={`${link.title}: ${link.description}`}
+              >
                 <div className="h-full p-6 bg-background border border-border/50 rounded-lg shadow-xl hover:border-primary/30 hover:shadow-2xl transition-all cursor-pointer">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                          {Icon ? <Icon className="h-5 w-5 text-primary" /> : null}
+                          {Icon ? <Icon className="h-5 w-5 text-primary" aria-hidden /> : null}
                         </div>
-                        <h3 className="text-lg font-semibold">{link.title}</h3>
+                        <span className="text-lg font-semibold">{link.title}</span>
                       </div>
                       <p className="text-muted-foreground text-sm">{link.description}</p>
                     </div>
                     <div className="shrink-0 ml-2">
-                      <ArrowRight className="h-5 w-5 text-primary" />
+                      <ArrowRight className="h-5 w-5 text-primary" aria-hidden />
                     </div>
                   </div>
                 </div>

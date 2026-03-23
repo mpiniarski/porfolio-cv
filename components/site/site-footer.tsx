@@ -16,7 +16,7 @@ export function SiteFooter({ cv }: { cv: CvData["cv"] }) {
   return (
     <footer className="bg-secondary/10 py-12 px-4 mt-auto">
       <div className="max-w-4xl mx-auto text-center">
-        <h3 className="mb-4">{cv.name}</h3>
+        <p className="mb-4 text-lg font-semibold tracking-tight">{cv.name}</p>
         <p className="text-muted-foreground mb-6">{cv.footer_tagline ?? cv.headline}</p>
         <div className="flex justify-center gap-6 mb-6">
           {navItems.map((item) => (

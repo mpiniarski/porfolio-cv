@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Building2,
   Calendar,
   ChevronUp,
   GraduationCap,
@@ -42,8 +41,10 @@ function formatPeriod(start: Date, end: Date) {
 type ExperienceItem = {
   title: string;
   company: string;
-  /** Full project line from data (e.g. "SIEMENS (GroundFog)"); shown like employer name under the role. */
+  /** Full project line from data (e.g. "SIEMENS (GroundFog)"); used for anchors and fallbacks. */
   projectName?: string;
+  /** When `name` is "Client (Engagement)", shown under the client line (e.g. GroundFog). */
+  engagementPartner?: string;
   parentCompany?: string;
   location: string;
   period: string;
@@ -72,6 +73,67 @@ function splitClientAndCompany(projectName: string): { client?: string; company?
   const match = projectName.match(/^(.+?)\s*\((.+?)\)\s*$/);
   if (!match) return {};
   return { client: match[1]?.trim(), company: match[2]?.trim() };
+}
+
+/** Title-case loud client labels (e.g. SIEMENS → Siemens) while keeping tokens like MANN+HUMMEL readable. */
+function prettyEngagementClient(raw: string): string {
+  const t = raw.trim();
+  if (!t) return t;
+  if (t.includes("+")) {
+    return t
+      .split("+")
+      .map((part) => {
+        const p = part.trim();
+        if (!p) return part;
+        return p.charAt(0).toUpperCase() + p.slice(1).toLowerCase();
+      })
+      .join("+");
+  }
+  if (t === t.toUpperCase() && /[A-Z]/.test(t)) {
+    return t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
+  }
+  return t;
+}
+
+/** e.g. GroundFog → Ground Fog for subtitle lines */
+function humanizeEngagementPartner(raw: string): string {
+  return raw.replace(/([a-z\d])([A-Z])/g, "$1 $2").trim();
+}
+
+/** Main title = client / project name only; engagement & employer are never part of `heading`. */
+function experienceCardHeadingParts(exp: ExperienceItem): { heading: string; metaLines: string[] } {
+  const heading = exp.title?.trim() || exp.company;
+  const metaLines: string[] = [];
+
+  if (exp.engagementPartner) {
+    metaLines.push(humanizeEngagementPartner(exp.engagementPartner));
+  }
+  if (exp.parentCompany) {
+    metaLines.push(exp.parentCompany);
+  }
+
+  if (!exp.engagementPartner) {
+    const fallback = exp.projectName ?? exp.company;
+    if (fallback !== heading) {
+      metaLines.unshift(fallback);
+    }
+  }
+
+  return { heading, metaLines };
+}
+
+function experienceRailLabels(exp: ExperienceItem): { main: string; subLines: string[] } {
+  if (!exp.isSubProject) {
+    return { main: exp.shortName || exp.company, subLines: [] };
+  }
+  const subLines: string[] = [];
+  if (exp.engagementPartner) {
+    subLines.push(humanizeEngagementPartner(exp.engagementPartner));
+  }
+  if (exp.parentCompany) {
+    subLines.push(exp.parentCompany);
+  }
+  return { main: exp.title, subLines };
 }
 
 const now = new Date();
@@ -136,11 +198,14 @@ export function ExperienceTimelineSection({
           if (!pStart || !pEnd) continue;
 
           const projectCompany = company ?? exp.company;
-          const projectTitle = p.role?.trim() || title;
+          const splitPair = Boolean(client && company);
+          const displayTitle = splitPair && client ? prettyEngagementClient(client) : p.name.trim() || title;
+          const engagementPartner = splitPair && company ? company : undefined;
           out.push({
-            title: projectTitle,
+            title: displayTitle,
             company: projectCompany,
             projectName: p.name,
+            engagementPartner,
             parentCompany: exp.company,
             location: exp.location ?? "",
             period: formatPeriod(pStart, pEnd),
@@ -359,6 +424,9 @@ export function ExperienceTimelineSection({
     );
   }
 
+  const activeExp = experiences[activeIndex];
+  const activeHeadingParts = activeExp ? experienceCardHeadingParts(activeExp) : { heading: "", metaLines: [] as string[] };
+
   return (
     <section
       ref={containerRef}
@@ -379,71 +447,74 @@ export function ExperienceTimelineSection({
           </div>
 
           <div className="flex-1 overflow-y-auto space-y-4 pb-4">
-            {experiences.map((exp, index) => (
-              <Card
-                key={`${exp.company}-${exp.period}-${index}`}
-                data-experience-anchor={exp.anchorId}
-                ref={(el) => {
-                  cardRefs.current[index] = el;
-                }}
-                className={`scroll-mt-28 border-border/50 shadow-lg transition-all duration-500 ${highlightedIndex === index ? "ring-2 ring-primary shadow-primary/20" : ""
-                  }`}
-              >
-                <CardHeader className="pb-4">
-                  <div className="flex items-start gap-4">
-                    {exp.logo ? (
-                      <div className="shrink-0 w-24 h-24 flex items-center justify-center bg-white rounded-lg border border-border/50 p-2.5">
-                        <img
-                          src={exp.logo}
-                          alt={`${exp.company} logo`}
-                          className="max-w-full max-h-full object-contain"
-                        />
-                      </div>
-                    ) : null}
-
-                    <div className="flex-1">
-                      <h3 className="text-xl md:text-2xl font-semibold mb-2">{exp.title}</h3>
-                      <p className="text-primary text-lg font-medium mb-1">
-                        {exp.projectName ?? exp.company}
-                      </p>
-
-                      {exp.parentCompany ? (
-                        <p className="text-sm text-muted-foreground mb-2 flex items-start gap-1.5">
-                          <Building2 className="mt-0.5 h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
-                          <span>
-                            Employed by{" "}
-                            <span className="font-medium text-foreground/90">{exp.parentCompany}</span>
-                          </span>
-                        </p>
+            {experiences.map((exp, index) => {
+              const hp = experienceCardHeadingParts(exp);
+              return (
+                <Card
+                  key={`${exp.company}-${exp.period}-${index}`}
+                  data-experience-anchor={exp.anchorId}
+                  ref={(el) => {
+                    cardRefs.current[index] = el;
+                  }}
+                  className={`scroll-mt-28 border-border/50 shadow-lg transition-all duration-500 ${highlightedIndex === index ? "ring-2 ring-primary shadow-primary/20" : ""
+                    }`}
+                >
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start gap-4">
+                      {exp.logo ? (
+                        <div className="shrink-0 w-24 h-24 flex items-center justify-center bg-white rounded-lg border border-border/50 p-2.5">
+                          <img
+                            src={exp.logo}
+                            alt={`${exp.company} logo`}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
                       ) : null}
 
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground text-sm">
-                        <div className="flex items-center gap-1.5">
-                          <Calendar className="h-4 w-4" />
-                          <span>{exp.period}</span>
+                      <div className="flex-1">
+                        <h2
+                          className={`font-semibold tracking-tight mb-1 ${hp.metaLines.length > 0 ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"}`}
+                        >
+                          {hp.heading}
+                        </h2>
+                        {hp.metaLines.length > 0 ? (
+                          <div className="mb-2 space-y-1">
+                          {hp.metaLines.map((line, mi) => (
+                            <p key={`${exp.anchorId}-m-${mi}`} className="text-sm text-muted-foreground">
+                              {line}
+                            </p>
+                          ))}
+                          </div>
+                        ) : null}
+
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground text-sm">
+                          <div className="flex items-center gap-1.5">
+                            <Calendar className="h-4 w-4" />
+                            <span>{exp.period}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <MapPin className="h-4 w-4" />
+                            <span>{exp.location}</span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                          <MapPin className="h-4 w-4" />
-                          <span>{exp.location}</span>
-                        </div>
+                        {exp.client && !exp.projectName ? (
+                          <p className="text-xs text-muted-foreground mt-2">Client: {exp.client}</p>
+                        ) : null}
                       </div>
-                      {exp.client && !exp.projectName ? (
-                        <p className="text-xs text-muted-foreground mt-2">Client: {exp.client}</p>
-                      ) : null}
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <ul className="list-disc list-outside ml-4 pl-4 space-y-2 mb-6 text-muted-foreground text-sm md:text-base leading-relaxed marker:text-primary">
-                    {exp.highlights.map((highlight, hIndex) => (
-                      <li key={`${highlight}-${hIndex}`} className="pl-1">
-                        {highlight}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <ul className="list-disc list-outside ml-4 pl-4 space-y-2 mb-6 text-muted-foreground text-sm md:text-base leading-relaxed marker:text-primary">
+                      {exp.highlights.map((highlight, hIndex) => (
+                        <li key={`${highlight}-${hIndex}`} className="pl-1">
+                          {highlight}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
 
@@ -464,26 +535,19 @@ export function ExperienceTimelineSection({
                   ) : null}
 
                   <div className="flex-1">
-                    <h3
-                      className={`text-xl md:text-2xl font-semibold mb-2 ${experiences[activeIndex].isOpportunity ? "text-primary" : ""
-                        }`}
+                    <h2
+                      className={`font-semibold tracking-tight mb-1 ${activeHeadingParts.metaLines.length > 0 ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"} ${experiences[activeIndex].isOpportunity ? "text-primary" : ""}`}
                     >
-                      {experiences[activeIndex].title}
-                    </h3>
-                    <p className="text-primary text-lg font-medium mb-1">
-                      {experiences[activeIndex].projectName ?? experiences[activeIndex].company}
-                    </p>
-
-                    {experiences[activeIndex].parentCompany ? (
-                      <p className="text-sm text-muted-foreground mb-2 flex items-start gap-1.5">
-                        <Building2 className="mt-0.5 h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
-                        <span>
-                          Employed by{" "}
-                          <span className="font-medium text-foreground/90">
-                            {experiences[activeIndex].parentCompany}
-                          </span>
-                        </span>
-                      </p>
+                      {activeHeadingParts.heading}
+                    </h2>
+                    {activeHeadingParts.metaLines.length > 0 ? (
+                      <div className="mb-2 space-y-1">
+                        {activeHeadingParts.metaLines.map((line, mi) => (
+                          <p key={`active-m-${mi}`} className="text-sm text-muted-foreground">
+                            {line}
+                          </p>
+                        ))}
+                      </div>
                     ) : null}
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground text-sm">
@@ -586,9 +650,7 @@ export function ExperienceTimelineSection({
                 const rangeHeight = bottomPosition - topPosition;
                 const isActive = index === activeIndex;
 
-                const labelMain = exp.isSubProject ? exp.title : exp.shortName || exp.company;
-                const labelSub1 = exp.isSubProject ? exp.projectName ?? exp.company : null;
-                const labelSub2 = exp.isSubProject ? exp.parentCompany : null;
+                const { main: railMain, subLines: railSubLines } = experienceRailLabels(exp);
 
                 return (
                   <button
@@ -617,24 +679,17 @@ export function ExperienceTimelineSection({
                           className={`text-sm font-medium transition-all ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-primary/50"
                             }`}
                         >
-                          {labelMain}
+                          {railMain}
                         </div>
-                        {labelSub1 ? (
+                        {railSubLines.map((line, si) => (
                           <div
+                            key={`${index}-rail-${si}`}
                             className={`text-[9px] transition-all ${isActive ? "text-primary" : "text-muted-foreground/70 group-hover:text-primary/50"
                               }`}
                           >
-                            {labelSub1}
+                            {line}
                           </div>
-                        ) : null}
-                        {labelSub2 ? (
-                          <div
-                            className={`text-[9px] transition-all ${isActive ? "text-primary" : "text-muted-foreground/70 group-hover:text-primary/50"
-                              }`}
-                          >
-                            {labelSub2}
-                          </div>
-                        ) : null}
+                        ))}
                       </div>
                     </div>
                   </button>
@@ -658,10 +713,12 @@ export function ExperienceTimelineSection({
           <Card className="max-w-lg w-full border-border/50 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <CardHeader className="relative pb-3">
               <button
+                type="button"
                 onClick={() => setSelectedEducation(null)}
+                aria-label="Close education details"
                 className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
               >
-                <X className="h-5 w-5" />
+                <X className="h-5 w-5" aria-hidden />
               </button>
               <div className="flex items-start gap-3 pr-8">
                 <div className="shrink-0 mt-1">
@@ -670,7 +727,7 @@ export function ExperienceTimelineSection({
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold mb-1">{educationMilestones[selectedEducation].title}</h3>
+                  <h2 className="text-xl font-semibold mb-1">{educationMilestones[selectedEducation].title}</h2>
                   <p className="text-primary font-medium">{educationMilestones[selectedEducation].institution}</p>
                   <p className="text-sm text-muted-foreground mt-1">{educationMilestones[selectedEducation].year}</p>
                 </div>
@@ -692,12 +749,14 @@ export function ExperienceTimelineSection({
           >
             <CardHeader className="pb-3 border-b border-border shrink-0">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-semibold">Experience Timeline</h3>
+                <h2 className="text-xl font-semibold">Experience Timeline</h2>
                 <button
+                  type="button"
                   onClick={() => setIsTimelineOpen(false)}
+                  aria-label="Close timeline"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-5 w-5" aria-hidden />
                 </button>
               </div>
             </CardHeader>
@@ -764,9 +823,7 @@ export function ExperienceTimelineSection({
                     const rangeHeight = bottomPosition - topPosition;
                     const isActive = index === activeIndex;
 
-                    const labelMain = exp.isSubProject ? exp.title : exp.shortName || exp.company;
-                    const labelSub1 = exp.isSubProject ? exp.projectName ?? exp.company : null;
-                    const labelSub2 = exp.isSubProject ? exp.parentCompany : null;
+                    const { main: railMain, subLines: railSubLines } = experienceRailLabels(exp);
 
                     return (
                       <button
@@ -807,24 +864,17 @@ export function ExperienceTimelineSection({
                               className={`text-sm font-medium transition-all ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-primary/50"
                                 }`}
                             >
-                              {labelMain}
+                              {railMain}
                             </div>
-                            {labelSub1 ? (
+                            {railSubLines.map((line, si) => (
                               <div
+                                key={`${index}-rail-m-${si}`}
                                 className={`text-[9px] transition-all ${isActive ? "text-primary" : "text-muted-foreground/70 group-hover:text-primary/50"
                                   }`}
                               >
-                                {labelSub1}
+                                {line}
                               </div>
-                            ) : null}
-                            {labelSub2 ? (
-                              <div
-                                className={`text-[9px] transition-all ${isActive ? "text-primary" : "text-muted-foreground/70 group-hover:text-primary/50"
-                                  }`}
-                              >
-                                {labelSub2}
-                              </div>
-                            ) : null}
+                            ))}
                           </div>
                         </div>
                       </button>
