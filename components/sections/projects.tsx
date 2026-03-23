@@ -12,11 +12,16 @@ export function ProjectsSection({
   projects,
   title,
   description,
+  hideWhenEmpty,
 }: {
   projects: NonNullable<CvData["cv"]["projects"]>;
   title?: string;
   description?: string;
+  /** Omit the whole section when there are no projects (e.g. combined Work page). */
+  hideWhenEmpty?: boolean;
 }) {
+  if (hideWhenEmpty && projects.length === 0) return null;
+
   return (
     <section id="projects" className="py-20 px-4 bg-secondary/5">
       <div className="max-w-6xl mx-auto">

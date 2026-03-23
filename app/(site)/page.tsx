@@ -2,9 +2,8 @@ import { getCvData } from "@/lib/cv";
 import { HeroSection } from "@/components/sections/hero";
 import { WorkedWithSection } from "@/components/sections/worked-with";
 import { OverviewQuickSection } from "@/components/sections/overview-quick";
-import { SelectedWorkSection } from "@/components/sections/selected-work";
+import { CaseStudiesSection } from "@/components/sections/case-studies";
 import { ServicesSection } from "@/components/sections/services";
-import { ProjectsSection } from "@/components/sections/projects";
 import { ExploreMoreSection } from "@/components/sections/explore-more";
 import { ContactSection } from "@/components/sections/contact";
 
@@ -26,20 +25,19 @@ export default function Home() {
           companies={derived.workedWith}
         />
       </div>
-      <div id="selected-work">
-        <SelectedWorkSection cv={cv} />
-      </div>
+      <CaseStudiesSection
+        block={cv.case_studies}
+        companyLogos={cv.company_logos}
+        maxItems={3}
+        viewAllHref="/projects#case-studies"
+        viewAllLabel="See all work →"
+      />
       <div id="overview">
         <OverviewQuickSection cv={cv} />
       </div>
       <div id="services">
         <ServicesSection cv={cv} />
       </div>
-      <ProjectsSection
-        projects={cv.projects ?? []}
-        title="Featured Projects"
-        description="Personal projects showcasing frontend development skills and modern web technologies."
-      />
       <div className="bg-secondary/5">
         <ExploreMoreSection cv={cv} excludeHrefs={["/contact"]} />
       </div>

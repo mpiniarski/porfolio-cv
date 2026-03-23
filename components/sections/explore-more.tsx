@@ -32,8 +32,8 @@ export function ExploreMoreSection({
     {
       href: "/projects",
       icon: "FolderOpen",
-      title: "Projects",
-      description: "Explore my portfolio of professional and personal work",
+      title: "Work",
+      description: "Case studies from my roles and personal projects",
     },
     { href: "/contact", icon: "Mail", title: "Contact", description: "Let's discuss opportunities" },
   ];

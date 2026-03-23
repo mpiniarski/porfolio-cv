@@ -1,5 +1,5 @@
 /**
- * Stable fragment id for /experience deep links. Must match `selected_work.highlights[].experience_anchor` in data.yml.
+ * Stable fragment id for /experience deep links. Must match `case_studies.items[].experience_anchor` (and experience UI) in data.yml.
  */
 export function experienceEntryAnchorId(projectName: string | undefined, company: string): string {
   const raw = (projectName ?? company).trim();

@@ -56,10 +56,10 @@ cv:
       projects:
         - name: "SIEMENS (GroundFog)"
           role: "Lead Front-end Developer"
-          start_date: "2023-02"
+          start_date: "2024-02"
           end_date: "2025-02"
           highlights:
-            - "Led frontend development within a 10-person team (4 frontend engineers) on a global multi-application platform using Vue, TypeScript, and Vite, mentoring developers and improving code quality via guidelines and CI/CD (linting, quality gates), reducing noise in PRs and improving review efficiency."
+            - "Led frontend development within a 10-person team (4 frontend engineers) on a global multi-application platform using Vue, TypeScript, GraphQL and Vite, mentoring developers and improving code quality via guidelines and CI/CD (linting, quality gates), reducing noise in PRs and improving review efficiency."
             - "Delivered core platform features for siemens.com, including AI-powered search, chatbot interfaces, and live translation used across a global multi-language platform."
             - "Built and evolved a shared design system (~30 components) used across multiple applications, enabling consistent UI development at scale."
             - "Improved frontend quality and reliability by introducing visual regression testing (Playwright) and integrating checks into the CI/CD pipeline, reducing UI regressions in production."
@@ -67,8 +67,8 @@ cv:
 
         - name: "MANN+HUMMEL (Diva-E)"
           role: "Senior Front-end Developer"
-          start_date: "2022-09"
-          end_date: "2023-01"
+          start_date: "2023-09"
+          end_date: "2024-01"
           highlights:
             - "Developed advanced product discovery features using React, TypeScript, and GraphQL, including VIN-based search, dimension-based filtering, and smart search across a large automotive catalog, improving product discovery and navigation across the catalog."
             - "Built search results, product detail pages, and 360° product visualizations, improving product exploration and usability."
@@ -76,7 +76,7 @@ cv:
         - name: "Websight CMS"
           role: "Front-end Developer"
           start_date: "2021-04"
-          end_date: "2022-08"
+          end_date: "2023-08"
           highlights:
             - "Led frontend development of a visual CMS built with React, mentoring a frontend engineer and collaborating closely with backend (OSGi-based) and design teams, including reviewing and guiding frontend-related contributions; primary contributor to core editor functionality."
             - "Designed and built a drag-and-drop page editor with component tree and overlay-based editing on top of an iframe-rendered page, enabling content teams to visually create and manage pages without developer involvement."
@@ -163,25 +163,109 @@ cv:
       repo: "https://github.com/mpiniarski/spectrum"
       image: "/contrast/clue.png"
 
-  selected_work:
-    title: "Selected Work"
-    description: "High-impact product surfaces from recent senior frontend roles."
-    highlights:
-      - title: "Visual CMS editor"
-        subtitle: "WebSight"
-        icon: "LayoutTemplate"
-        company: "Dynamic Solutions"
-        experience_anchor: "websight-cms"
-      - title: "AI-powered search + chatbot + live translations"
-        subtitle: "Siemens"
-        icon: "Bot"
-        company: "Siemens"
-        experience_anchor: "siemens-groundfog"
-      - title: "Financial dashboards"
-        subtitle: "Balyasny"
-        icon: "BarChart3"
-        company: "Balyasny Asset Management"
-        experience_anchor: "balyasny-asset-management"
+  case_studies:
+    title: "Case studies"
+    description: "Concrete problems from recent roles — what was hard, what I built, and what changed."
+    items:
+      - id: websight-wysiwyg-editor
+        title: "Building a true WYSIWYG editor on top of a live webpage"
+        company: "WebSight CMS"
+        logo_company: "Dynamic Solutions"
+        blurb: "Enabling true visual editing on top of a real rendered page using an overlay-based architecture."
+        problem:
+          - "Needed true WYSIWYG editing on top of a real rendered page, not a simplified preview"
+          - "Complex interactions (select, drag, edit) had to feel native to the document"
+          - "Rendering inside an iframe introduced challenges with positioning, synchronization, and styling"
+        work:
+          - "Built an overlay-based editor system aligned with an iframe-rendered page underneath"
+          - "Synchronized editor state with the live DOM to enable precise interactions"
+          - "Solved rendering issues by dynamically adapting styles (e.g. normalizing viewport units like vh/vw)"
+          - "Designed a plugin-based architecture (ESM) enabling complex behavior through small, maintainable modules"
+          - "Implemented interaction model using overlays, toolbars, and side panels while underlying page re-rendered affected segments"
+          - "Collaborated with backend (OSGi) on APIs and architecture, and with design on UX constraints"
+          - "Mentored frontend engineers through reviews and architectural guidance"
+        impact:
+          - "Enabled non-technical users to manage content visually"
+          - "Delivered a complex UI system with real product value"
+          - "Improved maintainability through modular architecture"
+          - "Strengthened team capabilities through mentoring"
+
+      - id: siemens-design-system
+        title: "Scaling UI consistency across a multi-application platform"
+        company: "Siemens (GroundFog)"
+        logo_company: "Siemens"
+        blurb: "Unifying UI across teams with a shared design system and visual regression testing."
+        problem:
+          - "UI components implemented separately across teams led to inconsistent UX, duplicated logic, and regressions"
+          - "No reliable way to validate shared UI changes at scale"
+          - "Duplication occurred even within the same team"
+        work:
+          - "Led development of a shared design system (~30 components)"
+          - "Collaborated with design to refine tokens, patterns, and behaviors"
+          - "Built a component library (storybook-like) enabling interactive exploration of component states and props"
+          - "Designed preview system covering multiple states (hover, active) and viewports (desktop, tablet, mobile)"
+          - "Integrated visual regression testing (Playwright) for automated UI validation"
+          - "Worked closely with stakeholders, driving adoption across teams"
+        impact:
+          - "Improved UI consistency and accessibility across applications"
+          - "Increased development speed through reuse"
+          - "Reduced regressions and improved confidence when evolving shared UI"
+          - "Lowered long-term maintenance cost of frontend code"
+
+      - id: olx-frontend-flows
+        title: "Bridging legacy and modern UI flows"
+        company: "OLX Group"
+        blurb: "Connecting legacy and modern applications to enable seamless cross-application flows."
+        problem:
+          - "Same product flows had to be maintained in both legacy and modern applications"
+          - "Led to duplicated work, inconsistent behavior, and slower delivery"
+          - "Integrating new flows without breaking existing journeys was challenging"
+        work:
+          - "Enabled cross-application flow transitions between legacy and modern UI"
+          - "Implemented mechanism for entering flows in the new app and returning to legacy seamlessly"
+          - "Ensured consistent behavior and navigation across application boundaries"
+        impact:
+          - "Reduced duplication of frontend logic across applications"
+          - "Improved consistency of key user flows"
+          - "Enabled gradual migration without disrupting existing users"
+
+      - id: siemens-environment-access
+        title: "Eliminating environment friction across development and QA"
+        company: "Siemens (GroundFog)"
+        logo_company: "Siemens"
+        blurb: "Improving workflows by enabling dynamic environment switching via URL configuration."
+        problem:
+          - "Environment access required manual data setup and coordination"
+          - "Difficult for teams to view the same content across environments"
+          - "Slowed down testing, validation, and stakeholder feedback"
+        work:
+          - "Designed a URL-based environment configuration system"
+          - "Enabled dynamic switching between environments without manual data migration"
+          - "Built solution usable across developers, QA, and non-technical stakeholders"
+        impact:
+          - "Significantly improved testing and validation workflows"
+          - "Reduced cross-team coordination overhead"
+          - "Accelerated feedback loops across development and product"
+
+      - id: olx-account-recovery
+        title: "Faster account recovery for users"
+        company: "OLX Group"
+        blurb: "Improving user experience and operations by enabling secure support-driven account recovery."
+        problem:
+          - "Blocked accounts required developer involvement, delaying resolution"
+          - "Users could wait hours to regain access"
+          - "Customer support lacked tools to act independently"
+          - "Direct system access (e.g. AWS Cognito) could not be safely granted"
+        work:
+          - "Identified the problem and initiated the effort to improve the workflow"
+          - "Coordinated with teams to design and deliver a secure solution"
+          - "Enabled support to perform recovery actions within controlled permissions"
+          - "Ensured balance between usability and strict security constraints"
+        impact:
+          - "Reduced account recovery time significantly"
+          - "Improved user experience by restoring access faster"
+          - "Enabled support team autonomy"
+          - "Removed recurring operational burden from engineering"
 
   core_technologies:
     - name: "TypeScript"

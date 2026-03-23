@@ -15,7 +15,7 @@ export function SiteHeader({ cv }: { cv: CvData["cv"] }) {
   const navItems = [
     { label: "Home", href: "/" },
     { label: "Experience", href: "/experience" },
-    { label: "Projects", href: "/projects" },
+    { label: "Work", href: "/projects" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
   ];

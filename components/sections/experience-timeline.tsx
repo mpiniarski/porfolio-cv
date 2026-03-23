@@ -56,7 +56,7 @@ type ExperienceItem = {
   isSubProject?: boolean;
   shortName?: string;
   isOpportunity?: boolean;
-  /** Matches `selected_work.highlights[].experience_anchor` / URL `#fragment`. */
+  /** Matches `case_studies.items[].experience_anchor` / `/experience#…` URL fragment. */
   anchorId: string;
 };
 

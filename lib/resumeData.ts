@@ -69,19 +69,26 @@ export interface CvProject {
   image?: string;
 }
 
-export interface CvSelectedWorkHighlight {
+/** Long-form “problem → work → impact” narratives; optional homepage / case studies section. */
+export interface CvCaseStudy {
+  /** Stable key for anchors or analytics. */
+  id: string;
   title: string;
-  /** Detail line (e.g. tech stack) or context (e.g. employer). */
-  subtitle?: string;
-  /** Lucide icon name registered in `components/shared/icon-map.tsx`. */
-  icon?: string;
-  /** Exact key in `company_logos` for the org where the work happened. */
-  company?: string;
+  /** Employer or client label shown in UI. */
+  company: string;
+  /** Exact key in `company_logos` when the display `company` label does not match a logo map entry. */
+  logo_company?: string;
   /**
-   * Fragment for `/experience#…` — must match `experienceEntryAnchorId(project name or company)` in code.
-   * Example: `websight-cms`, `siemens-groundfog`, `balyasny-asset-management`.
+   * Optional `/experience#…` link — must match `experienceEntryAnchorId(project name, company)`.
    */
   experience_anchor?: string;
+  /** One-line hook under the title. */
+  blurb?: string;
+  problem: string[];
+  work: string[];
+  impact: string[];
+  /** Reflections, trade-offs, or lessons (optional). */
+  learning?: string[];
 }
 
 export interface CvCoreTechnology {
@@ -141,11 +148,11 @@ export interface CvData {
     typically_help_with?: string[];
     social_networks?: CvSocialNetwork[];
     projects?: CvProject[];
-    /** Homepage “Selected Work”; section omitted when missing or `highlights` empty. */
-    selected_work?: {
+    /** Case studies / problem narratives; UI can omit when `items` missing or empty. */
+    case_studies?: {
       title?: string;
       description?: string;
-      highlights: CvSelectedWorkHighlight[];
+      items: CvCaseStudy[];
     };
     /** Tech stack logos for home overview + about; UI falls back to built-in defaults when omitted. */
     core_technologies?: CvCoreTechnology[];
