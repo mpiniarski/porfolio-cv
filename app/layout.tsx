@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
-import { getCvData } from "@/lib/cv";
 import { RootShell } from "@/components/site/root-shell";
+import { SiteAnalytics } from "@/components/site/site-analytics";
+import { getCvData } from "@/lib/cv";
 
 export function generateMetadata(): Metadata {
   const { cv, derived } = getCvData();
@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <RootShell cv={cv}>{children}</RootShell>
-        <Analytics />
+        <SiteAnalytics />
       </body>
     </html>
   );
