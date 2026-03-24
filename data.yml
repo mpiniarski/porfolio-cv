@@ -159,7 +159,7 @@ cv:
     - name: "Contrast"
       summary: "Real-time multiplayer word association game built with PartyKit, React, and TypeScript, demonstrating hexagonal architecture with shared game logic across client and server."
       technologies: "React · Next.js · TypeScript · PartyKit · WebSockets · Tailwind CSS"
-      app: "https://spectrum-dev-kohl.vercel.app/"
+      app: "https://spectrum-rho.vercel.app/"
       repo: "https://github.com/mpiniarski/spectrum"
       image: "/contrast/clue.png"
 
