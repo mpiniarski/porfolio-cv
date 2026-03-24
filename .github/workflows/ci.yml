@@ -1,7 +1,8 @@
 # CI (lint, build, tests — visual regression skipped) runs on every branch: all pushes and all pull requests.
 # Production deploy runs only on push to main (see `deploy` job `if`).
 #
-# Deploy secrets (GitHub → Settings → Secrets and variables → Actions):
+# Deploy secrets: store them under the GitHub Environment you use below (Settings → Environments
+# → your env → Environment secrets), or as repository secrets (Settings → Secrets → Actions).
 #   VERCEL_TOKEN       — https://vercel.com/account/tokens
 #   VERCEL_ORG_ID      — Vercel project → Settings → General
 #   VERCEL_PROJECT_ID  — same
@@ -47,6 +48,9 @@ jobs:
     needs: ci
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    # Must match the environment name in GitHub (Settings → Environments). Exposes that env’s
+    # secrets to this job as ${{ secrets.* }} — same syntax as repository secrets.
+    environment: prod
     steps:
       - uses: actions/checkout@v4
 

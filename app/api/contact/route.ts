@@ -3,8 +3,6 @@ import { Resend } from "resend";
 
 import { getCvData } from "@/lib/cv";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -25,12 +23,15 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!process.env.RESEND_API_KEY) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
       return NextResponse.json(
         { error: "Email service is not configured" },
         { status: 500 }
       );
     }
+
+    const resend = new Resend(apiKey);
 
     const { cv } = getCvData();
     const recipientEmail = process.env.CONTACT_EMAIL ?? cv.email;
