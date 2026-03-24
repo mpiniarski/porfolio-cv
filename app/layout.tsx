@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 import { getCvData } from "@/lib/cv";
@@ -26,6 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <RootShell cv={cv}>{children}</RootShell>
+        <Analytics />
       </body>
     </html>
   );
