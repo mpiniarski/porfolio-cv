@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
+
 import { getCvData } from "@/lib/cv";
 import { ExperienceTimelineSection } from "@/components/sections/experience-timeline";
 import { PageHeader } from "@/components/shared/page-header";
+
+export const metadata: Metadata = {
+  title: "Experience",
+  description: "Detailed work history and project highlights.",
+};
 
 export default function ExperiencePage() {
   const { cv } = getCvData();

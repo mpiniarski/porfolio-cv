@@ -5,8 +5,14 @@ import { getCvData } from "@/lib/cv";
 import { RootShell } from "@/components/site/root-shell";
 
 export function generateMetadata(): Metadata {
-  const { derived } = getCvData();
-  return { title: derived.meta.title, description: derived.meta.description };
+  const { cv, derived } = getCvData();
+  return {
+    title: {
+      default: derived.meta.title,
+      template: `%s · ${cv.name}`,
+    },
+    description: derived.meta.description,
+  };
 }
 
 export default function RootLayout({

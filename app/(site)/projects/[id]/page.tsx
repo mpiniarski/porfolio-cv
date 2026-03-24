@@ -18,9 +18,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const { cv } = getCvData();
   const study = getCaseStudyById(cv, id);
-  if (!study) return { title: "Case study" };
+  if (!study) return { title: "Work" };
   return {
-    title: `${study.title} — Work`,
+    title: study.title,
     description: study.blurb ?? study.problem[0],
   };
 }
