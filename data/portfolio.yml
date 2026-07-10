@@ -1,0 +1,222 @@
+footer_tagline: "Senior Frontend Engineer | React · Vue · Next.js"
+
+typically_help_with:
+  - "Designing and implementing React/TypeScript frontends for internal tools and platforms"
+  - "Building and evolving design systems and component libraries at scale"
+  - "Profiling, debugging, and improving performance in data-heavy UIs"
+
+projects:
+  - name: "Contrast"
+    summary: "Real-time multiplayer word association game built with PartyKit, React, and TypeScript, demonstrating hexagonal architecture with shared game logic across client and server."
+    technologies: "React · Next.js · TypeScript · PartyKit · WebSockets · Tailwind CSS"
+    app: "https://spectrum-rho.vercel.app/"
+    repo: "https://github.com/mpiniarski/spectrum"
+    image: "/contrast/clue.png"
+
+case_studies:
+  title: "Case studies"
+  description: "Concrete problems from recent roles — what was hard, what I built, and what changed."
+  items:
+    - id: websight-wysiwyg-editor
+      title: "Building a true WYSIWYG editor on top of a live webpage"
+      company: "WebSight CMS"
+      logo_company: "Dynamic Solutions"
+      blurb: "Enabling true visual editing on top of a real rendered page using an overlay-based architecture."
+      problem:
+        - "Needed true WYSIWYG editing on top of a real rendered page, not a simplified preview"
+        - "Complex interactions (select, drag, edit) had to feel native to the document"
+        - "Rendering inside an iframe introduced challenges with positioning, synchronization, and styling"
+      work:
+        - "Built an overlay-based editor system aligned with an iframe-rendered page underneath"
+        - "Synchronized editor state with the live DOM to enable precise interactions"
+        - "Solved rendering issues by dynamically adapting styles (e.g. normalizing viewport units like vh/vw)"
+        - "Designed a plugin-based architecture (ESM) enabling complex behavior through small, maintainable modules"
+        - "Implemented interaction model using overlays, toolbars, and side panels while underlying page re-rendered affected segments"
+        - "Collaborated with backend (OSGi) on APIs and architecture, and with design on UX constraints"
+        - "Mentored frontend engineers through reviews and architectural guidance"
+      impact:
+        - "Enabled non-technical users to manage content visually"
+        - "Delivered a complex UI system with real product value"
+        - "Improved maintainability through modular architecture"
+        - "Strengthened team capabilities through mentoring"
+
+    - id: siemens-design-system
+      title: "Scaling UI consistency across a multi-application platform"
+      company: "Siemens (GroundFog)"
+      logo_company: "Siemens"
+      blurb: "Unifying UI across teams with a shared design system and visual regression testing."
+      problem:
+        - "UI components implemented separately across teams led to inconsistent UX, duplicated logic, and regressions"
+        - "No reliable way to validate shared UI changes at scale"
+        - "Duplication occurred even within the same team"
+      work:
+        - "Led development of a shared design system (~30 components)"
+        - "Collaborated with design to refine tokens, patterns, and behaviors"
+        - "Built a component library (storybook-like) enabling interactive exploration of component states and props"
+        - "Designed preview system covering multiple states (hover, active) and viewports (desktop, tablet, mobile)"
+        - "Integrated visual regression testing (Playwright) for automated UI validation"
+        - "Worked closely with stakeholders, driving adoption across teams"
+      impact:
+        - "Improved UI consistency and accessibility across applications"
+        - "Increased development speed through reuse"
+        - "Reduced regressions and improved confidence when evolving shared UI"
+        - "Lowered long-term maintenance cost of frontend code"
+
+    - id: olx-frontend-flows
+      title: "Bridging legacy and modern UI flows"
+      company: "OLX Group"
+      blurb: "Connecting legacy and modern applications to enable seamless cross-application flows."
+      problem:
+        - "Same product flows had to be maintained in both legacy and modern applications"
+        - "Led to duplicated work, inconsistent behavior, and slower delivery"
+        - "Integrating new flows without breaking existing journeys was challenging"
+      work:
+        - "Enabled cross-application flow transitions between legacy and modern UI"
+        - "Implemented mechanism for entering flows in the new app and returning to legacy seamlessly"
+        - "Ensured consistent behavior and navigation across application boundaries"
+      impact:
+        - "Reduced duplication of frontend logic across applications"
+        - "Improved consistency of key user flows"
+        - "Enabled gradual migration without disrupting existing users"
+
+    - id: siemens-environment-access
+      title: "Eliminating environment friction across development and QA"
+      company: "Siemens (GroundFog)"
+      logo_company: "Siemens"
+      blurb: "Improving workflows by enabling dynamic environment switching via URL configuration."
+      problem:
+        - "Environment access required manual data setup and coordination"
+        - "Difficult for teams to view the same content across environments"
+        - "Slowed down testing, validation, and stakeholder feedback"
+      work:
+        - "Designed a URL-based environment configuration system"
+        - "Enabled dynamic switching between environments without manual data migration"
+        - "Built solution usable across developers, QA, and non-technical stakeholders"
+      impact:
+        - "Significantly improved testing and validation workflows"
+        - "Reduced cross-team coordination overhead"
+        - "Accelerated feedback loops across development and product"
+
+    - id: olx-account-recovery
+      title: "Faster account recovery for users"
+      company: "OLX Group"
+      blurb: "Improving user experience and operations by enabling secure support-driven account recovery."
+      problem:
+        - "Blocked accounts required developer involvement, delaying resolution"
+        - "Users could wait hours to regain access"
+        - "Customer support lacked tools to act independently"
+        - "Direct system access (e.g. AWS Cognito) could not be safely granted"
+      work:
+        - "Identified the problem and initiated the effort to improve the workflow"
+        - "Coordinated with teams to design and deliver a secure solution"
+        - "Enabled support to perform recovery actions within controlled permissions"
+        - "Ensured balance between usability and strict security constraints"
+      impact:
+        - "Reduced account recovery time significantly"
+        - "Improved user experience by restoring access faster"
+        - "Enabled support team autonomy"
+        - "Removed recurring operational burden from engineering"
+
+core_technologies:
+  - name: "TypeScript"
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
+  - name: "React"
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+  - name: "Vue"
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg"
+  - name: "Next.js"
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg"
+    invert_logo: true
+  - name: "GraphQL"
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg"
+  - name: "Node.js"
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
+  - name: "Kotlin"
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg"
+  - name: "Playwright"
+    logo: "https://playwright.dev/img/playwright-logo.svg"
+
+photo: "/hero/profile.png"
+
+hero_stats:
+  - top: "M.Sc"
+    bottom: "Computer Science"
+  - top: "React"
+    bottom: "Next.js"
+  - top: "Remote"
+    bottom: "Warsaw"
+
+worked_with:
+  years_label: "9"
+  companies:
+    - "Balyasny Asset Management"
+    - "Siemens"
+    - "OLX Group"
+    - "Pearson IOKI"
+    - "Diva-E"
+    - "Dynamic Solutions"
+    - "GroundFog"
+    - "No Spoon Tech Lab"
+    - "Appchance"
+
+open_for_opportunities: true
+open_for_opportunities_section:
+  availability: "Available Now"
+  mode: "Remote / Hybrid"
+  bullets:
+    - "Currently exploring new opportunities as a Senior Frontend Engineer."
+    - "Open to remote or hybrid positions with innovative teams working on challenging technical problems."
+    - "Particularly interested in roles involving complex UI/UX challenges, performance optimization, design systems, or team leadership."
+    - "Available for full-time positions starting immediately."
+
+company_logos:
+  "Balyasny Asset Management": "/logos/balyasny.svg"
+  Siemens: "/logos/siemens.svg"
+  "OLX Group": "/logos/olx.svg"
+  "Pearson IOKI": "/logos/pearson.png"
+  GroundFog: "/logos/groundfog.svg"
+  "Diva-E": "/logos/diva-e.svg"
+  "Dynamic Solutions": "/logos/dynamic-solutions.svg"
+  "No Spoon Tech Lab": "/logos/nospoon.png"
+  Appchance: "/logos/appchance.svg"
+
+company_short_names:
+  "Balyasny Asset Management": "Balyasny (BAM)"
+  "No Spoon Tech Lab": "No Spoon"
+
+services:
+  - icon: "Rocket"
+    title: "Web Projects Delivery"
+    description: "End-to-end web project delivery from initial design to production deployment, ensuring quality and performance at every stage."
+  - icon: "Briefcase"
+    title: "Software Engineering Management"
+    description: "Leading engineering teams with focus on delivery, code quality, and best practices. Establishing workflows and development processes that scale."
+  - icon: "Users"
+    title: "Leading a Frontend Team"
+    description: "Building and mentoring high-performing frontend teams. Fostering technical excellence and collaborative culture across distributed teams."
+  - icon: "Lightbulb"
+    title: "Architectural Advisory"
+    description: "Providing strategic guidance on frontend architecture, design systems, and technical decisions for scalable enterprise applications."
+
+tools:
+  - name: "Cursor"
+    description: "AI-powered code editor"
+    logo: "https://www.cursor.com/brand/icon.svg"
+  - name: "Claude"
+    description: "AI coding assistant"
+    logo: "https://claude.ai/images/claude_app_icon.png"
+  - name: "ChatGPT"
+    description: "AI assistant"
+    logo: "https://cdn.oaistatic.com/_next/static/media/apple-touch-icon.82af6fe1.png"
+  - name: "Perplexity"
+    description: "AI search engine"
+    logo: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/perplexity-ai-icon.png"
+  - name: "Figma"
+    description: "Design & prototyping"
+    logo: "https://cdn.sanity.io/images/599r6htc/localized/46a76c802176eb17b04e12108de7e7e0f3736dc6-1024x1024.png"
+  - name: "Wispr Flow"
+    description: "Voice-to-text coding"
+    logo: "https://logosandtypes.com/wp-content/uploads/2023/02/wispr.svg"
+  - name: "Cotypist"
+    description: "AI-powered typing assistant"
+    logo: "https://cotypist.app/img/icon_32,402x.png.pagespeed.ce.1upAc7YQx7.png"

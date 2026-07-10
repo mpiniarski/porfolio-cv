@@ -1,0 +1,17 @@
+based_on: "./cv-base.yml"
+cv:
+  headline: "Senior Full-stack Engineer"
+  summary: "Senior Full-Stack Engineer with 9+ years of experience building end-to-end systems across frontend and backend. Delivered scalable APIs, data pipelines, and complex UIs using TypeScript/React, Node.js, and Kotlin. Strong focus on system design, performance, and reliability."
+  short_summary: "Senior Full-stack Engineer building robust products end-to-end — from complex frontend systems and design systems to backend services and platform reliability."
+  footer_tagline: "Senior Full-stack Engineer | React · Node.js · Kotlin"
+  skills:
+    - label: "Frontend"
+      details: "TypeScript · JavaScript · React · Vue · Next.js · Webpack · Vite · Design systems · a11y · Lighthouse"
+    - label: "Backend & APIs"
+      details: "Node.js · Kotlin · Java · REST · GraphQL · Microservices · Authentication systems"
+    - label: "Cloud & Data"
+      details: "AWS · Terraform · Docker · MongoDB · Data modeling · CI/CD · Observability (NewRelic, Sentry)"
+    - label: "Architecture"
+      details: "System design · API design · Distributed systems · Data flow · Performance optimisation · Testing"
+
+

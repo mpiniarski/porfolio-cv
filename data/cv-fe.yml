@@ -1,0 +1,14 @@
+based_on: "./cv-base.yml"
+cv:
+  headline: "Senior Frontend Engineer"
+  summary: "Senior Frontend Engineer with 9+ years of experience building complex frontend systems, including data-heavy applications, visual CMS editors with drag-and-drop page editing, and scalable platform architectures using TypeScript, React, and Vue. Led frontend development across enterprise platforms and internal tools, delivering AI-powered interfaces and analytical dashboards. Strong focus on performance, maintainability, and engineering quality (CI/CD, testing, a11y)."
+  short_summary: "Senior Frontend Engineer building complex UI systems — from visual CMS editors and AI-powered interfaces to data-heavy dashboards. Specializing in frontend architecture, design systems, and performance at scale."
+  skills:
+    - label: "Frontend"
+      details: "TypeScript · JavaScript · React · Vue · Next.js · GraphQL · REST · Webpack · Vite"
+    - label: "Architecture"
+      details: "Design systems · Component architecture · Performance optimization · a11y · CI/CD · Lighthouse"
+    - label: "Testing"
+      details: "Unit · Integration · E2E · Visual regression"
+    - label: "Backend (Supporting)"
+      details: "Node.js · Kotlin · Java · AWS · Terraform · MongoDB · Docker · NewRelic · Sentry"
