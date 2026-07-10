@@ -1,8 +1,24 @@
 import fs from "node:fs";
 import path from "node:path";
+import { cache } from "react";
 import yaml from "yaml";
 
-import type { CvData } from "./resumeData";
+import type { CvData, PortfolioData } from "./resumeData";
+import { loadCvDataFromFile } from "./cv/load";
+import { deepMerge } from "./deepMerge";
+import { CvDataNotFoundError } from "./cv/errors";
+export const CV_VARIANTS = ["fe", "fs"] as const;
+export type CvVariant = (typeof CV_VARIANTS)[number];
+export { isCvDataNotFoundError } from "./cv/errors";
+export { loadCvDataFromFile };
+
+type CvResult = { cv: CvData["cv"]; derived: CvDerived };
+
+const getPortfolioData = cache((): PortfolioData => {
+  return yaml.parse(
+    fs.readFileSync(path.resolve(process.cwd(), "data", "portfolio.yml"), "utf8"),
+  ) as PortfolioData;
+});
 
 export type CvDerived = {
   meta: {
@@ -14,14 +30,32 @@ export type CvDerived = {
   workedWith: Array<{ name: string; logo: string; shortName?: string }>;
 };
 
-function findDataYml(): string {
-  const cwd = process.cwd();
-  const fromLib = path.resolve(__dirname, "..", "..", "data.yml");
-  const candidates = [path.join(cwd, "data.yml"), path.join(cwd, "..", "data.yml"), fromLib];
-  for (const filePath of candidates) {
-    if (fs.existsSync(filePath)) return filePath;
+export function getCvData(
+  options?: { variant?: unknown },
+): CvResult {
+  const variant: CvVariant = options?.variant === "fs" ? "fs" : "fe";
+  return getCvDataByVariant(variant);
+}
+
+const getCvDataByVariant = cache((variant: CvVariant): CvResult => {
+  try {
+    const filePath = path.resolve(process.cwd(), "data", `cv-${variant}.yml`);
+    const portfolio = getPortfolioData();
+    const data = loadCvDataFromFile(filePath);
+    // TODO: Return separated `cv` and `portfolio` from this API and migrate consumers incrementally.
+    const cv = mergeCvAndPortfolio(data.cv, portfolio);
+    const derived = deriveCv(cv);
+    return { cv, derived };
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException)?.code === "ENOENT") {
+      throw new CvDataNotFoundError("CV or portfolio data file not found");
+    }
+    throw error;
   }
-  throw new Error(`data.yml not found. Tried: ${candidates.join(", ")}`);
+});
+
+export function mergeCvAndPortfolio(cv: CvData["cv"], portfolio: PortfolioData): CvData["cv"] {
+  return deepMerge(cv, portfolio);
 }
 
 function parseYear(value: string | undefined): number | null {
@@ -59,6 +93,7 @@ function getWorkedWithCompanies(cv: CvData["cv"]): string[] {
   return Array.from(names);
 }
 
+// TODO: Extract derive helpers into a dedicated module.
 export function deriveCv(cv: CvData["cv"]): CvDerived {
   const title = `${cv.name} – ${cv.headline}`;
   const description = cv.summary ?? undefined;
@@ -81,18 +116,5 @@ export function deriveCv(cv: CvData["cv"]): CvDerived {
     topEducationLabel,
     workedWith,
   };
-}
-
-let memo: { data: CvData; derived: CvDerived; mtimeMs: number } | null = null;
-
-export function getCvData(): { cv: CvData["cv"]; derived: CvDerived } {
-  const filePath = findDataYml();
-  const mtimeMs = fs.statSync(filePath).mtimeMs;
-  if (memo && memo.mtimeMs === mtimeMs) return { cv: memo.data.cv, derived: memo.derived };
-  const file = fs.readFileSync(filePath, "utf8");
-  const data = yaml.parse(file) as CvData;
-  const derived = deriveCv(data.cv);
-  memo = { data, derived, mtimeMs };
-  return { cv: data.cv, derived };
 }
 

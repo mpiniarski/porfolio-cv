@@ -98,7 +98,35 @@ export interface CvCoreTechnology {
   invert_logo?: boolean;
 }
 
-export interface CvData {
+export interface PortfolioData {
+  photo?: string | null;
+  hero_stats?: Array<{ top: string; bottom: string }>;
+  worked_with?: {
+    years_label?: string;
+    companies?: string[];
+  };
+  footer_tagline?: string;
+  open_for_opportunities?: boolean;
+  open_for_opportunities_section?: {
+    availability?: string;
+    mode?: string;
+    bullets: string[];
+  };
+  services?: { icon: string; title: string; description: string }[];
+  tools?: { name: string; description: string; logo: string }[];
+  company_logos?: Record<string, string>;
+  company_short_names?: Record<string, string>;
+  typically_help_with?: string[];
+  projects?: CvProject[];
+  case_studies?: {
+    title?: string;
+    description?: string;
+    items: CvCaseStudy[];
+  };
+  core_technologies?: CvCoreTechnology[];
+}
+
+export interface CvDataBase {
   cv: {
     name: string;
     headline: string;
@@ -112,52 +140,16 @@ export interface CvData {
     summary?: string;
     /** Short one-liner for the homepage hero (and fallback where a brief blurb is needed). */
     short_summary?: string;
-    /**
-     * Optional 3-up stat strip shown in the homepage hero.
-     * When omitted, the UI falls back to derived education/years/location.
-     */
-    hero_stats?: Array<{ top: string; bottom: string }>;
-    /**
-     * Optional configuration for the "Worked with" homepage section.
-     * Allows matching curated content/order from external designs.
-     */
-    worked_with?: {
-      /** Overrides the computed X+ years label in the title, e.g. "9". */
-      years_label?: string;
-      /** Explicit ordered list of company names to render (must exist in company_logos). */
-      companies?: string[];
-    };
-    /** Footer role/tagline line. When omitted, falls back to headline. */
-    footer_tagline?: string;
-    open_for_opportunities?: boolean;
-    open_for_opportunities_section?: {
-      availability?: string;
-      mode?: string;
-      bullets: string[];
-    };
-    services?: { icon: string; title: string; description: string }[];
-    tools?: { name: string; description: string; logo: string }[];
-    /** Optional mapping used to render company logos in "Worked with". */
-    company_logos?: Record<string, string>;
-    /** Optional short labels for companies (e.g. "No Spoon" instead of full legal name). */
-    company_short_names?: Record<string, string>;
     skills: CvSkillItem[];
     experience: CvExperienceItem[];
     education: CvEducationItem[];
     languages: CvLanguageItem[];
-    typically_help_with?: string[];
     social_networks?: CvSocialNetwork[];
-    projects?: CvProject[];
-    /** Case studies / problem narratives; UI can omit when `items` missing or empty. */
-    case_studies?: {
-      title?: string;
-      description?: string;
-      items: CvCaseStudy[];
-    };
-    /** Tech stack logos for home overview + about; UI falls back to built-in defaults when omitted. */
-    core_technologies?: CvCoreTechnology[];
-    photo?: string | null;
   };
+}
+
+export interface CvData {
+  cv: CvDataBase["cv"] & PortfolioData;
 }
 
 /** Strip https:// and optional www. for compact display; href stays full URL for ATS and links. */
