@@ -9,9 +9,9 @@ const DEFAULT_PRIMARY_EXPERIENCE_COUNT = 2;
 const PAGE_SHELL_BASE =
   "max-w-[210mm] mx-auto px-16 py-12 min-h-[297mm] print:min-h-[297mm] w-full print:w-[210mm]";
 /** Page 1 print padding (full page). */
-const PAGE_1_PRINT_PAD = "print:px-12 print:py-6";
-/** Page 2 print padding: slightly tighter to recover a small amount of vertical space. */
-const PAGE_2_PRINT_PAD = "print:px-11 print:py-5";
+const PAGE_1_PRINT_PAD = "print:px-12 print:pt-6 print:pb-6";
+/** Page 2 print padding: slightly tighter top to recover a small amount of vertical space. */
+const PAGE_2_PRINT_PAD = "print:px-11 print:pt-3 print:pb-6";
 
 type ExperienceRenderRow = {
   item: CvExperienceItem;
@@ -39,7 +39,10 @@ function highlightTech(text: string): (string | React.ReactElement)[] {
     "AG Grid",
     "KotlinJS",
     "Ember.js",
-    "NewRelic",
+    "New Relic",
+    "Sentry",
+    "TanStack Query",
+    "Playwright",
     "XMPP",
     "Cognito",
     "Scrum",
@@ -68,7 +71,7 @@ function ResumeProjectEntry({ project }: { project: CvExperienceProject }) {
   const primary = role || project.name;
   const secondary = role ? project.name : null;
   return (
-    <section className="flex flex-col gap-1.5 pb-3 last:pb-0 print:gap-1.25 print:pb-2.25 print:last:pb-0 print:break-inside-avoid">
+    <section className="flex flex-col gap-1.5 pb-3 last:pb-0 print:gap-1.25 print:pb-1.75 print:last:pb-0 print:break-inside-avoid">
       <div className="space-y-0.5 print:space-y-px">
         <h3 className="text-sm font-semibold text-slate-900">{primary}</h3>
         {secondary ? <p className="text-xs font-semibold text-slate-600">{secondary}</p> : null}
@@ -76,7 +79,7 @@ function ResumeProjectEntry({ project }: { project: CvExperienceProject }) {
       <div className="text-[10px] text-slate-500">
         {formatDateRange(project.start_date, project.end_date)}
       </div>
-      <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-relaxed text-slate-700 marker:text-slate-400 print:space-y-1.25 print:leading-[1.475]">
+      <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-relaxed text-slate-700 marker:text-slate-400 print:space-y-1 print:leading-[1.35]">
         {project.highlights.map((h) => (
           <li key={h}>{highlightTech(h)}</li>
         ))}
@@ -113,7 +116,7 @@ function ResumeExperienceArticle({ row }: { row: ExperienceRenderRow }) {
   const isConsultingStyle = (item.worked_with?.length ?? 0) > 0;
 
   return (
-    <article className="space-y-1.5 pb-3 last:pb-0 print:space-y-1.5 print:pb-2.5 print:last:pb-0 print:break-inside-avoid">
+    <article className="space-y-1.5 pb-3 last:pb-0 print:space-y-1.5 print:pb-2 print:last:pb-0 print:break-inside-avoid">
       {!continuation ? (
         <>
           <div className="space-y-0.5 print:space-y-px">
@@ -127,7 +130,7 @@ function ResumeExperienceArticle({ row }: { row: ExperienceRenderRow }) {
         </>
       ) : null}
       {showCompanyDescription ? (
-        <p className="text-xs leading-relaxed text-slate-700 print:leading-[1.475]">
+        <p className="text-xs leading-relaxed text-slate-700 print:leading-[1.35]">
           {item.company_description}
         </p>
       ) : null}
@@ -136,8 +139,8 @@ function ResumeExperienceArticle({ row }: { row: ExperienceRenderRow }) {
           className={
             isConsultingStyle
               ? continuation
-                ? "space-y-3 border-l border-slate-200 py-0.5 pl-3 print:space-y-2.25 print:border-slate-300 print:pl-3 print:py-0.5"
-                : "mt-2 space-y-3 border-l border-slate-200 py-0.5 pl-3 print:mt-1.75 print:space-y-2.25 print:border-slate-300 print:pl-3 print:py-0.5"
+                ? "space-y-3 border-l border-slate-200 py-0.5 pl-3 print:space-y-1.75 print:border-slate-300 print:pl-3 print:py-0.5"
+                : "mt-2 space-y-3 border-l border-slate-200 py-0.5 pl-3 print:mt-1.75 print:space-y-1.75 print:border-slate-300 print:pl-3 print:py-0.5"
               : continuation
                 ? "space-y-3 print:space-y-2.75"
                 : "space-y-3 pt-2 print:space-y-2.75 print:pt-2.25"
@@ -148,7 +151,7 @@ function ResumeExperienceArticle({ row }: { row: ExperienceRenderRow }) {
           ))}
         </div>
       ) : (
-        <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-relaxed text-slate-700 marker:text-slate-400 print:space-y-1.25 print:leading-[1.475]">
+        <ul className="ml-5 list-disc space-y-1.5 list-outside text-xs leading-relaxed text-slate-700 marker:text-slate-400 print:space-y-1 print:leading-[1.35]">
           {(item.highlights ?? []).map((h) => (
             <li key={h}>{highlightTech(h)}</li>
           ))}
@@ -222,7 +225,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
           <div className="flex min-h-0 flex-1 flex-col gap-6 print:gap-4.5">
           <section className="print:break-inside-avoid">
             {resumeSummaryText ? (
-              <p className="text-xs leading-relaxed text-slate-700 print:leading-[1.475]">
+              <p className="text-xs leading-relaxed text-slate-700 print:leading-[1.35]">
                 {(() => {
                   const text = resumeSummaryText;
                   const marker = "experience";
@@ -247,8 +250,8 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
               </h2>
               <div className="space-y-2 print:space-y-1.75">
                 {skills.map((skill) => (
-                  <p key={skill.label} className="text-xs leading-relaxed text-slate-700 print:leading-[1.475]">
-                    <span className="font-medium tracking-wider text-slate-600 uppercase">{skill.label}:</span>{" "}
+                  <p key={skill.label} className="text-xs leading-relaxed text-slate-700 print:leading-[1.35]">
+                    <span className="font-semibold tracking-wider text-slate-900 uppercase">{skill.label}:</span>{" "}
                     {skill.details}
                   </p>
                 ))}
@@ -260,7 +263,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
             <h2 className="mb-3 text-sm font-semibold tracking-wider text-slate-500 uppercase print:mb-2.25">
               Experience:
             </h2>
-            <div className="space-y-4 print:space-y-2.75">
+            <div className="space-y-4 print:space-y-2.25">
               {experiencePage1Rows.map((row) => (
                 <ResumeExperienceArticle key={resumeExperienceRowKey(row)} row={row} />
               ))}
@@ -277,10 +280,10 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
           className={`${previewEnabled ? "resume-page" : "resume-page resume-page--no-preview"} resume-page--sheet-2 flex min-h-0 flex-col`}
         >
           <div className={page2Shell}>
-            <div className="flex min-h-0 flex-1 flex-col gap-6 print:gap-3.5">
+            <div className="flex min-h-0 flex-1 flex-col gap-6 print:gap-2">
             {experiencePage2Rows.length > 0 ? (
               <section>
-                <div className="space-y-4 print:space-y-2.25">
+                <div className="space-y-4 print:space-y-1.25">
                   {experiencePage2Rows.map((row) => (
                     <ResumeExperienceArticle key={resumeExperienceRowKey(row)} row={row} />
                   ))}
@@ -293,7 +296,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                 <h2 className="mb-2 text-sm font-semibold tracking-wider text-slate-500 uppercase print:mb-1.5">
                   Education:
                 </h2>
-                <div className="space-y-2 print:space-y-1.5">
+                <div className="space-y-2 print:space-y-1">
                   {education.map((entry) => {
                     const abbrev = entry.degree.includes(" - ")
                       ? entry.degree.split(" - ")[0].trim()
@@ -335,7 +338,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
                   <h2 className="mb-2 text-sm font-semibold tracking-wider text-slate-500 uppercase print:mb-1.5">
                     Languages:
                   </h2>
-                  <div className="space-y-2 print:space-y-1.5">
+                  <div className="space-y-2 print:space-y-1">
                     {languages.map((lang) => {
                       const [name, rest] = lang.bullet.split(/\s*\(\s*/);
                       const label = name?.replace(/:$/, "").trim();
