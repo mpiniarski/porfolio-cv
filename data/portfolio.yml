@@ -149,7 +149,7 @@ hero_stats:
 worked_with:
   years_label: "9"
   companies:
-    - "Balyasny Asset Management"
+    - "Balyasny Asset Management (BAM)"
     - "Siemens"
     - "OLX Group"
     - "Pearson IOKI"
@@ -170,7 +170,7 @@ open_for_opportunities_section:
     - "Available for full-time positions starting immediately."
 
 company_logos:
-  "Balyasny Asset Management": "/logos/balyasny.svg"
+  "Balyasny Asset Management (BAM)": "/logos/balyasny.svg"
   Siemens: "/logos/siemens.svg"
   "OLX Group": "/logos/olx.svg"
   "Pearson IOKI": "/logos/pearson.png"
@@ -181,7 +181,7 @@ company_logos:
   Appchance: "/logos/appchance.svg"
 
 company_short_names:
-  "Balyasny Asset Management": "Balyasny (BAM)"
+  "Balyasny Asset Management (BAM)": "Balyasny (BAM)"
   "No Spoon Tech Lab": "No Spoon"
 
 services:

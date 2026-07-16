@@ -31,7 +31,7 @@ cv:
         - "Designed and built Tasks, a personal task manager accepted as an official template application, implementing agent-native patterns in which AI agents and the UI share the same state and actions."
         - "Reported security issues discovered while adopting the framework and shared product feedback directly with the Builder.io team."
 
-    - company: "Balyasny Asset Management"
+    - company: "Balyasny Asset Management (BAM)"
       highlights:
         - "Designed and delivered analytical views for portfolio risk analysis, translating complex financial requirements into decision-support tools used by ~1000 users."
         - "Built internal React dashboards and an advanced Highcharts chart editor for exploring large-scale financial datasets with AG Grid and custom visualizations."

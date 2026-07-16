@@ -191,7 +191,7 @@ export function ExperienceTimelineSection({
             client,
             isSubProject: Boolean(client),
             shortName:
-              projectCompany === "Balyasny Asset Management"
+              projectCompany === "Balyasny Asset Management (BAM)"
                 ? "Balyasny (BAM)"
                 : projectCompany === "No Spoon Tech Lab"
                   ? "No Spoon"

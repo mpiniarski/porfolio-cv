@@ -22,7 +22,7 @@ cv:
         - "Designed and built Tasks, a personal task manager accepted as an official template application, implementing agent-native patterns in which AI agents and the UI share the same state and actions."
         - "Reported security issues discovered while adopting the framework and shared product feedback directly with the Builder.io team."
 
-    - company: "Balyasny Asset Management"
+    - company: "Balyasny Asset Management (BAM)"
       position: "Senior Frontend Engineer"
       start_date: "2025-03"
       end_date: "2026-02"
