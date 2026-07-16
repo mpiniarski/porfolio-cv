@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import yaml from "yaml";
 
-import type { CvData } from "../resumeData";
+import type { CvData, CvExperienceItem } from "../resumeData";
 import { deepMerge } from "../deepMerge";
 
 type CvYamlSource = Partial<CvData> & { based_on?: string };
@@ -30,6 +30,29 @@ function resolveCvWithInheritance(filePath: string, visited: Set<string>): CvDat
   return merged as CvData;
 }
 
+/** Apply variant `experience_overrides` (matched by exact company) onto the merged experience list, then strip the field. */
+function applyExperienceOverrides(data: CvData): CvData {
+  const overrides = data.cv.experience_overrides;
+  if (!overrides?.length) return data;
+
+  const experience = data.cv.experience ?? [];
+  for (const override of overrides) {
+    if (!experience.some((entry) => entry.company === override.company)) {
+      throw new Error(`experience_overrides: no experience entry with company "${override.company}"`);
+    }
+  }
+
+  const cv = {
+    ...data.cv,
+    experience: experience.map((entry) => {
+      const override = overrides.find((o) => o.company === entry.company);
+      return override ? (deepMerge(entry, override) as CvExperienceItem) : entry;
+    }),
+  };
+  delete cv.experience_overrides;
+  return { ...data, cv };
+}
+
 export function loadCvDataFromFile(filePath: string): CvData {
-  return resolveCvWithInheritance(filePath, new Set());
+  return applyExperienceOverrides(resolveCvWithInheritance(filePath, new Set()));
 }

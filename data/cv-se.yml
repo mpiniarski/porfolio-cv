@@ -1,0 +1,25 @@
+based_on: "./cv-base.yml"
+
+cv:
+  headline: "Senior Software Engineer"
+  resume_page1_experience_rows: 3   # OSS entry is short; pull Dynamic Solutions' first slice onto page 1 (FE-parity)
+  summary: "Senior Software Engineer with 9+ years of experience building visual CMS platforms, developer tooling, and complex web applications using React, TypeScript, Node.js, and Kotlin. Contributor to Builder.io's Agent-Native framework (6 merged PRs, including Tasks, an official template application), with hands-on experience shipping AI-powered product features. Experienced across frontend architecture, API-driven systems, and platform engineering, with a strong focus on performance, maintainability, and developer experience."   # ← CHANGED (Agent-Native + AI sentence; "developer platforms" → "developer tooling" to avoid platforms×2)
+  short_summary: "Senior Software Engineer building visual CMS platforms, complex frontend systems, and scalable backend services with React, TypeScript, Node.js, and Kotlin. Builder.io Agent-Native contributor."   # ← CHANGED (optional: appended contributor mention)
+
+  footer_tagline: "Senior Software Engineer | React · TypeScript · Node.js · AI Agents"   # ← CHANGED (optional: was "… · Kotlin"; revert if you prefer)
+
+  skills:
+    - label: "Frontend"
+      details: "TypeScript · React · Vue · Next.js · REST/GraphQL API integration · Webpack · Vite · Design systems · a11y · Lighthouse"   # ← CHANGED (dropped "JavaScript" — implied by TypeScript; "REST · GraphQL" → "REST/GraphQL API integration")
+
+    - label: "Backend & Platform"
+      details: "TypeScript · Node.js · Kotlin · Java · REST API design · Authentication systems · Microservices"   # ← CHANGED (dropped "Platform integrations" — vague; "REST" → "REST API design")
+
+    - label: "AI & Agents"
+      details: "AI/LLM integration · AI agents · AI-assisted development (Cursor, Claude, Codex)"   # ← CHANGED (dropped "Agent-native architecture" — the Agent-Native work is named in summary + top entry)
+
+    - label: "Cloud & Data"
+      details: "AWS · Terraform · Docker · MongoDB · Data modeling · CI/CD · Observability (NewRelic, Sentry)"
+
+    - label: "Architecture"
+      details: "Frontend architecture · System design · Distributed systems · Performance · Testing · Developer experience"   # ← CHANGED ("Performance optimization" → "Performance" to shorten the line; earlier: "Platform architecture" → "Frontend architecture", dropped "API design"/"Data flow")

@@ -13,6 +13,15 @@ cv:
   phone: "+48 505 409 892"
 
   experience:
+    - company: "Agent-Native by Builder.io"                                  # ← NEW entry (fills Feb-2026 → now gap; freshest TS/Node evidence)
+      position: "Open Source Contributor"
+      start_date: "2026-05"
+      # No end_date → ongoing role (renders "Present" and fills the timeline to now).
+      highlights:
+        - "Contributed 6 merged pull requests (TypeScript, Node.js, React): a core error-routing fix, improvements to the Content and Mail template applications, and developer tooling."
+        - "Designed and built Tasks, a personal task manager accepted as an official template application, implementing agent-native patterns in which AI agents and the UI share the same state and actions."
+        - "Reported security issues discovered while adopting the framework, and shared product feedback directly with the Builder.io team."
+
     - company: "Balyasny Asset Management"
       position: "Senior Frontend Engineer"
       start_date: "2025-03"
@@ -22,7 +31,7 @@ cv:
         - "Designed and delivered analytical views for portfolio risk analysis, translating complex financial requirements into decision-support tools used by ~1000 users."
         - "Built internal React dashboards enabling exploration of large-scale financial datasets with AG Grid and custom visualizations."
         - "Developed an advanced chart editor using Highcharts, supporting multiple visualization types (including candlestick, scatter, and bar) with configurable axes, data series, styling, and data selection."
-        - "Implemented efficient data fetching and caching using TanStack Query, ensuring responsive UI performance and efficient data handling for high-volume backend data."
+        - "Implemented efficient data fetching and caching using TanStack Query, and optimized rendering through profiling-driven virtualization and reduced DOM manipulation, keeping high-volume data views responsive."   # ← CHANGED (US spelling; performance specifics from your BAM story)
 
     - company: "Dynamic Solutions"
       company_description: "Technology consulting firm with in-house software products; provides senior-level specialists to enterprise clients."
@@ -30,7 +39,7 @@ cv:
       start_date: "2021-04"
       end_date: "2025-02"
       location: "Warsaw"
-      resume_break_projects_after: 2
+      resume_break_projects_after: 1   # page 1: Siemens only; Mann+Hummel + WebSight continue on page 2 (fits the OSS entry above)
       worked_with:
         - Siemens
         - GroundFog
@@ -42,29 +51,29 @@ cv:
           start_date: "2024-02"
           end_date: "2025-02"
           highlights:
-            - "Led frontend development within a 10-person team (4 frontend engineers) on a global multi-application platform using Vue, TypeScript, GraphQL and Vite, mentoring developers and improving code quality via guidelines and CI/CD (linting, quality gates), reducing noise in PRs and improving review efficiency."
+            - "Led frontend development within a 10-person team (3 frontend engineers) on a multi-tenant content platform powering siemens.com, mentoring developers and improving engineering quality through CI/CD (linting, quality gates) and code review practices."   # ← CHANGED (was 4; corrected to match your prep stories: "me + 2")
             - "Delivered core platform features for siemens.com, including AI-powered search, chatbot interfaces, and live translation used across a global multi-language platform."
-            - "Built and evolved a shared design system (~30 components) used across multiple applications, enabling consistent UI development at scale."
-            - "Improved frontend quality and reliability by introducing visual regression testing (Playwright) and integrating checks into the CI/CD pipeline, reducing UI regressions in production."
-            - "Automated cross-environment content access via URL-based configuration, eliminating manual data migration and enabling direct access to production content in local environments, significantly improving development and testing efficiency."
+            - "Built and evolved a shared component platform (~30 reusable components) with interactive component documentation, consumed by multiple applications, improving UI consistency, reuse, and development velocity at scale."   # ← CHANGED (added docs detail from your design-system story)
+            - "Improved quality and reliability by introducing automated visual regression testing (Playwright) integrated into CI/CD, enabling safe evolution of shared UI across multiple applications."
+            - "Designed URL-based environment routing, allowing developers, QA, and stakeholders to access production content across environments without manual data migration, significantly improving development and testing efficiency."
 
         - name: "MANN+HUMMEL (Diva-E)"
           role: "Senior Front-end Developer"
           start_date: "2023-09"
           end_date: "2024-01"
           highlights:
-            - "Developed advanced product discovery features using React, TypeScript, and GraphQL, including VIN-based search, dimension-based filtering, and smart search across a large automotive catalog, improving product discovery and navigation across the catalog."
-            - "Built search results, product detail pages, and 360° product visualizations, improving product exploration and usability."
+            - "Developed advanced product discovery features using React, TypeScript, and GraphQL, including VIN-based search, dimension-based filtering, and smart search across a large automotive catalog."
+            - "Built search results, product detail pages, and 360° product visualizations, improving product discovery and navigation."
 
-        - name: "Websight CMS"
+        - name: "WebSight CMS"
           role: "Front-end Developer"
           start_date: "2021-04"
           end_date: "2023-08"
           highlights:
-            - "Led frontend development of a visual CMS built with React, mentoring a frontend engineer and collaborating closely with backend (OSGi-based) and design teams, including reviewing and guiding frontend-related contributions; primary contributor to core editor functionality."
-            - "Designed and built a drag-and-drop page editor with component tree and overlay-based editing on top of an iframe-rendered page, enabling content teams to visually create and manage pages without developer involvement."
-            - "Led frontend architecture evolution, including migration to TypeScript and React Hooks and refactoring core editor systems (actions, state management, ESM ↔ React integration)."
-            - "Delivered core CMS capabilities including inline editing and content tree interactions, while ensuring correct rendering of embedded pages by dynamically adapting styles (e.g. normalizing viewport units inside iframe context)."
+            - "Led frontend development of a visual CMS platform built with React and TypeScript, mentoring 4 frontend engineers and working closely with designers and backend engineers on REST APIs and platform architecture."   # ← CHANGED (was: "…built with React, mentoring frontend engineers and collaborating closely with backend (OSGi-based) and design teams.")
+            - "Designed and built a true WYSIWYG page editor using an overlay system synchronized with an iframe-rendered page."
+            - "Led evolution of the frontend platform, including migration to TypeScript, React Hooks, and refactoring of editor architecture, state management, and ESM-based plugin integration."
+            - "Delivered core CMS capabilities including inline editing and content tree interactions while evolving a plugin-based editor architecture (6 editor plugins) and ensuring embedded pages rendered correctly inside the editing environment (e.g. normalizing viewport units inside an iframe)."   # ← CHANGED (added plugin count)
 
     - company: "OLX Group"
       position: "Software Engineer"
@@ -72,10 +81,9 @@ cv:
       start_date: "2019-12"
       end_date: "2021-01"
       highlights:
-        - "Developed authentication systems for a large-scale marketplace using Kotlin, Java and AWS Cognito."
-        - "Implemented core user flows including login, registration and password recovery."
-        - "Contributed to migration of millions of users to AWS Cognito and introduced security features such as suspicious login detection."
-        - "Enabled Customer Support to manage blocked users independently, eliminating 15–20 daily incidents previously handled by engineers."
+        - "Developed authentication systems for a large-scale marketplace using Kotlin, Java, REST APIs, and AWS Cognito, implementing core user flows including login, registration, and password recovery."   # ← CHANGED (former "core user flows" bullet folded in here)
+        - "Contributed to migration of millions of users to AWS Cognito while introducing security features such as suspicious login detection."
+        - "Designed secure internal tooling enabling Customer Support to manage blocked accounts independently, eliminating 15–20 daily engineering interventions."
         - "Improved observability and error tracking using NewRelic and Sentry."
 
     - company: "No Spoon Tech Lab"
@@ -84,8 +92,8 @@ cv:
       start_date: "2018-06"
       end_date: "2019-08"
       highlights:
-        - "Developed a real-time chat application for an online gaming platform using React and KotlinJS over the XMPP protocol."
-        - "Designed and implemented messaging features including message synchronization, presence handling, and real-time updates across connected clients."
+        - "Built a real-time messaging platform for an online gaming product using React, KotlinJS, and the XMPP protocol — message synchronization, presence handling, and real-time updates across connected clients."   # ← CHANGED (2-page fit: merged former bullets 1+3)
+        - "Implemented custom server-side rendering for the React application in Node.js."   # ← NEW (surfaces professional Node.js work)
 
     - company: "Appchance"
       position: "Junior Frontend Developer"
@@ -101,8 +109,7 @@ cv:
       end_date: "2017-12"
       location: "Poznań"
       highlights:
-        - "Developed REST APIs for an e-learning platform using Java, Kotlin, REST and MongoDB within a microservice architecture."
-        - "Delivered features in cross-functional Scrum teams (~20 engineers across two teams)."
+        - "Developed REST APIs for an e-learning platform using Java, Kotlin, and MongoDB within a microservice architecture, working in cross-functional Scrum teams (~20 engineers across two collaborating teams)."   # ← CHANGED (merged 2 bullets, team-size detail kept)
 
   education:
     - institution: "Poznań University of Technology"
@@ -123,7 +130,6 @@ cv:
 
     - institution: "Universitat Politècnica de València"
       degree: "Student Exchange"
-      area: ""
       start_date: "2018-09"
       end_date: "2019-06"
       location: "Spain"

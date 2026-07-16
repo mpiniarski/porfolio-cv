@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 
 type ResumePageProps = { searchParams: Promise<{ variant?: CvVariant }> };
 
-function getResumeVariant(value: string | string[] | undefined): string | undefined {
+function getResumeVariant(value: string | string[] | undefined): CvVariant | undefined {
   if (value === undefined) return undefined;
   const single = Array.isArray(value) ? value[value.length - 1] : value;
-  if (CV_VARIANTS.includes(single as CvVariant)) return single;
+  if (CV_VARIANTS.includes(single as CvVariant)) return single as CvVariant;
   return undefined;
 }
 

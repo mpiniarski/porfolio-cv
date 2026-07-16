@@ -4,7 +4,7 @@ import { formatCvLocationForResume, sortEducationByEndDateDesc } from "@/lib/res
 import type { CvData, CvExperienceItem, CvExperienceProject } from "@/lib/resumeData";
 import { ResumeHeader } from "./ResumeHeader";
 
-const PRIMARY_EXPERIENCE_COUNT = 2;
+const DEFAULT_PRIMARY_EXPERIENCE_COUNT = 2;
 
 const PAGE_SHELL_BASE =
   "max-w-[210mm] mx-auto px-16 py-12 min-h-[297mm] print:min-h-[297mm] w-full print:w-[210mm]";
@@ -190,8 +190,9 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
     projects: item.projects ? sortByStartDateDesc(item.projects) : undefined,
   }));
   const experienceRows = expandExperienceForResumeRows(experience);
-  const experiencePage1Rows = experienceRows.slice(0, PRIMARY_EXPERIENCE_COUNT);
-  const experiencePage2Rows = experienceRows.slice(PRIMARY_EXPERIENCE_COUNT);
+  const primaryExperienceCount = cv.resume_page1_experience_rows ?? DEFAULT_PRIMARY_EXPERIENCE_COUNT;
+  const experiencePage1Rows = experienceRows.slice(0, primaryExperienceCount);
+  const experiencePage2Rows = experienceRows.slice(primaryExperienceCount);
   const skills = cv.skills ?? [];
   const education = sortEducationByEndDateDesc(cv.education ?? []);
   const languages = cv.languages ?? [];

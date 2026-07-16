@@ -35,6 +35,12 @@ export interface CvExperienceItem {
   resume_break_projects_after?: number;
 }
 
+/**
+ * Variant-file override for one experience entry, matched by exact `company`.
+ * Provided fields replace the base entry's; arrays (e.g. `highlights`) are replaced wholesale.
+ */
+export type CvExperienceOverride = Partial<CvExperienceItem> & { company: string };
+
 export interface CvEducationItem {
   institution: string;
   degree: string;
@@ -142,9 +148,22 @@ export interface CvDataBase {
     short_summary?: string;
     skills: CvSkillItem[];
     experience: CvExperienceItem[];
+    /**
+     * Variant files only: per-entry experience overrides matched by exact `company`.
+     * Lets a variant tailor one role (e.g. shorter highlights) without redefining the
+     * whole `experience` array (deepMerge replaces arrays wholesale). Applied and
+     * stripped in `loadCvDataFromFile`.
+     */
+    experience_overrides?: CvExperienceOverride[];
     education: CvEducationItem[];
     languages: CvLanguageItem[];
     social_networks?: CvSocialNetwork[];
+    /**
+     * Resume only: how many expanded experience rows land on page 1 (default 2).
+     * Bump per-variant when a short leading entry (e.g. an open-source role) would
+     * otherwise leave page 1 half-empty and push the next role entirely to page 2.
+     */
+    resume_page1_experience_rows?: number;
   };
 }
 

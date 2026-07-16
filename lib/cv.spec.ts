@@ -1,10 +1,11 @@
 import path from "node:path";
 import fs from "node:fs";
+import os from "node:os";
 
 import { expect, test } from "@playwright/test";
 import yaml from "yaml";
 
-import { deriveCv, getCvData } from "./cv";
+import { deriveCv, getCvData, loadCvDataFromFile } from "./cv";
 import type { CvData } from "./resumeData";
 
 function sortDeep(value: unknown): unknown {
@@ -49,4 +50,44 @@ test("default variant equals explicit fe variant", () => {
 
   expect(sortDeep(implicit.cv)).toEqual(sortDeep(explicit.cv));
   expect(sortDeep(implicit.derived)).toEqual(sortDeep(explicit.derived));
+});
+
+function writeOverridesFixture(variantCv: Record<string, unknown>): string {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cv-overrides-"));
+  fs.writeFileSync(
+    path.join(dir, "base.yml"),
+    yaml.stringify({
+      cv: {
+        experience: [
+          { company: "A", position: "Dev", location: "X", highlights: ["a1", "a2"] },
+          { company: "B", position: "Dev", highlights: ["b1"] },
+        ],
+      },
+    }),
+  );
+  const variantPath = path.join(dir, "variant.yml");
+  fs.writeFileSync(variantPath, yaml.stringify({ based_on: "./base.yml", cv: variantCv }));
+  return variantPath;
+}
+
+test("experience_overrides replaces matched entry fields and keeps the rest", () => {
+  const variantPath = writeOverridesFixture({
+    experience_overrides: [{ company: "A", highlights: ["a-short"] }],
+  });
+
+  const data = loadCvDataFromFile(variantPath);
+
+  expect(data.cv.experience[0].highlights).toEqual(["a-short"]);
+  expect(data.cv.experience[0].position).toBe("Dev");
+  expect(data.cv.experience[0].location).toBe("X");
+  expect(data.cv.experience[1].highlights).toEqual(["b1"]);
+  expect(data.cv.experience_overrides).toBeUndefined();
+});
+
+test("experience_overrides with unknown company throws", () => {
+  const variantPath = writeOverridesFixture({
+    experience_overrides: [{ company: "Nope", highlights: ["x"] }],
+  });
+
+  expect(() => loadCvDataFromFile(variantPath)).toThrow(/no experience entry with company "Nope"/);
 });

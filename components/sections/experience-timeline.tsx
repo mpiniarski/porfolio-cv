@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Calendar,
+  ChevronDown,
   ChevronUp,
   GraduationCap,
   List,
@@ -12,7 +13,6 @@ import {
 
 import { experienceEntryAnchorId } from "@/lib/experienceAnchor";
 import type { CvData } from "@/lib/resumeData";
-import { DownloadCVButton } from "@/components/DownloadCVButton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 function parseYearMonth(value: string | undefined): Date | null {
@@ -22,12 +22,6 @@ function parseYearMonth(value: string | undefined): Date | null {
   if (!Number.isFinite(year)) return null;
   const month = m ? Math.max(1, Math.min(12, Number(m))) : 1;
   return new Date(year, month - 1, 1);
-}
-
-function addMonths(d: Date, months: number) {
-  const out = new Date(d);
-  out.setMonth(out.getMonth() + months);
-  return out;
 }
 
 function formatMonthYear(d: Date) {
@@ -56,7 +50,6 @@ type ExperienceItem = {
   client?: string;
   isSubProject?: boolean;
   shortName?: string;
-  isOpportunity?: boolean;
   /** Matches `case_studies.items[].experience_anchor` / `/experience#…` URL fragment. */
   anchorId: string;
 };
@@ -159,31 +152,12 @@ export function ExperienceTimelineSection({
   const experiences = useMemo<ExperienceItem[]>(() => {
     const out: ExperienceItem[] = [];
 
-    const opp = cv.open_for_opportunities_section;
-    if (opp?.bullets?.length) {
-      // This item is "extra" and should end at the current day (no future padding).
-      // Give it a small visible range so the timeline rail can render its bar.
-      const end = now;
-      const start = addMonths(end, -1);
-
-      out.push({
-        title: "",
-        company: "Open for Opportunities",
-        location: opp.mode ?? "Remote / Hybrid",
-        period: opp.availability ?? "Available Now",
-        startDate: start,
-        endDate: paddedNow,
-        highlights: opp.bullets,
-        technologies: [],
-        isOpportunity: true,
-        anchorId: experienceEntryAnchorId(undefined, "Open for Opportunities"),
-      });
-    }
-
     for (const exp of experience ?? []) {
       const expStart = parseYearMonth(exp.start_date);
-      const expEnd =
-        parseYearMonth(exp.end_date) ?? new Date(now.getFullYear(), now.getMonth(), 1);
+      const parsedEnd = parseYearMonth(exp.end_date);
+      const isOngoing = !parsedEnd;
+      // Ongoing roles extend to `paddedNow` so their bar reaches the top of the timeline.
+      const expEnd = parsedEnd ?? paddedNow;
 
       const title =
         (exp.position ?? "").replace(/\s*\(.+?\)\s*/g, "").trim() ||
@@ -230,7 +204,9 @@ export function ExperienceTimelineSection({
           title,
           company: exp.company,
           location: exp.location ?? "",
-          period: formatPeriod(expStart, expEnd),
+          period: isOngoing
+            ? `${formatMonthYear(expStart)} – Present`
+            : formatPeriod(expStart, expEnd),
           startDate: expStart,
           endDate: expEnd,
           highlights: exp.highlights ?? [],
@@ -266,8 +242,6 @@ export function ExperienceTimelineSection({
           return;
         }
       }
-      const firstNonOpp = experiences.findIndex((e) => !e.isOpportunity);
-      if (firstNonOpp > 0) setActiveIndex(firstNonOpp);
     };
     applyNavigation();
     window.addEventListener("hashchange", applyNavigation);
@@ -391,31 +365,6 @@ export function ExperienceTimelineSection({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeIndex, experiences.length]);
 
-  useEffect(() => {
-    let isScrolling = false;
-    const handleWheel = (e: WheelEvent) => {
-      const target = e.target as HTMLElement;
-      const experienceSection = target.closest("[data-experience-timeline]");
-      if (!experienceSection) return;
-      if (isScrolling) return;
-
-      e.preventDefault();
-      isScrolling = true;
-
-      if (e.deltaY > 0) navigateToIndex(activeIndex + 1);
-      else navigateToIndex(activeIndex - 1);
-
-      setTimeout(() => {
-        isScrolling = false;
-      }, 600);
-    };
-
-    const container = containerRef.current;
-    if (!container) return;
-    container.addEventListener("wheel", handleWheel, { passive: false });
-    return () => container.removeEventListener("wheel", handleWheel);
-  }, [activeIndex, experiences.length]);
-
   if (!experiences.length) {
     return (
       <section className="px-4 py-10">
@@ -520,8 +469,22 @@ export function ExperienceTimelineSection({
 
         {/* Desktop: Figma-style card + rail */}
         <div className="hidden lg:grid lg:grid-cols-[1fr_240px] gap-8 items-center py-10">
-          <div ref={desktopDetailRef} className="scroll-mt-28">
-            <Card className="border-border/50 shadow-xl">
+          <div className="flex flex-col items-center gap-1">
+            <button
+              type="button"
+              onClick={() => navigateToIndex(activeIndex - 1)}
+              disabled={activeIndex === 0}
+              aria-label="Previous (more recent) experience"
+              className="text-muted-foreground/40 hover:text-muted-foreground/70 disabled:opacity-25 disabled:hover:text-muted-foreground/40 transition-colors cursor-pointer disabled:cursor-default"
+            >
+              <ChevronUp className="h-12 w-28" strokeWidth={1.75} />
+            </button>
+
+            <div
+              ref={desktopDetailRef}
+              className="scroll-mt-28 w-full flex items-center min-h-[560px]"
+            >
+              <Card className="w-full border-border/50 shadow-xl">
               <CardHeader className="pb-4">
                 <div className="flex items-start gap-4">
                   {experiences[activeIndex]?.logo ? (
@@ -536,7 +499,7 @@ export function ExperienceTimelineSection({
 
                   <div className="flex-1">
                     <h2
-                      className={`font-semibold tracking-tight mb-1 ${activeHeadingParts.metaLines.length > 0 ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"} ${experiences[activeIndex].isOpportunity ? "text-primary" : ""}`}
+                      className={`font-semibold tracking-tight mb-1 ${activeHeadingParts.metaLines.length > 0 ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"}`}
                     >
                       {activeHeadingParts.heading}
                     </h2>
@@ -574,35 +537,26 @@ export function ExperienceTimelineSection({
                     </li>
                   ))}
                 </ul>
-                {experiences[activeIndex].isOpportunity ? (
-                  <div className="flex flex-wrap gap-3 pt-2">
-                    <DownloadCVButton
-                      variant="default"
-                      size="sm"
-                      className="rounded-lg px-4 py-2"
-                    >
-                      Download CV
-                    </DownloadCVButton>
-                    <a
-                      href="/contact"
-                      className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
-                    >
-                      Contact me
-                    </a>
-                  </div>
-                ) : null}
               </CardContent>
-            </Card>
+              </Card>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigateToIndex(activeIndex + 1)}
+              disabled={activeIndex >= experiences.length - 1}
+              aria-label="Next (older) experience"
+              className="text-muted-foreground/40 hover:text-muted-foreground/70 disabled:opacity-25 disabled:hover:text-muted-foreground/40 transition-colors cursor-pointer disabled:cursor-default"
+            >
+              <ChevronDown className="h-12 w-28" strokeWidth={1.75} />
+            </button>
           </div>
 
           <div>
-            <div className="relative h-[700px] mt-8">
+            <div className="relative h-[700px]">
               <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-border" />
 
-              <div
-                className={`absolute left-1/2 -translate-x-1/2 -top-2 transition-colors ${activeIndex === 0 && experiences[0].isOpportunity ? "text-primary" : "text-muted-foreground/30"
-                  }`}
-              >
+              <div className="absolute left-1/2 -translate-x-1/2 -top-2 text-muted-foreground/30">
                 <ChevronUp className="h-6 w-6" />
               </div>
 
@@ -698,7 +652,7 @@ export function ExperienceTimelineSection({
             </div>
 
             <div className="mt-4 text-center text-sm text-muted-foreground">
-              Use scroll wheel or arrow keys to navigate
+              Use the arrows or arrow keys to navigate
             </div>
           </div>
         </div>
@@ -765,10 +719,7 @@ export function ExperienceTimelineSection({
                 <div className="relative min-h-[600px] h-full">
                   <div className="absolute left-1/2 -translate-x-1/2 top-6 bottom-6 w-0.5 bg-border" />
 
-                  <div
-                    className={`absolute left-1/2 -translate-x-1/2 top-2 transition-colors ${activeIndex === 0 && experiences[0].isOpportunity ? "text-primary" : "text-muted-foreground/30"
-                      }`}
-                  >
+                  <div className="absolute left-1/2 -translate-x-1/2 top-2 text-muted-foreground/30">
                     <ChevronUp className="h-6 w-6" />
                   </div>
 

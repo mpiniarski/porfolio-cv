@@ -12,6 +12,6 @@ cv:
     - label: "Cloud & Data"
       details: "AWS · Terraform · Docker · MongoDB · Data modeling · CI/CD · Observability (NewRelic, Sentry)"
     - label: "Architecture"
-      details: "System design · API design · Distributed systems · Data flow · Performance optimisation · Testing"
+      details: "System design · Distributed systems · Performance optimization · Testing"
 
 
