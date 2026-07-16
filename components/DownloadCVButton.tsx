@@ -3,7 +3,7 @@
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const CV_PATH = "/" + encodeURIComponent("Marcin Piniarski – Senior Frontend Engineer.pdf");
+const CV_PATH = "/" + encodeURIComponent("Resume · Marcin Piniarski.pdf");
 const PDF_FILENAME = "Marcin Piniarski - CV.pdf";
 
 export function DownloadCVButton({
