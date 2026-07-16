@@ -9,6 +9,8 @@ cv:
       details: "TypeScript · JavaScript · React · Vue · Next.js · GraphQL · REST · Webpack · Vite"
     - label: "Backend"
       details: "Node.js · Kotlin · Java · AWS · Terraform · MongoDB · Docker · New Relic · Sentry"
+    - label: "AI & Agents"
+      details: "AI/LLM integration · AI agents · AI-assisted development (Cursor, Claude, Codex)"
     - label: "Architecture"
       details: "Design systems · Component architecture · Performance optimization · a11y · CI/CD · Lighthouse"
     - label: "Testing"
