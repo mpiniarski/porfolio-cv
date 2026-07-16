@@ -9,9 +9,9 @@ const DEFAULT_PRIMARY_EXPERIENCE_COUNT = 2;
 const PAGE_SHELL_BASE =
   "max-w-[210mm] mx-auto px-16 py-12 min-h-[297mm] print:min-h-[297mm] w-full print:w-[210mm]";
 /** Page 1 print padding (full page). */
-const PAGE_1_PRINT_PAD = "print:px-12 print:pt-6 print:pb-6";
+const PAGE_1_PRINT_PAD = "print:px-12 print:pt-8 print:pb-6";
 /** Page 2 print padding: slightly tighter top to recover a small amount of vertical space. */
-const PAGE_2_PRINT_PAD = "print:px-11 print:pt-3 print:pb-6";
+const PAGE_2_PRINT_PAD = "print:px-11 print:pt-6 print:pb-6";
 
 type ExperienceRenderRow = {
   item: CvExperienceItem;
@@ -222,7 +222,7 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
             socialNetworks={social_networks}
           />
 
-          <div className="flex min-h-0 flex-1 flex-col gap-6 print:gap-4.5">
+          <div className="flex min-h-0 flex-1 flex-col gap-6 print:gap-2.5">
           <section className="print:break-inside-avoid">
             {resumeSummaryText ? (
               <p className="text-xs leading-relaxed text-slate-700 print:leading-[1.35]">
@@ -280,10 +280,10 @@ export function ResumeDocument({ cv, previewEnabled = true }: { cv: CvData["cv"]
           className={`${previewEnabled ? "resume-page" : "resume-page resume-page--no-preview"} resume-page--sheet-2 flex min-h-0 flex-col`}
         >
           <div className={page2Shell}>
-            <div className="flex min-h-0 flex-1 flex-col gap-6 print:gap-2">
+            <div className="flex min-h-0 flex-1 flex-col gap-6 print:gap-1.5">
             {experiencePage2Rows.length > 0 ? (
               <section>
-                <div className="space-y-4 print:space-y-1.25">
+                <div className="space-y-4 print:space-y-0.75">
                   {experiencePage2Rows.map((row) => (
                     <ResumeExperienceArticle key={resumeExperienceRowKey(row)} row={row} />
                   ))}
