@@ -18,9 +18,9 @@ cv:
       start_date: "2026-05"
       # No end_date → ongoing role (renders "Present" and fills the timeline to now).
       highlights:
-        - "Contributed 6 merged pull requests (TypeScript, Node.js, React): a core error-routing fix, improvements to the Content and Mail template applications, and developer tooling."
+        - "Contributed 6 merged pull requests (TypeScript, Node.js, React), including a core error-routing fix, improvements to the Content and Mail template applications, and developer tooling."   # ← CHANGED (":" → ", including" — the colon read as a complete list of all 6, making Tasks below look like a 7th)
         - "Designed and built Tasks, a personal task manager accepted as an official template application, implementing agent-native patterns in which AI agents and the UI share the same state and actions."
-        - "Reported security issues discovered while adopting the framework, and shared product feedback directly with the Builder.io team."
+        - "Reported security issues discovered while adopting the framework and shared product feedback directly with the Builder.io team."
 
     - company: "Balyasny Asset Management"
       position: "Senior Frontend Engineer"
@@ -47,33 +47,33 @@ cv:
         - Diva-E
       projects:
         - name: "SIEMENS (GroundFog)"
-          role: "Lead Front-end Developer"
+          role: "Lead Frontend Developer"
           start_date: "2024-02"
           end_date: "2025-02"
           highlights:
-            - "Led frontend development within a 10-person team (3 frontend engineers) on a multi-tenant content platform powering siemens.com, mentoring developers and improving engineering quality through CI/CD (linting, quality gates) and code review practices."   # ← CHANGED (was 4; corrected to match your prep stories: "me + 2")
+            - "Led frontend development within a 10-person team (3 frontend engineers) on a Vue-based multi-tenant content platform powering siemens.com, mentoring developers and driving code review practices."   # ← CHANGED (Vue grounded here per you — the platform was Vue, not React; this backs the skills-row Vue)
             - "Delivered core platform features for siemens.com, including AI-powered search, chatbot interfaces, and live translation used across a global multi-language platform."
             - "Built and evolved a shared component platform (~30 reusable components) with interactive component documentation, consumed by multiple applications, improving UI consistency, reuse, and development velocity at scale."   # ← CHANGED (added docs detail from your design-system story)
-            - "Improved quality and reliability by introducing automated visual regression testing (Playwright) integrated into CI/CD, enabling safe evolution of shared UI across multiple applications."
+            - "Improved quality and reliability by introducing automated visual regression testing (Playwright) integrated into CI/CD, enabling safe evolution of the shared UI platform."
             - "Designed URL-based environment routing, allowing developers, QA, and stakeholders to access production content across environments without manual data migration, significantly improving development and testing efficiency."
 
         - name: "MANN+HUMMEL (Diva-E)"
-          role: "Senior Front-end Developer"
+          role: "Senior Frontend Developer"
           start_date: "2023-09"
           end_date: "2024-01"
           highlights:
             - "Developed advanced product discovery features using React, TypeScript, and GraphQL, including VIN-based search, dimension-based filtering, and smart search across a large automotive catalog."
-            - "Built search results, product detail pages, and 360° product visualizations, improving product discovery and navigation."
+            - "Built search results, product detail pages, and 360° product visualizations, improving catalog navigation."
 
         - name: "WebSight CMS"
-          role: "Front-end Developer"
+          role: "Lead Frontend Developer"   # ← CHANGED (you led + mentored 4 — and this resolves the umbrella-title tension flagged in the final review)
           start_date: "2021-04"
           end_date: "2023-08"
           highlights:
-            - "Led frontend development of a visual CMS platform built with React and TypeScript, mentoring 4 frontend engineers and working closely with designers and backend engineers on REST APIs and platform architecture."   # ← CHANGED (was: "…built with React, mentoring frontend engineers and collaborating closely with backend (OSGi-based) and design teams.")
+            - "Led frontend development of a visual CMS platform built with React, mentoring 4 frontend engineers and working closely with designers and backend engineers on REST APIs and platform architecture."   # ← CHANGED ("open-source" removed after verification: only 2 docs commits carry your name in the public websight-io org, so the word invites a code-read that finds nothing of yours — Agent-Native is where that invitation belongs; "and TypeScript" dropped earlier: bullet 3 credits you with the TS migration)
             - "Designed and built a true WYSIWYG page editor using an overlay system synchronized with an iframe-rendered page."
-            - "Led evolution of the frontend platform, including migration to TypeScript, React Hooks, and refactoring of editor architecture, state management, and ESM-based plugin integration."
-            - "Delivered core CMS capabilities including inline editing and content tree interactions while evolving a plugin-based editor architecture (6 editor plugins) and ensuring embedded pages rendered correctly inside the editing environment (e.g. normalizing viewport units inside an iframe)."   # ← CHANGED (added plugin count)
+            - "Led evolution of the frontend platform, including migration to TypeScript and React Hooks, refactoring of the editor architecture and state management, and ESM-based plugin integration."   # ← CHANGED (parallelism: "migration to X, Y, and refactoring of…" read broken)
+            - "Delivered core CMS capabilities including inline editing and content tree interactions while evolving a plugin-based editor architecture (6 editor plugins) and ensuring embedded pages rendered correctly inside the editing environment (e.g., normalizing viewport units inside an iframe)."   # ← CHANGED (added plugin count; US style "e.g.,")
 
     - company: "OLX Group"
       position: "Software Engineer"
@@ -84,7 +84,7 @@ cv:
         - "Developed authentication systems for a large-scale marketplace using Kotlin, Java, REST APIs, and AWS Cognito, implementing core user flows including login, registration, and password recovery."   # ← CHANGED (former "core user flows" bullet folded in here)
         - "Contributed to migration of millions of users to AWS Cognito while introducing security features such as suspicious login detection."
         - "Designed secure internal tooling enabling Customer Support to manage blocked accounts independently, eliminating 15–20 daily engineering interventions."
-        - "Improved observability and error tracking using NewRelic and Sentry."
+        - "Improved observability and error tracking using New Relic and Sentry."
 
     - company: "No Spoon Tech Lab"
       position: "Full-stack Web Developer"
@@ -92,7 +92,7 @@ cv:
       start_date: "2018-06"
       end_date: "2019-08"
       highlights:
-        - "Built a real-time messaging platform for an online gaming product using React, KotlinJS, and the XMPP protocol — message synchronization, presence handling, and real-time updates across connected clients."   # ← CHANGED (2-page fit: merged former bullets 1+3)
+        - "Built a real-time messaging platform for an online gaming product using React, KotlinJS, and the XMPP protocol — message synchronization, presence handling, and live updates across connected clients."   # ← CHANGED (2-page fit merge; "real-time … real-time" echo fixed)
         - "Implemented custom server-side rendering for the React application in Node.js."   # ← NEW (surfaces professional Node.js work)
 
     - company: "Appchance"

@@ -3,14 +3,14 @@ based_on: "./cv-base.yml"
 cv:
   headline: "Senior Software Engineer"
   resume_page1_experience_rows: 3   # OSS entry is short; pull Dynamic Solutions' first slice onto page 1 (FE-parity)
-  summary: "Senior Software Engineer with 9+ years of experience building visual CMS platforms, developer tooling, and complex web applications using React, TypeScript, Node.js, and Kotlin. Contributor to Builder.io's Agent-Native framework (6 merged PRs, including Tasks, an official template application), with hands-on experience shipping AI-powered product features. Experienced across frontend architecture, API-driven systems, and platform engineering, with a strong focus on performance, maintainability, and developer experience."   # ← CHANGED (Agent-Native + AI sentence; "developer platforms" → "developer tooling" to avoid platforms×2)
+  summary: "Senior Software Engineer with 10 years of experience building visual CMS platforms, developer tooling, and complex web applications using React, TypeScript, Node.js, and Kotlin. Contributor to Builder.io's Agent-Native framework (6 merged PRs, including Tasks, an official template application), with hands-on experience shipping AI-powered product features. Experienced across frontend architecture, API-driven systems, and platform engineering, with a strong focus on performance, maintainability, and developer experience."   # ← CHANGED (Agent-Native + AI sentence; "developer platforms" → "developer tooling" to avoid platforms×2)
   short_summary: "Senior Software Engineer building visual CMS platforms, complex frontend systems, and scalable backend services with React, TypeScript, Node.js, and Kotlin. Builder.io Agent-Native contributor."   # ← CHANGED (optional: appended contributor mention)
 
   footer_tagline: "Senior Software Engineer | React · TypeScript · Node.js · AI Agents"   # ← CHANGED (optional: was "… · Kotlin"; revert if you prefer)
 
   skills:
     - label: "Frontend"
-      details: "TypeScript · React · Vue · Next.js · REST/GraphQL API integration · Webpack · Vite · Design systems · a11y · Lighthouse"   # ← CHANGED (dropped "JavaScript" — implied by TypeScript; "REST · GraphQL" → "REST/GraphQL API integration")
+      details: "TypeScript · React · Vue · Next.js · REST & GraphQL API integration · Vite · Design systems · a11y"   # ← CHANGED (one line: dropped "JavaScript" (implied by TypeScript), "Webpack" (Vite covers modern bundling), "Lighthouse" (perf covered by Architecture))
 
     - label: "Backend & Platform"
       details: "TypeScript · Node.js · Kotlin · Java · REST API design · Authentication systems · Microservices"   # ← CHANGED (dropped "Platform integrations" — vague; "REST" → "REST API design")
@@ -19,7 +19,49 @@ cv:
       details: "AI/LLM integration · AI agents · AI-assisted development (Cursor, Claude, Codex)"   # ← CHANGED (dropped "Agent-native architecture" — the Agent-Native work is named in summary + top entry)
 
     - label: "Cloud & Data"
-      details: "AWS · Terraform · Docker · MongoDB · Data modeling · CI/CD · Observability (NewRelic, Sentry)"
+      details: "AWS · Terraform · Docker · MongoDB · Data modeling · CI/CD · Observability (New Relic, Sentry)"
 
     - label: "Architecture"
-      details: "Frontend architecture · System design · Distributed systems · Performance · Testing · Developer experience"   # ← CHANGED ("Performance optimization" → "Performance" to shorten the line; earlier: "Platform architecture" → "Frontend architecture", dropped "API design"/"Data flow")
+      details: "Frontend architecture · System design · Distributed systems · Performance · Testing · Developer experience"   # ← CHANGED ("Platform architecture" → "Frontend architecture" (concrete, distinct from System design); "Performance optimization" → "Performance"; dropped "API design"/"Data flow")
+
+  experience_overrides:   # ← SE-only, Builder-targeted framing; cv-base keeps neutral wording for fe/fs.
+    - company: "Agent-Native by Builder.io"   # #1 foreground full-stack TS/Node.js (freshest backend signal)
+      highlights:
+        - "Contributed 6 merged pull requests across a full-stack TypeScript/Node.js/React codebase, including a core error-routing fix, improvements to the Content and Mail template applications, and developer tooling."
+        - "Designed and built Tasks, a personal task manager accepted as an official template application, implementing agent-native patterns in which AI agents and the UI share the same state and actions."
+        - "Reported security issues discovered while adopting the framework and shared product feedback directly with the Builder.io team."
+
+    - company: "Balyasny Asset Management"
+      highlights:
+        - "Designed and delivered analytical views for portfolio risk analysis, translating complex financial requirements into decision-support tools used by ~1000 users."
+        - "Built internal React dashboards and an advanced Highcharts chart editor for exploring large-scale financial datasets with AG Grid and custom visualizations."
+        - "Implemented efficient data fetching and caching using TanStack Query, and optimized rendering through profiling-driven virtualization and reduced DOM manipulation, keeping high-volume data views responsive."
+
+    - company: "Dynamic Solutions"   # #2 enterprise/content-team collaboration; #3 SDK framing; #4 lead with "content platform", Vue parenthetical
+      projects:
+        - name: "SIEMENS (GroundFog)"
+          role: "Lead Frontend Developer"
+          start_date: "2024-02"
+          end_date: "2025-02"
+          highlights:
+            - "Led frontend development within a 10-person team (3 frontend engineers) on a multi-tenant content platform (Vue, TypeScript) powering siemens.com, mentoring through code review and partnering with enterprise engineering, product, and content teams."
+            - "Delivered core platform features including AI-powered search, chatbots, and live translation for a global audience."
+            - "Built and evolved a shared component platform — an internal SDK of ~30 reusable components with interactive documentation — consumed by multiple applications, improving UI consistency, reuse, and development velocity at scale."
+            - "Improved quality and reliability by introducing automated visual regression testing (Playwright) integrated into CI/CD, enabling safe evolution of the shared UI platform."
+            - "Designed URL-based environment routing, allowing developers, QA, and stakeholders to access production content across environments without manual data migration, significantly improving development and testing efficiency."
+        - name: "MANN+HUMMEL (Diva-E)"
+          role: "Senior Frontend Developer"
+          start_date: "2023-09"
+          end_date: "2024-01"
+          highlights:
+            - "Developed advanced product discovery features using React, TypeScript, and GraphQL, including VIN-based search, dimension-based filtering, and smart search across a large automotive catalog."
+            - "Built search results, product detail pages, and 360° product visualizations, improving catalog navigation."
+        - name: "WebSight CMS"
+          role: "Lead Frontend Developer"
+          start_date: "2021-04"
+          end_date: "2023-08"
+          highlights:
+            - "Led frontend development of a visual CMS platform built with React, mentoring 4 frontend engineers and working closely with designers and backend engineers on REST APIs and platform architecture."
+            - "Designed and built a true WYSIWYG page editor using an overlay system synchronized with an iframe-rendered page."
+            - "Led evolution of the frontend platform, including migration to TypeScript and React Hooks, refactoring of the editor architecture and state management, and an ESM-based plugin SDK."
+            - "Delivered core CMS capabilities including inline editing and content tree interactions while evolving a plugin-based editor architecture (6 editor plugins) and ensuring embedded pages rendered correctly inside the editing environment (e.g., normalizing viewport units inside an iframe)."
