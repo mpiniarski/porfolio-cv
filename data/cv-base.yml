@@ -28,7 +28,7 @@ cv:
       end_date: "2026-02"
       location: "Warsaw"
       highlights:
-        - "Designed and delivered analytical views for portfolio risk analysis, translating complex financial requirements into decision-support tools used by ~1000 users."
+        - "Designed and delivered analytical views, working directly with risk managers to translate complex financial requirements into decision-support tools used by ~1000 users."
         - "Built internal React dashboards enabling exploration of large-scale financial datasets with AG Grid and custom visualizations."
         - "Developed an advanced chart editor using Highcharts, supporting multiple visualization types (including candlestick, scatter, and bar) with configurable axes, data series, styling, and data selection."
         - "Implemented efficient data fetching and caching using TanStack Query, and optimized rendering through profiling-driven virtualization and reduced DOM manipulation, keeping high-volume data views responsive."   # ← CHANGED (US spelling; performance specifics from your BAM story)
@@ -39,7 +39,7 @@ cv:
       start_date: "2021-04"
       end_date: "2025-02"
       location: "Warsaw"
-      resume_break_projects_after: 1   # page 1: Siemens only; Mann+Hummel + WebSight continue on page 2 (fits the OSS entry above)
+      resume_break_projects_after: 2  
       worked_with:
         - Siemens
         - GroundFog
@@ -51,7 +51,7 @@ cv:
           start_date: "2024-02"
           end_date: "2025-02"
           highlights:
-            - "Led frontend development within a 10-person team (3 frontend engineers) on a Vue-based multi-tenant content platform powering siemens.com, mentoring developers and driving code review practices."   # ← CHANGED (Vue grounded here per you — the platform was Vue, not React; this backs the skills-row Vue)
+            - "Led frontend development within a 10-person team (3 frontend engineers) on a multi-tenant content platform (Vue, GraphQL) powering siemens.com, mentoring developers, driving code review practices, and working closely with product managers, designers, and QA."   
             - "Delivered core platform features for siemens.com, including AI-powered search, chatbot interfaces, and live translation used across a global multi-language platform."
             - "Built and evolved a shared component platform (~30 reusable components) with interactive component documentation, consumed by multiple applications, improving UI consistency, reuse, and development velocity at scale."   # ← CHANGED (added docs detail from your design-system story)
             - "Improved quality and reliability by introducing automated visual regression testing (Playwright) integrated into CI/CD, enabling safe evolution of the shared UI platform."
@@ -109,7 +109,7 @@ cv:
       end_date: "2017-12"
       location: "Poznań"
       highlights:
-        - "Developed REST APIs for an e-learning platform using Java, Kotlin, and MongoDB within a microservice architecture, working in cross-functional Scrum teams (~20 engineers across two collaborating teams)."   # ← CHANGED (merged 2 bullets, team-size detail kept)
+        - "Developed REST APIs for an e-learning platform using Java, Kotlin, Spring Boot, and MongoDB within a microservice architecture, working in cross-functional Scrum teams (~20 engineers across two collaborating teams)."
 
   education:
     - institution: "Poznań University of Technology"

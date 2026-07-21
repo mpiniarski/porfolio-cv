@@ -38,6 +38,7 @@ cv:
         - "Implemented efficient data fetching and caching using TanStack Query, and optimized rendering through profiling-driven virtualization and reduced DOM manipulation, keeping high-volume data views responsive."
 
     - company: "Dynamic Solutions"   # #2 enterprise/content-team collaboration; #3 SDK framing; #4 lead with "content platform", Vue parenthetical
+      resume_break_projects_after: 1   # Siemens on page 1; Mann+Hummel → page 2
       projects:
         - name: "SIEMENS (GroundFog)"
           role: "Lead Frontend Developer"

@@ -1,17 +1,22 @@
 based_on: "./cv-base.yml"
 cv:
-  headline: "Senior Software Engineer"
+  headline: "Senior Frontend Engineer"
   resume_page1_experience_rows: 3   # OSS entry is short; pull Dynamic Solutions' first slice onto page 1
-  summary: "Senior Software Engineer with 10 years of experience building complex web systems, including visual CMS platforms with drag-and-drop page editing, data-heavy applications, and scalable platform architectures using TypeScript, React, Node.js, and Vue. Led development across enterprise platforms and internal tools, delivering AI-powered interfaces and analytical dashboards. Strong focus on performance, maintainability, and engineering quality (CI/CD, testing, a11y)."
-  short_summary: "Senior Software Engineer building complex systems — from visual CMS platforms and AI-powered interfaces to data-heavy dashboards. Specializing in software architecture, design systems, and performance at scale."
+  summary: "Senior Frontend Engineer with 10 years of experience building complex frontend systems, including data-heavy applications, visual CMS editors with drag-and-drop page editing, and scalable platform architectures using TypeScript, React, and Vue. Led frontend development across enterprise platforms and internal tools, delivering AI-powered interfaces and analytical dashboards. Strong focus on performance, maintainability, and engineering quality (CI/CD, testing, a11y)."
+  short_summary: "Senior Frontend Engineer building complex UI systems — from visual CMS editors and AI-powered interfaces to data-heavy dashboards. Specializing in frontend architecture, design systems, and performance at scale."
   skills:
     - label: "Frontend"
-      details: "TypeScript · JavaScript · React · Vue · Next.js · GraphQL · REST · Webpack · Vite"
-    - label: "Backend"
-      details: "Node.js · Kotlin · Java · AWS · Terraform · MongoDB · Docker · New Relic · Sentry"
-    - label: "AI & Agents"
-      details: "AI/LLM integration · AI agents · AI-assisted development (Cursor, Claude, Codex)"
+      details: "TypeScript · JavaScript · React · Vue · Next.js · REST · GraphQL · Webpack · Vite"
     - label: "Architecture"
       details: "Design systems · Component architecture · Performance optimization · a11y · CI/CD · Lighthouse"
     - label: "Testing"
       details: "Unit · Integration · E2E · Visual regression"
+    - label: "AI & Agents"
+      details: "AI/LLM integration · AI agents · AI-assisted development (Cursor, Claude, Codex)"
+    - label: "Backend (Supporting)"
+      details: "Node.js · Kotlin · Java · AWS · Terraform · MongoDB · Docker · New Relic · Sentry"
+
+  experience_overrides:
+    # Page 1 carries Siemens only; Mann+Hummel continues on page 2 (scalar override — projects stay from cv-base).
+    - company: "Dynamic Solutions"
+      resume_break_projects_after: 1

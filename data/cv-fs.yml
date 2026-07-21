@@ -1,7 +1,8 @@
 based_on: "./cv-base.yml"
 cv:
   headline: "Senior Full-stack Engineer"
-  summary: "Senior Full-Stack Engineer with 9+ years of experience building end-to-end systems across frontend and backend. Delivered scalable APIs, data pipelines, and complex UIs using TypeScript/React, Node.js, and Kotlin. Strong focus on system design, performance, and reliability."
+  resume_page1_experience_rows: 3   # OSS entry is short; pull Dynamic Solutions' first slice onto page 1
+  summary: "Senior Full-stack Engineer with 10 years of experience building end-to-end systems across frontend and backend. Delivered scalable APIs, data pipelines, and complex UIs using TypeScript/React, Node.js, and Kotlin. Strong focus on system design, performance, and reliability."
   short_summary: "Senior Full-stack Engineer building robust products end-to-end — from complex frontend systems and design systems to backend services and platform reliability."
   footer_tagline: "Senior Full-stack Engineer | React · Node.js · Kotlin"
   skills:
@@ -9,9 +10,16 @@ cv:
       details: "TypeScript · JavaScript · React · Vue · Next.js · Webpack · Vite · Design systems · a11y · Lighthouse"
     - label: "Backend & APIs"
       details: "Node.js · Kotlin · Java · REST · GraphQL · Microservices · Authentication systems"
+    - label: "AI & Agents"
+      details: "AI/LLM integration · AI agents · AI-assisted development (Cursor, Claude, Codex)"
     - label: "Cloud & Data"
-      details: "AWS · Terraform · Docker · MongoDB · Data modeling · CI/CD · Observability (NewRelic, Sentry)"
+      details: "AWS · Terraform · Docker · MongoDB · Data modeling · CI/CD · Observability (New Relic, Sentry)"
     - label: "Architecture"
       details: "System design · Distributed systems · Performance optimization · Testing"
+
+  experience_overrides:
+    # Page 1 carries Siemens only; Mann+Hummel continues on page 2 (scalar override — projects stay from cv-base).
+    - company: "Dynamic Solutions"
+      resume_break_projects_after: 1
 
 
