@@ -7,7 +7,7 @@ import type { CvData, PortfolioData } from "./resumeData";
 import { loadCvDataFromFile } from "./cv/load";
 import { deepMerge } from "./deepMerge";
 import { CvDataNotFoundError } from "./cv/errors";
-export const CV_VARIANTS = ["fe", "fs", "se"] as const;
+export const CV_VARIANTS = ["fe", "fs", "se", "nf"] as const;
 export type CvVariant = (typeof CV_VARIANTS)[number];
 export { isCvDataNotFoundError } from "./cv/errors";
 export { loadCvDataFromFile };
@@ -33,6 +33,7 @@ export type CvDerived = {
 export function getCvData(
   options?: { variant?: unknown },
 ): CvResult {
+  // Variant can come from a URL query param — validate and fall back to "fe".
   const requested = options?.variant;
   const variant: CvVariant = CV_VARIANTS.includes(requested as CvVariant)
     ? (requested as CvVariant)

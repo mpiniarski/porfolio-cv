@@ -1,0 +1,31 @@
+based_on: "./cv-base.yml"
+# Netflix — UI Engineer 5, Studio Foundation Apps Engineering (Warsaw, JR41474).
+# Based directly on cv-base — independent of the public-site fe variant.
+cv:
+  headline: "Senior UI Engineer"
+  resume_page1_experience_rows: 3   # OSS entry is short; pull Dynamic Solutions' first slice onto page 1
+  summary: "Senior UI Engineer with 10 years of experience building complex enterprise web applications, internal tools, and UI platforms using TypeScript, React, and Vue. Led frontend development across multi-application platforms, building design systems, shared component libraries, and developer tooling while partnering with product, design, and backend teams — and directly with end users — to deliver intuitive, high-quality user experiences. Strong focus on performance, maintainability, accessibility, testing, and CI/CD. AI-assisted development with Cursor, Claude, and Codex is part of my daily workflow. Open-source contributor to Builder.io's Agent-Native project."
+  short_summary: "Senior UI Engineer building internal tools and complex web UIs — visual CMS editors, content platforms, and data-heavy dashboards — with a focus on design systems, testing, and AI-assisted development."
+
+  skills:
+    - label: "Frontend"
+      details: "TypeScript · React · Vue · HTML5 · CSS · Next.js · REST · GraphQL · Webpack · Vite"
+
+    - label: "Architecture"
+      details: "Design systems · Component architecture · Performance · a11y · CI/CD (GitHub Actions, Jenkins) · Lighthouse"
+
+    - label: "Testing"
+      details: "Unit (Jest, Vitest) · E2E and visual regression (Playwright) · Integration"
+
+    - label: "AI & Agents"
+      details: "AI/LLM integration · AI agents · AI-assisted development (Cursor, Claude, Codex)"
+
+    - label: "Backend (Supporting)"
+      details: "Node.js · Kotlin · Java · Spring Boot · AWS (S3, Cognito) · MongoDB · Docker · New Relic · Sentry"
+
+  # nf-only tuning for the two-page fit.
+  experience_overrides:
+    # Page 1 carries Siemens only; Mann+Hummel continues on page 2 (scalar override — projects stay from cv-base).
+    - company: "Dynamic Solutions"
+      resume_break_projects_after: 1
+
